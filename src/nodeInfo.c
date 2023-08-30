@@ -1,17 +1,44 @@
 #include "../include/nodeInfo.h"
 
-NodeInfo newInteger(int value, char* id, enum TTag tag){
-    NodeInfo result;    
+NodeInfo *newInteger(int value, char* id, enum TTag tag){
+    NodeInfo *result;    
 
-    
-    result.value = malloc(sizeof(int));
-    *((int*)result.value) = value;
+    result->value = malloc(sizeof(int));
+    *((int*)result->value) = value;
 
-    result.id = strdup(id);     // Remember to free this later.
-    result.type = INTEGER;
-    result.tag = tag;
+    result->type = INTEGER;
+    result->id = strdup(id);     // Remember to free this later.
+    result->tag = tag;
 
     return result;
+}
+
+NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag){
+    NodeInfo *result;    
+
+    getValue(&result, value, type);
+
+    result->type = type;
+    result->id = strdup(id);     // Remember to free this later.
+    result->tag = tag;
+
+    return result;
+}
+
+
+
+void* getValue(NodeInfo* node, void* value, enum TType type) {
+    switch(type){
+
+        case INTEGER:
+            node->value = malloc(sizeof(int));
+            *((int*)node->value) = value;
+        case BOOLEAN:
+            node->value = malloc(sizeof(&value));
+            *((char*)node->value) = value;
+
+    }
+
 }
 
 NodeInfo newBoolean(enum TBoolean value, char* id, enum TTag tag) {
