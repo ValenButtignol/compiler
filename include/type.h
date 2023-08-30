@@ -1,3 +1,6 @@
+#ifndef	TYPE_H
+#define TYPE_H
+
 #include <stdio.h>
 
 typedef struct{
@@ -7,5 +10,9 @@ typedef struct{
 }Type;
 
 Type newInteger(int integer);
+
 Type newBoolean(int boolean);
+
 Type newSymbol(char* symbol);
+
+#endif
