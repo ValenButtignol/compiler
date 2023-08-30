@@ -41,18 +41,16 @@ void* getValue(NodeInfo* node, void* value, enum TType type) {
 
 }
 
-NodeInfo newBoolean(enum TBoolean value, char* id, enum TTag tag) {
+//NodeInfo newBoolean(enum TBoolean value, char* id, enum TTag tag);
 
-}
+//NodeInfo newOperator(char* value, char* id, enum TTag tag);
 
-NodeInfo newOperator(char* value, char* id, enum TTag tag);
+//NodeInfo newNonTerminal(char* value, char* id, enum TTag tag);
 
-NodeInfo newNonTerminal(char* value, char* id, enum TTag tag);
-
-char* nodeInfoToString(NodeInfo type){
+/* char* nodeInfoToString(NodeInfo node){
     char *string = "";
-    if(type.boolean != NULL){
-        strcat(string, type.boolean ? "true" : "false");
+    if(node.type == BOOLEAN){
+        strcat(string, node.boolean ? "true" : "false");
     }
     if(type.integer != NULL){
         char str[] = ""; 
@@ -65,7 +63,7 @@ char* nodeInfoToString(NodeInfo type){
     }
     return string;
 }
-
+ */
 void freeNodeInfo(NodeInfo* node) {
     free(node->value);  
     free(node->id);

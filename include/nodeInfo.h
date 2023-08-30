@@ -16,13 +16,17 @@ typedef struct {
 	enum TTag tag;
 }NodeInfo;
 
-NodeInfo newInteger(int value, char* id, enum TTag tag);
+NodeInfo *newInteger(int value, char* id, enum TTag tag);
 
-NodeInfo newBoolean(enum TBoolean value, char* id, enum TTag tag);
+//NodeInfo newBoolean(enum TBoolean value, char* id, enum TTag tag);
 
-NodeInfo newOperator(char* value, char* id, enum TTag tag);
+//NodeInfo newOperator(char* value, char* id, enum TTag tag);
 
-NodeInfo newNonTerminal(char* value, char* id, enum TTag tag);
+//NodeInfo newNonTerminal(char* value, char* id, enum TTag tag);
+
+NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag);
+
+void* getValue(NodeInfo* node, void* value, enum TType type);
 
 void freeNodeInfo(NodeInfo* node);
 

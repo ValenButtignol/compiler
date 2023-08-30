@@ -3,7 +3,7 @@
 
 #include "../include/ast.h"
 
-TAst* newAst(Type root, TAst* ls, TAst* rs) {
+TAst* newAst(NodeInfo root, TAst* ls, TAst* rs) {
     TAst* ast = (TAst*) malloc(sizeof(TAst));
 
     ast->root = root;
@@ -12,7 +12,7 @@ TAst* newAst(Type root, TAst* ls, TAst* rs) {
     return ast;
 }
 
-TAst* newLeaf(Type root) {
+TAst* newLeaf(NodeInfo root) {
     TAst *ast = (TAst*) malloc(sizeof(TAst));
     ast->root = root;
     ast->ls = NULL;
