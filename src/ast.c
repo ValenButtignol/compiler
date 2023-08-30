@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "../include/ast.h"
 
 TAst* newAst(Type root, TAst* ls, TAst* rs) {
@@ -19,19 +21,33 @@ TAst newLeaf(Type root) {
 }
 
 char* astToString(TAst* ast) {
-    char* string = ""; 
-    string = "("
-    if (ast->ls == NULL) {
-        string = strcat(string) ++ "NULL";
-    } else {
-        string = string ++ astToString(ls);
+    return astToStringRecursive(ast);
+}
+
+char* astToStringRecursive(TAst* ast) {
+    if (ast == NULL) {
+        return strdup(""); // Return an empty string for NULL ast
     }
 
-    if (ast->rs == NULL) {
-        string = string ++ "NULL";
-    } else {
-        string = string ++ astToString(rs);
+    char* rootStr = typeToString(ast->root);
+    char* lsStr = astToStringRecursive(ast->ls);
+    char* rsStr = astToStringRecursive(ast->rs);
+
+    // Calculate the length of the final string
+    size_t totalLength = strlen(rootStr) + strlen(lsStr) + strlen(rsStr) + 5; // +5 for formatting characters
+
+    char* result = (char*)malloc(totalLength * sizeof(char));
+    if (result == NULL) {
+        // Handle memory allocation failure
+        return NULL;
     }
-    string = string ++ ")";
-    return string;
+
+    // Format the result string
+    snprintf(result, totalLength, "[%s %s %s]", rootStr, lsStr, rsStr);
+
+    free(rootStr);
+    free(lsStr);
+    free(rsStr);
+
+    return result;
 }

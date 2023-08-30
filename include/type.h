@@ -2,6 +2,7 @@
 #define TYPE_H
 
 #include <stdio.h>
+#include <string.h>
 
 typedef struct{
 	int integer;
