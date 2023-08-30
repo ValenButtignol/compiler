@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../include/ast.h"
-#include "../include/type.h"
+#include "../include/nodeInfo.h"
 %}
 
 %token TId
@@ -38,9 +38,10 @@ PROGRAM: DECLARATION_LIST STATEMENT_LIST {
     ;
 
 DECLARATION_LIST: ENTITY ASSIGNMENT DECLARATION_LIST {
-    $$ = newAst(newSymbol("declaration"), 
-                newAst(newSymbol("definition"),$1, $2), 
-                $3));}
+    // $$ = newAst(newSymbol("declaration"), 
+    //             newAst(newSymbol("definition"),$1, $2), 
+    //             $3));
+    }
     | /* LAMBDA */  // PODRÍA SER { $$ = NULL }
     ;
 
@@ -62,7 +63,8 @@ ASSIGNMENT: TId TAssign EXPRESSION TSemiColon {
      }
     ;
 
-RETURN: TReturn EXPRESSION TSemiColon { $$ = newAst(newSymbol($1), $2, NULL); }
+RETURN: TReturn EXPRESSION TSemiColon { //$$ = newAst(newSymbol($1), $2, NULL); 
+                                      }
     ;
 
 EXPRESSION: EXPRESSION TPlus EXPRESSION { $$ = newAst(newNodeInfo(&($2), NULL, "+", OPERATOR),$1, $3);}
