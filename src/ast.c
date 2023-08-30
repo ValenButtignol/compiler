@@ -31,7 +31,7 @@ char* astToStringRecursive(TAst* ast) {
         return strdup(""); // Return an empty string for NULL ast
     }
 
-    char* rootStr = typeToString(ast->root);
+    char* rootStr = nodeInfoToString(ast->root);
     printf("\n%s\n\n", rootStr);
     char* lsStr = astToStringRecursive(ast->ls);
     char* rsStr = astToStringRecursive(ast->rs);
