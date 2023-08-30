@@ -3,9 +3,9 @@
 typedef struct{
 	int integer;
 	int boolean;
-	char* token;
+	char* symbol;
 }Type;
 
 Type newInteger(int integer);
 Type newBoolean(int boolean);
-Type newToken(char* token);
+Type newSymbol(char* symbol);
