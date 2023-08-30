@@ -24,10 +24,12 @@ char* typeToString(Type type){
         strcat(string, type.boolean ? "true" : "false");
     }
     if(type.integer != NULL){
-        char str[] = sprintf(str, "%d", type.integer);
+        char str[] = ""; 
+        sprintf(str, "%d", type.integer);
         strcat(string, str);
     }
     if(type.symbol != NULL){
+        printf("\n\n%s\n\n", type.symbol);
         strcat(string, type.symbol);
     }
     return string;

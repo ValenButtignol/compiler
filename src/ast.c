@@ -12,15 +12,17 @@ TAst* newAst(Type root, TAst* ls, TAst* rs) {
     return ast;
 }
 
-TAst newLeaf(Type root) {
-    TAst ast;
-    ast.root = root;
-    ast.ls = NULL;
-    ast.rs = NULL;
+TAst* newLeaf(Type root) {
+    TAst *ast = (TAst*) malloc(sizeof(TAst));
+    ast->root = root;
+    ast->ls = NULL;
+    ast->rs = NULL;
     return ast;
 }
 
 char* astToString(TAst* ast) {
+        printf("\n2wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n\n");
+
     return astToStringRecursive(ast);
 }
 
@@ -30,6 +32,7 @@ char* astToStringRecursive(TAst* ast) {
     }
 
     char* rootStr = typeToString(ast->root);
+    printf("\n%s\n\n", rootStr);
     char* lsStr = astToStringRecursive(ast->ls);
     char* rsStr = astToStringRecursive(ast->rs);
 
