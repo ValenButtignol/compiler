@@ -17,7 +17,7 @@ digit [0-9]
 
 %%
 
-"boolean" {  
+"boolean" {
         printf("TType: %s\n",yytext);
         return TType;
     }
@@ -84,11 +84,14 @@ digit [0-9]
 
 "true" { 
         printf("TBool: %s\n",yytext); 
+        //yylval = malloc()
+        //yylval = strcpy(yytext);
         return TBool;
     }
 
 "false" { 
         printf("TBool: %s\n",yytext); 
+        
         return TBool;
     }
 

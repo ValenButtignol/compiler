@@ -31,11 +31,17 @@
 
 %%
 
-PROGRAM: DECLARATION_LIST STATEMENT_LIST { printf("\n---------------------\nArbol Sintactico\n%s\n--------------------\n\n", astToString); }
+PROGRAM: DECLARATION_LIST STATEMENT_LIST { 
+    printf("\n---------------------\nArbol Sintactico\n%s\n--------------------\n\n", 
+    astToString(newAst(newSymbol("program"), $1, $2))); 
+    }
     ;
 
-DECLARATION_LIST: ENTITY ASSIGNMENT DECLARATION_LIST
-    | /* LAMBDA */
+DECLARATION_LIST: ENTITY ASSIGNMENT DECLARATION_LIST {
+    $$ = newAst(newSymbol("declaration"), 
+                newAst(newSymbol("definition"),$1, $2), 
+                $3));}
+    | /* LAMBDA */  // PODRÍA SER { $$ = NULL }
     ;
 
 ENTITY: TConst TType
@@ -48,23 +54,24 @@ STATEMENT_LIST: ASSIGNMENT STATEMENT_LIST
     | RETURN
     ;
 
-ASSIGNMENT: TId TAssign EXPRESSION TSemiColon {$$ = newAst(newSymbol($2), 
-                                                           newLeaf(newSymbol($1)),
-														   newAst(newSymbol($3), NULL, newLeaf(newSymbol($4)))
-                                              );
-											  }
+ASSIGNMENT: TId TAssign EXPRESSION TSemiColon { 
+        $$ = newAst(newSymbol($2), 
+            newLeaf(newSymbol($1)), 
+            newAst(newSymbol($3), NULL, newLeaf(newSymbol($4)))
+        );
+    }
     ;
 
-RETURN: TReturn EXPRESSION TSemiColon
+RETURN: TReturn EXPRESSION TSemiColon { $$ = newAst(newSymbol($1), $2, NULL); }
     ;
 
-EXPRESSION: EXPRESSION TPlus EXPRESSION
-    | EXPRESSION TMinus EXPRESSION
-    | EXPRESSION TMultiply EXPRESSION
-    | EXPRESSION TDivide EXPRESSION
-    | TOpenParenthesis EXPRESSION TCloseParenthesis
-    | TInteger
-    | TBool
-    | TId
+EXPRESSION: EXPRESSION TPlus EXPRESSION { $$ = newAst(newSymbol($2),$1, $3); }
+    | EXPRESSION TMinus EXPRESSION  { $$ = newAst(newSymbol($2),$1, $3); }
+    | EXPRESSION TMultiply EXPRESSION { $$ = newAst(newSymbol($2),$1, $3); }
+    | EXPRESSION TDivide EXPRESSION { $$ = newAst(newSymbol($2), $1, $3); }
+    | TOpenParenthesis EXPRESSION TCloseParenthesis { $$ = newLeaf(newSymbol($2)); }
+    | TInteger  { $$ = newLeaf(newSymbol($1)); }
+    | TBool { $$ = newLeaf(newSymbol($1)); }
+    | TId { $$ = newLeaf(newSymbol($1)); }
     ;
 %%

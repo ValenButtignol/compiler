@@ -6,7 +6,8 @@
 #include "type.h"
 
 typedef struct TAst{
-	Type root;
+	Type tipoDeNodo;//sentencia, definicion
+	Type informacion;// + - int const true false variable NULL
 	struct TAst* ls;
 	struct TAst* rs;
 }TAst;
@@ -19,3 +20,6 @@ char* astToString(TAst* ast);
 char* astToStringRecursive(TAst* ast);
 
 #endif
+//arbol *info *ast *ast
+//info = tag nombre tipo value
+//ts = *info *ts
