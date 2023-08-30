@@ -5,10 +5,10 @@
 #include <string.h>
 #include "type.h"
 
-typedef struct{
+typedef struct TAst{
 	Type root;
-	TAst* ls;
-	TAst* rs;
+	struct TAst* ls;
+	struct TAst* rs;
 }TAst;
 
 TAst* newAst(Type root, TAst* ls, TAst* rs);
@@ -16,5 +16,6 @@ TAst* newAst(Type root, TAst* ls, TAst* rs);
 TAst* newLeaf(Type root);
 
 char* astToString(TAst* ast);
+char* astToStringRecursive(TAst* ast);
 
 #endif
