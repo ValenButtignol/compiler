@@ -67,7 +67,8 @@ RETURN: TReturn EXPRESSION TSemiColon { //$$ = newAst(newSymbol($1), $2, NULL);
                                       }
     ;
 
-EXPRESSION: EXPRESSION TPlus EXPRESSION { $$ = newAst(newNodeInfo(&($2), NULL, "+", OPERATOR),$1, $3);}
+EXPRESSION: EXPRESSION TPlus EXPRESSION {NodeInfo *ni = newNodeInfo(&($2) , NULL, "+", OPERATOR);
+                                         $$ = newAst(ni, $1, $3);}
     | EXPRESSION TMinus EXPRESSION  {$$ = newAst(newNodeInfo(&($2), NULL, "-", OPERATOR),$1, $3);}
     | EXPRESSION TMultiply EXPRESSION {$$ = newAst(newNodeInfo(&($2), NULL, "*", OPERATOR),$1, $3);}
     | EXPRESSION TDivide EXPRESSION {$$ = newAst(newNodeInfo(&($2), NULL, "/", OPERATOR),$1, $3);}
