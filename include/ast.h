@@ -11,9 +11,11 @@ typedef struct TAst{
 	struct TAst* rs;
 }TAst;
 
-TAst* newAst(NodeInfo root, TAst* ls, TAst* rs);
+TAst* newAst(NodeInfo *root, TAst* ls, TAst* rs);
 
-TAst* newLeaf(NodeInfo root);
+TAst* newEmptyAst();
+
+TAst* newLeaf(NodeInfo *root);
 
 char* astToString(TAst* ast);
 

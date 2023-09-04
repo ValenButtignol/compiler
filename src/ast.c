@@ -3,26 +3,32 @@
 
 #include "../include/ast.h"
 
-TAst* newAst(NodeInfo root, TAst* ls, TAst* rs) {
+TAst* newAst(NodeInfo *root, TAst* ls, TAst* rs){
     TAst* ast = (TAst*) malloc(sizeof(TAst));
 
-    ast->root = root;
+    ast->data = *root;
     ast->ls = ls;
     ast->rs = rs;
     return ast;
 }
 
-TAst* newLeaf(NodeInfo root) {
+TAst* newEmptyAst(){
     TAst *ast = (TAst*) malloc(sizeof(TAst));
-    ast->root = root;
+    ast->data = *newEmptyNodeInfo();
+    ast->ls = NULL;
+    ast->rs = NULL;
+    return ast;
+}
+
+TAst* newLeaf(NodeInfo *root) {
+    TAst *ast = (TAst*) malloc(sizeof(TAst));
+    ast->data = *root;
     ast->ls = NULL;
     ast->rs = NULL;
     return ast;
 }
 
 char* astToString(TAst* ast) {
-        printf("\n2wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n\n");
-
     return astToStringRecursive(ast);
 }
 
@@ -31,7 +37,7 @@ char* astToStringRecursive(TAst* ast) {
         return strdup(""); // Return an empty string for NULL ast
     }
 
-    char* rootStr = nodeInfoToString(ast->root);
+    char* rootStr = nodeInfoToString(ast->data);
     printf("\n%s\n\n", rootStr);
     char* lsStr = astToStringRecursive(ast->ls);
     char* rsStr = astToStringRecursive(ast->rs);
