@@ -91,3 +91,14 @@ void deleteLevelsFromBlock(SymbolTableNode** block) {
 
 }
 
+
+NodeInfo* searchKey(SymbolTable* block, char* key) {
+    SymbolTableNode* current = block->head;
+    while (current != NULL) {
+        if (strcmp(current->data->id, key) == 0) {
+            return current->data;
+        }
+        current = current->nextBlock;
+    }
+    return NULL;
+}

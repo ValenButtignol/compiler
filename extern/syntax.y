@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include "../include/ast.h"
 #include "../include/nodeInfo.h"
+
+#include "../include/symbolTable.h"
+
+const SymbolTable* symbolTable = createSymbolTable();
 %}
 
 
@@ -64,13 +68,25 @@ DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK {
     ;
 
 DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
+            NodeInfo *varDecl = searchKey(symbolTable, $3);
+            if (varDecl != NULL) {
+                printf("Error: variable %s already declared\n", $3);
+                exit(1);
+            }
+
             NodeInfo *constantDecl = newNodeInfo("declaration", EMPTY, "=", NONTERMINAL);
             TAst *declaredID = newLeaf(newNodeInfo("constantDecl", *$2, $3, CONSTANT_DEC));
             $$ = newAst(constantDecl, declaredID, $5);
         }
     | TType TId TAssign EXPRESSION TSemiColon {
+            NodeInfo *varDecl = searchKey(symbolTable, $2);
+            if (varDecl != NULL) {
+                printf("Error: variable %s already declared\n", $2);
+                exit(1);
+            }
             NodeInfo *varDecl = newNodeInfo("declaration", EMPTY, "=", NONTERMINAL);
             TAst *declaredID = newLeaf(newNodeInfo("variableDecl", *$1, $2, VARIABLE));
+            addBlockToLevel(symbolTable, varDecl->value, varDecl->type, varDecl->id, varDecl->tag);
             $$ = newAst(varDecl, declaredID, $4);
         }
     ;
@@ -89,12 +105,15 @@ STATEMENT_BLOCK: ASSIGNMENT STATEMENT_BLOCK {
     ;
 
 ASSIGNMENT: TId TAssign EXPRESSION TSemiColon { 
-            NodeInfo *tid = newNodeInfo($1, EMPTY, $1, CONSTANT_DEC);
+            NodeInfo *tid = searchKey(symbolTable, $1);
+            if (tid == NULL) {
+                printf("Error: variable %s not declared\n", $1);
+                exit(1);
+            } 
             TAst *t = newLeaf(tid);
             NodeInfo *tassign = newNodeInfo($2, EMPTY, "=", OPERATOR);
             $$ = newAst(tassign, t, $3);
 
-            // 
         }
     ;
 
@@ -111,20 +130,27 @@ EXPRESSION: EXPRESSION TPlus EXPRESSION {
         }
     | EXPRESSION TMinus EXPRESSION  {
             NodeInfo *ni = newNodeInfo($2, EMPTY, "-", OPERATOR);
-            $$ = newAst(ni, (TAst*)&$1, (TAst*)&$3);
+            $$ = newAst(ni, $1, $3);
         }
     | EXPRESSION TMultiply EXPRESSION {
             NodeInfo *ni = newNodeInfo($2, EMPTY, "*", OPERATOR);
-            $$ = newAst(ni, (TAst*)&$1, (TAst*)&$3);
+            $$ = newAst(ni, $1, $3);
         }
     | EXPRESSION TDivide EXPRESSION {
             NodeInfo *ni = newNodeInfo($2, EMPTY, "/", OPERATOR);
-            $$ = newAst(ni, (TAst*)&$1, (TAst*)&$3);
+            $$ = newAst(ni, $1, $3);
         }
     | TOpenParenthesis EXPRESSION TCloseParenthesis { $$ = $2; }
     | TInteger  { $$ = newLeaf(newNodeInfo($1, INTEGER, "INT", CONSTANT_EXPR)); }
     | TBool { $$ = newLeaf(newNodeInfo($1, BOOLEAN, "BOOL", CONSTANT_EXPR)); }
-    | TId { $$ = newLeaf(newNodeInfo($1, EMPTY, $1, VARIABLE));  }
+    | TId { 
+            NodeInfo *tid = searchKey(symbolTable, $1);     // TODO
+            if (tid == NULL) {
+                printf("Error: variable %s not declared\n", $1);
+                exit(1);
+            }
+            $$ = newLeaf(tid);
+        }
     ;
 
 %%
