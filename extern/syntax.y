@@ -9,21 +9,24 @@
 
 %union {
     TAst* ast;
+    enum TType* type;
     char* string;
     int* integer;
     enum TBoolean* boolean;
+    enum TTag* tag;
+    enum TOperator* operator;
 }
 
 %token <string> TId
-%token <string> TType
-%token <string> TConst
+%token <type> TType
+%token <tag> TConst
 %token TSemiColon
-%token <string> TReturn
-%token <string> TAssign
-%token <string> TPlus
-%token <string>TMinus
-%token <string>TMultiply
-%token <string>TDivide
+%token <tag> TReturn
+%token <operator> TAssign
+%token <operator> TPlus
+%token <operator>TMinus
+%token <operator>TMultiply
+%token <operator>TDivide
 %token TOpenParenthesis
 %token TCloseParenthesis
 %token <integer>TInteger
@@ -68,13 +71,13 @@ DECLARATION_LIST: ENTITY ASSIGNMENT DECLARATION_LIST {
     ;
 
 ENTITY: TConst TType{
-            NodeInfo *tconst = newNodeInfo($1, EMPTY, "const", CONSTANT);
-            NodeInfo *ttype = newNodeInfo($2, EMPTY, "value", CONSTANT);
+            NodeInfo *tconst = newNodeInfo($1, EMPTY, "const", CONSTANT_DEC);
+            NodeInfo *ttype = newNodeInfo($2, EMPTY, "value", CONSTANT_DEC);
             TAst *t = newLeaf(ttype);
             $$ = newAst(tconst, newEmptyAst(), t);
         }
     | TType{
-        NodeInfo *ttype = newNodeInfo($1, EMPTY, "value", CONSTANT);
+        NodeInfo *ttype = newNodeInfo($1, EMPTY, "value", CONSTANT_DEC);
         $$ = newLeaf(ttype);
     }    
     ;
@@ -92,7 +95,7 @@ STATEMENT_LIST: ASSIGNMENT STATEMENT_LIST{
     ;
 
 ASSIGNMENT: TId TAssign EXPRESSION TSemiColon { 
-            NodeInfo *tid = newNodeInfo($1, EMPTY, $1, CONSTANT);
+            NodeInfo *tid = newNodeInfo($1, EMPTY, $1, CONSTANT_DEC);
             TAst *t = newLeaf(tid);
             NodeInfo *tassign = newNodeInfo($2, EMPTY, "=", OPERATOR);
             $$ = newAst(tassign, t, $3);
@@ -101,7 +104,7 @@ ASSIGNMENT: TId TAssign EXPRESSION TSemiColon {
     ;
 
 RETURN: TReturn EXPRESSION TSemiColon { 
-            NodeInfo *treturn = newNodeInfo($1, EMPTY, "return", CONSTANT);
+            NodeInfo *treturn = newNodeInfo($1, EMPTY, "return", CONSTANT_DEC);
             $$ = newAst(treturn, newEmptyAst(), $2);
             }
     ;
@@ -124,8 +127,8 @@ EXPRESSION: EXPRESSION TPlus EXPRESSION {
                                     $$ = newAst(ni, (TAst*)&$1, (TAst*)&$3);
                                     }
     | TOpenParenthesis EXPRESSION TCloseParenthesis { $$ = $2;}
-    | TInteger  { $$ = newLeaf(newNodeInfo($1, INTEGER, "INT", CONSTANT)); }
-    | TBool { $$ = newLeaf(newNodeInfo($1, BOOLEAN, "BOOL", CONSTANT)); }
+    | TInteger  { $$ = newLeaf(newNodeInfo($1, INTEGER, "INT", CONSTANT_DEC)); }
+    | TBool { $$ = newLeaf(newNodeInfo($1, BOOLEAN, "BOOL", CONSTANT_DEC)); }
     | TId { $$ = newLeaf(newNodeInfo($1, EMPTY, $1, VARIABLE));  }
     ;
 %%
