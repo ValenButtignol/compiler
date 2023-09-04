@@ -1,22 +1,9 @@
 #include "../include/nodeInfo.h"
 
-NodeInfo *newInteger(int value, char* id, enum TTag tag){
-    NodeInfo *result;    
-
-    result->value = malloc(sizeof(int));
-    *((int*)result->value) = value;
-
-    result->type = INTEGER;
-    result->id = strdup(id);     // Remember to free this later.
-    result->tag = tag;
-
-    return result;
-}
-
 NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag){
-    NodeInfo *result;    
+    NodeInfo *result = malloc(sizeof(NodeInfo*));  
 
-    getValue(&result, value, type);
+    setValue(result, value, type);
 
     result->type = type;
     result->id = strdup(id);     // Remember to free this later.
@@ -25,17 +12,25 @@ NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag){
     return result;
 }
 
+NodeInfo *newEmptyNodeInfo(){
+    NodeInfo *result = malloc(sizeof(NodeInfo*));    
+    result->value = malloc(sizeof(int*));
 
+    result->value = NULL;
+    result->type = EMPTY;
+    result->id = "";     // Remember to free this later.
+    result->tag = LAMBDA;
 
-void* getValue(NodeInfo* node, void* value, enum TType type) {
+    return result;
+}
+
+void* setValue(NodeInfo* node, void* value, enum TType type) {
+    node->value = malloc(sizeof(value));
     switch(type){
-
         case INTEGER:
-            node->value = malloc(sizeof(int));
-            *((int*)node->value) = value;
+            node->value = value;
         case BOOLEAN:
-            node->value = malloc(sizeof(&value));
-            *((char*)node->value) = value;
+            node->value = value;
 
     }
 
@@ -47,24 +42,25 @@ void* getValue(NodeInfo* node, void* value, enum TType type) {
 
 //NodeInfo newNonTerminal(char* value, char* id, enum TTag tag);
 
-/* char* nodeInfoToString(NodeInfo node){
-    char *string = "";
-    if(node.type == BOOLEAN){
-        strcat(string, node.boolean ? "true" : "false");
-    }
-    if(type.integer != NULL){
-        char str[] = ""; 
-        sprintf(str, "%d", type.integer);
-        strcat(string, str);
-    }
-    if(type.symbol != NULL){
-        printf("\n\n%s\n\n", type.symbol);
-        strcat(string, type.symbol);
-    }
-    return string;
+char* nodeInfoToString(NodeInfo node){
+    return "\n-------------------------------------\nImplementalo vago\n\n";
 }
- */
+
 void freeNodeInfo(NodeInfo* node) {
     free(node->value);  
     free(node->id);
+}
+
+enum TBoolean getBooleanFromText(char* boolean){
+    if(strcmp(boolean, "true")){
+        return TRUE;
+    }else if(strcmp(boolean, "false")){
+        return FALSE;
+    }
+}
+
+char *boolToString(enum TBoolean boolean){
+    if(boolean) return "true";
+    if(!boolean) return "false";
+
 }
