@@ -43,7 +43,51 @@ void* setValue(NodeInfo* node, void* value, enum TType type) {
 //NodeInfo newNonTerminal(char* value, char* id, enum TTag tag);
 
 char* nodeInfoToString(NodeInfo node){
-    return "\n-------------------------------------\nImplementalo vago\n\n";
+    char* string;
+    string = malloc(sizeof(char*));
+    switch (node.tag)
+    {
+    case 0:
+        strcpy(string, (char*)node.value);
+        break;
+    case 1:
+        strcpy(string, constExpreToString(node));
+        break;
+    case 2:
+        strcpy(string, operatorToString(*(enum TOperator*)node.value));
+        break;
+    case 3:
+        strcpy(string, " ");
+        break;
+    case 4:
+        strcpy(string, " ");
+        break;
+    case 5:
+        strcpy(string, "const");
+        break;
+    case 6:
+        strcpy(string, "return");
+        break;
+    default:
+        return " ";
+    }
+    return string;
+}
+
+char* constExpreToString(NodeInfo node){
+    switch (node.type)
+    {
+    case 0:
+        char* s = malloc(sizeof(char*));
+        sprintf(s, "%d",*(int*)node.value);
+        return s;
+        break;
+    case 1:
+        return boolToString(*(enum TBoolean*)node.value);
+        break;
+    default:
+        break;
+    }
 }
 
 void freeNodeInfo(NodeInfo* node) {
@@ -84,9 +128,9 @@ char *typeToString(enum TType type){
 }
 
 enum TTag getTagFromText(char* tag){
-    if(strcmp(tag, "const")){
+    if(strcmp(tag, "const") == 0){
         return CONSTANT_DEC;
-    }else if(strcmp(tag, "return")){
+    }else if(strcmp(tag, "return") == 0){
         return RETURN;
     }
 }

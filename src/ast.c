@@ -38,7 +38,6 @@ char* astToStringRecursive(TAst* ast) {
     }
 
     char* rootStr = nodeInfoToString(ast->data);
-    printf("\n%s\n\n", rootStr);
     char* lsStr = astToStringRecursive(ast->ls);
     char* rsStr = astToStringRecursive(ast->rs);
 

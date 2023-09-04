@@ -49,7 +49,9 @@
 
 PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK { 
             NodeInfo *p = newNodeInfo("Program", EMPTY, "Program", NONTERMINAL);
-            $$ = newAst(p, $1, $2); 
+            printf("\n\n------------------------------------------\n\nAST\n%s\n--------------------------\n",
+            astToString(newAst(p, $1, $2)));
+            $$=newAst(p, $1, $2);
         }
     ;
 
@@ -99,7 +101,7 @@ ASSIGNMENT: TId TAssign EXPRESSION TSemiColon {
     ;
 
 RETURN: TReturn EXPRESSION TSemiColon { 
-            NodeInfo *treturn = newNodeInfo($1, EMPTY, "return", CONSTANT_DEC);
+            NodeInfo *treturn = newNodeInfo($1, EMPTY, "return", RETURN);
             $$ = newAst(treturn, newEmptyAst(), $2);
         }
     ;
