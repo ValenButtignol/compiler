@@ -38,9 +38,9 @@ digit [0-9]
     }
 
 "return" {
-        yylval.tag = malloc(sizeof(enum TType*));
+        yylval.tag = malloc(sizeof(enum TTag*));
         *yylval.tag = getTagFromText(yytext);
-        printf("TTag: %s\n", tagToString(*yylval.type));
+        printf("TTag: %s\n", tagToString(*yylval.tag));
         return TReturn;
     }
 
