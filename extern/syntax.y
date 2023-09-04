@@ -65,12 +65,12 @@ DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK {
 
 DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
             NodeInfo *constantDecl = newNodeInfo("declaration", EMPTY, "=", NONTERMINAL);
-            TAst *declaredID = newLeaf(newNodeInfo("constantDecl", $2, $3, CONSTANT_DEC));
+            TAst *declaredID = newLeaf(newNodeInfo("constantDecl", *$2, $3, CONSTANT_DEC));
             $$ = newAst(constantDecl, declaredID, $5);
         }
     | TType TId TAssign EXPRESSION TSemiColon {
             NodeInfo *varDecl = newNodeInfo("declaration", EMPTY, "=", NONTERMINAL);
-            TAst *declaredID = newLeaf(newNodeInfo("variableDecl", $1, $2, VARIABLE));
+            TAst *declaredID = newLeaf(newNodeInfo("variableDecl", *$1, $2, VARIABLE));
             $$ = newAst(varDecl, declaredID, $4);
         }
     ;
