@@ -60,7 +60,8 @@ void deleteBlock(SymbolTableNode** block) {
     SymbolTableNode* current = *block;
     if (current != NULL) {
         *block = current->nextBlock;
-        deleteLevelsFromBlock(&block);  // Before deleting the block, delete all it's levels.
+        deleteLevelsFromBlock(block);  // Before deleting the block, delete all it's levels.
+        freeNodeInfo(&current->data);
         free(current);
         return;
     }
@@ -84,6 +85,7 @@ void deleteLevelsFromBlock(SymbolTableNode** block) {
         }
         
         currentLevel = currentLevel->nextLevel;
+        freeNodeInfo(&levelToDelete->data);
         free(levelToDelete);
     }
 

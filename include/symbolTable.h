@@ -2,12 +2,13 @@
 #define SYMBOL_TABLE_H
 
 #include <stdio.h>
+#include "nodeInfo.h"
 
-typedef struct {
+typedef struct SymbolTableNode{
     int level;
-    NodeInfo data;
-    SymbolTableNode* nextBlock;
-    SymbolTableNode* nextLevel;
+    NodeInfo* data;
+    struct SymbolTableNode* nextBlock;
+    struct SymbolTableNode* nextLevel;
 
 }SymbolTableNode;
 
