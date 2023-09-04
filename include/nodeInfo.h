@@ -6,8 +6,9 @@
 #include <string.h>
 
 enum TType {INTEGER, BOOLEAN, EMPTY};
-enum TTag {VARIABLE, CONSTANT, OPERATOR, NONTERMINAL, LAMBDA};
+enum TTag {VARIABLE, CONSTANT_EXPR, OPERATOR, NONTERMINAL, LAMBDA, CONSTANT_DEC, RETURN};
 enum TBoolean {TRUE, FALSE};
+enum TOperator {PLUS, MINUS, MULTIPLY, DIVIDE, ASSIGN};
 
 typedef struct{
 	void* value;
@@ -28,4 +29,10 @@ char* nodeInfoToString(NodeInfo node);
 
 enum TBoolean getBooleanFromText(char* boolean);
 char *boolToString(enum TBoolean boolean);
+enum TType getTypeFromText(char* type);
+char *typeToString(enum TType type);
+enum TTag getTagFromText(char* tag);
+char *tagToString(enum TTag tag);
+enum TOperator getOperatorFromText(char* op);
+char *operatorToString(enum TOperator op);
 #endif

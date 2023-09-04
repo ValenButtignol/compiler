@@ -62,5 +62,83 @@ enum TBoolean getBooleanFromText(char* boolean){
 char *boolToString(enum TBoolean boolean){
     if(boolean) return "true";
     if(!boolean) return "false";
+}
 
+enum TType getTypeFromText(char* type){
+    if(strcmp(type, "int") == 0){
+        return INTEGER;
+    }else if(strcmp(type, "boolean") == 0){
+        return BOOLEAN;
+    }
+}
+char *typeToString(enum TType type){
+    switch (type)
+    {
+    case 0:
+        return "int";
+    case 1:
+        return "boolean";
+    default:
+        break;
+    }
+}
+
+enum TTag getTagFromText(char* tag){
+    if(strcmp(tag, "const")){
+        return CONSTANT_DEC;
+    }else if(strcmp(tag, "return")){
+        return RETURN;
+    }
+}
+char *tagToString(enum TTag tag){
+    switch (tag)
+    {
+    case 0:
+        return "variable";
+    case 1:
+        return "const_expr";
+    case 2:
+        return "operator";
+    case 3:
+        return "no_terminal";
+    case 4:
+        return "lambda";
+    case 5:
+        return "const_dec";
+    case 6:
+        return "return";
+    default:
+        break;
+    }
+}
+
+enum TOperator getOperatorFromText(char* op){
+    if(strcmp(op, "+") == 0){
+        return PLUS;
+    }else if(strcmp(op, "-") == 0){
+        return MINUS;
+    }else if(strcmp(op, "*") == 0){
+        return MULTIPLY;
+    }else if(strcmp(op, "/") == 0){
+        return DIVIDE;
+    }else if(strcmp(op, "=") == 0){
+        return ASSIGN;
+    }
+}
+char *operatorToString(enum TOperator op){
+    switch (op)
+    {
+    case 0:
+        return "+";
+    case 1:
+        return "-";
+    case 2:
+        return "*";
+    case 3:
+        return "/";
+    case 4:
+        return "=";
+    default:
+        break;
+    }
 }
