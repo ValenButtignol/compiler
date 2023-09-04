@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-
+#include "../include/ast.h"
+#include "../include/nodeInfo.h"
 #include "syntax.tab.h"
 
 %}
@@ -82,21 +83,17 @@ digit [0-9]
         return TInteger;
     }
 
-"true" { 
-        printf("TBool: %s\n",yytext); 
-        //yylval = malloc()
-        //yylval = strcpy(yytext);
-        return TBool;
-    }
-
-"false" { 
-        printf("TBool: %s\n",yytext); 
-        
+"false"|"true" {
+        yylval.boolean = malloc(sizeof(enum TBoolean*));
+        *yylval.boolean = getBooleanFromText(yytext);
+        printf("TBool: %s\n",boolToString(*yylval.boolean)); 
         return TBool;
     }
 
 {letter}({letter}|{digit})* { 
-        printf("TId: %s\n",yytext);
+        yylval.string=(char *) malloc(sizeof(yytext)*yyleng);
+        strcpy(yylval.string,yytext);
+        printf("ID : %s\n",yytext);
         return TId;
     }
 
