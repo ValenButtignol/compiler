@@ -18,18 +18,17 @@ digit [0-9]
 
 %%
 
-"boolean" {
-        printf("TType: %s\n",yytext);
+"boolean"|"int" {
+        yylval.type = malloc(sizeof(enum TType*));
+        *yylval.type = getTypeFromText(yytext);
+        printf("TType: %s\n", typeToString(*yylval.type));
         return TType;
     }
 
-"int" {  
-        printf("TType: %s\n",yytext);
-        return TType;
-    }
-
-"const" {  
-        printf("TConst: %s\n",yytext);
+"const" {
+        yylval.tag = malloc(sizeof(enum TType*));
+        *yylval.tag = getTagFromText(yytext);
+        printf("TTag: %s\n", tagToString(*yylval.type));
         return TConst;
     }
 
@@ -38,33 +37,45 @@ digit [0-9]
         return TSemiColon;
     }
 
-"return" {  
-        printf("TReturn: %s\n",yytext);
+"return" {
+        yylval.tag = malloc(sizeof(enum TType*));
+        *yylval.tag = getTagFromText(yytext);
+        printf("TTag: %s\n", tagToString(*yylval.type));
         return TReturn;
     }
 
 "=" {  
-        printf("TAssign: %s\n",yytext);
+        yylval.operator = malloc(sizeof(enum TOperator*));
+        *yylval.operator = getOperatorFromText(yytext);
+        printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TAssign;
     }
 
 "+" {  
-        printf("TPlus: %s\n",yytext);
+        yylval.operator = malloc(sizeof(enum TOperator*));
+        *yylval.operator = getOperatorFromText(yytext);
+        printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TPlus;
     }
 
 "-" {  
-        printf("TMinus: %s\n",yytext);
+        yylval.operator = malloc(sizeof(enum TOperator*));
+        *yylval.operator = getOperatorFromText(yytext);
+        printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TMinus;
     }    
 
 "*" {  
-        printf("TMultiply: %s\n",yytext);
+        yylval.operator = malloc(sizeof(enum TOperator*));
+        *yylval.operator = getOperatorFromText(yytext);
+        printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TMultiply;
     }
 
 "/" {  
-        printf("TDivide: %s\n",yytext);
+        yylval.operator = malloc(sizeof(enum TOperator*));
+        *yylval.operator = getOperatorFromText(yytext);
+        printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TDivide;
     }
 
@@ -84,9 +95,9 @@ digit [0-9]
     }
 
 "false"|"true" {
-        yylval.boolean = malloc(sizeof(enum TBoolean*));
+        yylval.boolean = malloc(sizeof(enum TBool*));
         *yylval.boolean = getBooleanFromText(yytext);
-        printf("TBool: %s\n",boolToString(*yylval.boolean)); 
+        printf("TBoolean: %s\n", boolToString(*yylval.type));
         return TBool;
     }
 
