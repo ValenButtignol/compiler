@@ -12,14 +12,27 @@ NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag){
     return result;
 }
 
+NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag) {
+    NodeInfo *result = malloc(sizeof(NodeInfo*));    
+    result->value = malloc(sizeof(int*));
+
+    result->value = NULL;
+    result->type = type;
+    result->id = strdup(id); 
+    result->tag = tag;
+
+    return result;
+}
+
+
 NodeInfo *newEmptyNodeInfo(){
     NodeInfo *result = malloc(sizeof(NodeInfo*));    
     result->value = malloc(sizeof(int*));
 
     result->value = NULL;
-    result->type = EMPTY;
-    result->id = "";     // Remember to free this later.
-    result->tag = LAMBDA;
+    result->type = NONE;
+    result->id = ""; 
+    result->tag = NONE;
 
     return result;
 }
@@ -29,11 +42,6 @@ void* setValue(NodeInfo* node, void* value, enum TType type) {
     node->value = value;
 }
 
-//NodeInfo newBoolean(enum TBoolean value, char* id, enum TTag tag);
-
-//NodeInfo newOperator(char* value, char* id, enum TTag tag);
-
-//NodeInfo newNonTerminal(char* value, char* id, enum TTag tag);
 
 char* nodeInfoToString(NodeInfo node){
     char* string;
