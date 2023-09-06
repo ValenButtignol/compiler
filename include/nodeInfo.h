@@ -25,7 +25,7 @@ void freeNodeInfo(NodeInfo* node);
 
 char* nodeInfoToString(NodeInfo node);
 
-char* constExpreToString(NodeInfo node);
+char* constExprToString(NodeInfo node);
 
 enum TBoolean getBooleanFromText(char* boolean);
 

@@ -3,7 +3,7 @@
 
 #include "../include/ast.h"
 
-TAst* newAst(NodeInfo *root, TAst* ls, TAst* rs){
+TAst* newAst(NodeInfo *root, TAst* ls, TAst* rs) {
     TAst* ast = (TAst*) malloc(sizeof(TAst));
 
     ast->data = *root;
@@ -12,7 +12,7 @@ TAst* newAst(NodeInfo *root, TAst* ls, TAst* rs){
     return ast;
 }
 
-TAst* newEmptyAst(){
+TAst* newEmptyAst() {
     TAst *ast = (TAst*) malloc(sizeof(TAst));
     ast->data = *newEmptyNodeInfo();
     ast->ls = NULL;
@@ -20,7 +20,7 @@ TAst* newEmptyAst(){
     return ast;
 }
 
-int isEmptyAst(TAst ast){
+int isEmptyAst(TAst ast) {
     return isEmptyNode(ast.data) && ast.ls == NULL && ast.rs == NULL;
 }
 
@@ -43,8 +43,8 @@ char* astToStringRecursive(TAst* ast) {
 
     char* lsStr = astToStringRecursive(ast->ls);
     char* rootStr;
-    if(!isEmptyNode(ast->data)) rootStr = nodeInfoToString(ast->data);
-    else{
+    if (!isEmptyNode(ast->data)) rootStr = nodeInfoToString(ast->data);
+    else {
         rootStr = malloc(sizeof(""));
         *rootStr = ""; 
     }
@@ -69,43 +69,43 @@ char* astToStringRecursive(TAst* ast) {
 }
 
 int checkType(TAst* ast){
-    if(ast == NULL || isEmptyAst(*ast)) return 1;
-    if(ast->data.type == EMPTY && ast->data.tag == OPERATOR){
+    if (ast == NULL || isEmptyAst(*ast)) return 1;
+    if (ast->data.type == NONETYPE && ast->data.tag == EXPR_OP) {
         ast->data.type = getAstType(ast);
     }
-    if(ast->data.tag == OPERATOR){
-        if(getAstType(ast->ls) != getAstType(ast->rs)){
+    if (ast->data.tag == EXPR_OP) {
+        if (getAstType(ast->ls) != getAstType(ast->rs)) {
             printf("Type error in %s\n", nodeInfoToString(ast->data));
             exit(1);
         }
         return checkType(ast->ls) && checkType(ast->rs);
-    }else if(ast->data.tag != OPERATOR){
+    } else if (ast->data.tag != EXPR_OP) {
         return checkType(ast->ls) && checkType(ast->rs);
-    }else{
+    } else {
 
     }
 }
 
-enum TType getAstType(TAst* ast){
-    if(ast == NULL || isEmptyAst(*ast)){
+enum TType getAstType(TAst* ast) {
+    if (ast == NULL || isEmptyAst(*ast)) {
         printf("Missing operating\n");
         exit(1);
-    }else if(ast->data.tag != OPERATOR){
-        if(ast->data.type == EMPTY){
+    } else if (ast->data.tag != EXPR_OP) {
+        if (ast->data.type == NONETYPE) {
             printf("Invalid operator\n");
             exit(1);
-        }else{
+        } else {
             return ast->data.type;
         }
-    }else if(ast->data.type != EMPTY){
+    } else if (ast->data.type != NONETYPE) {
         return ast->data.type;
-    }else if(ast->data.type == EMPTY){
+    } else if(ast->data.type == NONETYPE) {
         enum TType lsType = getAstType(ast->ls);
         enum TType rsType = getAstType(ast->ls);
-        if(lsType != rsType){
+        if (lsType != rsType) {
             printf("Can not operate with different types");
             exit(1);
-        }else{
+        } else {
             return lsType;
         }
     }
