@@ -20,10 +20,12 @@ TAst* newLeaf(NodeInfo *root);
 char* astToString(TAst* ast);
 
 char* astToStringRecursive(TAst* ast);
+
 int isEmptyAst(TAst ast);
+
+
 int checkType(TAst* ast);
+
 enum TType getAstType(TAst* ast);
+
 #endif
-//arbol *info *ast *ast
-//info = tag nombre tipo value
-//ts = *info *ts -> ACA VAN SOLO VARIABLES.

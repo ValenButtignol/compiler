@@ -6,7 +6,6 @@
 #include <string.h>
 #include "enums.h"
 
-
 typedef struct{
 	void* value;
 	char* id;
