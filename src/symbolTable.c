@@ -19,6 +19,20 @@ SymbolTableNode* createSymbolNode(void* value, enum TType type, char* id, enum T
     return newNode;
 }
 
+SymbolTableNode* createSymbolNodeFromNodeInfo(NodeInfo* node) {
+    SymbolTableNode* newNode = (SymbolTableNode*)malloc(sizeof(SymbolTableNode));
+    if (newNode == NULL) {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+
+    newNode->data = node;
+    newNode->level = 0;
+    newNode->nextBlock = NULL;
+    newNode->nextLevel = NULL;
+
+}
+
 void initializeSymbolTable(SymbolTable** table) {
 
     printf("Initializing symbol table\n");
@@ -39,6 +53,20 @@ void addBlockToLevel(SymbolTableNode **level, void* value, enum TType type, char
     }
     current->nextBlock = newBlock;
 }
+
+void addNodeInfoToBlock(SymbolTableNode **level, NodeInfo* node) {
+    SymbolTableNode* newBlock = createSymbolNodeFromNodeInfo(node);
+    if (*level == NULL) {
+        *level = newBlock;
+        return;
+    }
+    SymbolTableNode* current = *level;
+    while (current->nextBlock != NULL) {
+        current = current->nextBlock;
+    }
+    current->nextBlock = newBlock;
+}
+
 
 // Adds a new level to a reference of the actual block.
 void addLevelToBlock(SymbolTableNode **block, void* value, enum TType type, char* id, enum TTag tag) {

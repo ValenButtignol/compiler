@@ -7,9 +7,18 @@
 
 #include "../include/symbolTable.h"
 
-const SymbolTable* symbolTable = createSymbolTable();
+SymbolTable* symbolTable = NULL;
 %}
 
+%initial-action {
+    symbolTable = malloc(sizeof(SymbolTable));
+    if (symbolTable == NULL) {
+        fprintf(stderr, "Failed to allocate memory for symbolTable\n");
+        exit(1);
+    }
+    symbolTable->head = NULL;
+    symbolTable->size = 0;
+}
 
 %union {
     TAst* ast;
@@ -71,21 +80,30 @@ DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK {
     ;
 
 DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
-            enum TOperator* op = malloc(sizeof(enum TOperator*));
-            *op = ASSIGN;
-            printf("ASSIGN = %d\n\n", $4);
             NodeInfo *constantDecl = newNodeInfo($4, EMPTY, "=", OPERATOR);
-            TAst *declaredID = newLeaf(newNodeInfo("constantDecl", *$2, $3, CONSTANT_DEC));
+
+            NodeInfo* constId = searchKey(symbolTable, $3);
+            if (constId != NULL) {
+                printf("Error: const identifier %s already declared\n", $3);
+                exit(1);
+            }
+            constId = newNodeInfo("constantDecl", *$2, $3, CONSTANT_DEC);
+            TAst *declaredID = newLeaf(constId);
             $$ = newAst(constantDecl, declaredID, $5);
         }
     | TType TId TAssign EXPRESSION TSemiColon {
-            enum TOperator* op = malloc(sizeof(enum TOperator*));
-            *op = ASSIGN;
-            printf("ASSIGN = %d\n\n", *$3);
             NodeInfo *varDecl = newNodeInfo($3, EMPTY, "=", OPERATOR);
-            printf("node = %s\n\n", nodeInfoToString(*varDecl));
-            TAst *declaredID = newLeaf(newNodeInfo("variableDecl", *$1, $2, VARIABLE));
-            addBlockToLevel(symbolTable, varDecl->value, varDecl->type, varDecl->id, varDecl->tag);
+
+            NodeInfo* varId = searchKey(symbolTable, $2);
+            if (varId != NULL) {
+                printf("Error: var identifier %s already declared\n", $2);
+                exit(1);
+            }
+
+            varId = newNodeInfo("variableDecl", *$1, $2, VARIABLE);
+            addNodeInfoToBlock(&(symbolTable->head), varId);
+            TAst *declaredID = newLeaf(varId);
+
             $$ = newAst(varDecl, declaredID, $4);
         }
     ;
@@ -104,7 +122,11 @@ STATEMENT_BLOCK: ASSIGNMENT STATEMENT_BLOCK {
     ;
 
 ASSIGNMENT: TId TAssign EXPRESSION TSemiColon {
-            NodeInfo *tid = newNodeInfo($1, EMPTY, $1, VARIABLE);
+            NodeInfo *tid = searchKey(symbolTable, $1);
+            if (tid == NULL) {
+                printf("Error: variable %s not declared\n", $1);
+                exit(1);
+            }
             TAst *t = newLeaf(tid);
             NodeInfo *tassign = newNodeInfo($2, EMPTY, "=", OPERATOR);
             $$ = newAst(tassign, t, $3);
@@ -137,12 +159,13 @@ EXPRESSION: EXPRESSION TPlus EXPRESSION {
         }
     | TOpenParenthesis EXPRESSION TCloseParenthesis { $$ = $2; }
     | TInteger  { 
-        char* num = malloc(sizeof(char*));
-        sprintf(num, "%d", $1);
-        $$ = newLeaf(newNodeInfo($1, INTEGER, num, CONSTANT_EXPR)); }
+            char* num = malloc(sizeof(char*));
+            sprintf(num, "%d", $1);
+            $$ = newLeaf(newNodeInfo($1, INTEGER, num, CONSTANT_EXPR)); 
+        }
     | TBool { $$ = newLeaf(newNodeInfo($1, BOOLEAN, "BOOL", CONSTANT_EXPR)); }
     | TId { 
-            NodeInfo *tid = searchKey(symbolTable, $1);     // TODO
+            NodeInfo *tid = searchKey(symbolTable, $1);
             if (tid == NULL) {
                 printf("Error: variable %s not declared\n", $1);
                 exit(1);

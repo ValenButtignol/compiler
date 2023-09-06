@@ -23,6 +23,8 @@ void initializeSymbolTable(SymbolTable** table);
 
 void addBlockToLevel(SymbolTableNode **level, void* value, enum TType type, char* id, enum TTag tag);
 
+void addNodeInfoToBlock(SymbolTableNode **level, NodeInfo* node);
+
 void addLevelToBlock(SymbolTableNode **block, void* value, enum TType type, char* id, enum TTag tag);
 
 void deleteBlock(SymbolTableNode** block);
