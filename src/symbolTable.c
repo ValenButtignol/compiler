@@ -54,6 +54,7 @@ void addBlockToLevel(SymbolTableNode **level, void* value, enum TType type, char
     current->nextBlock = newBlock;
 }
 
+// THIS ONE TAKES A NODEINFO AS PARAMETER
 void addNodeInfoToBlock(SymbolTableNode **level, NodeInfo* node) {
     SymbolTableNode* newBlock = createSymbolNodeFromNodeInfo(node);
     if (*level == NULL) {

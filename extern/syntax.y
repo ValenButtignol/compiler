@@ -17,7 +17,7 @@ SymbolTable* symbolTable = NULL;
         exit(1);
     }
     symbolTable->head = NULL;
-    symbolTable->size = 0;
+    symbolTable->size = 0;  
 }
 
 %union {
@@ -64,7 +64,7 @@ SymbolTable* symbolTable = NULL;
 PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK { 
             NodeInfo *p = newNodeInfo("Program", EMPTY, "Program", NONTERMINAL);
             printf("\n\n------------------------------------------\n\nAST\n%s\n--------------------------\n",
-            astToString(newAst(p, $1, $2)));
+                astToString(newAst(p, $1, $2)));
             $$=newAst(p, $1, $2);
         }
     ;
