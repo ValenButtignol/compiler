@@ -6,7 +6,7 @@
 #include "../include/nodeInfo.h"
 
 #include "../include/symbolTable.h"
-
+extern int yylineno;
 SymbolTable* symbolTable = NULL;
 %}
 
@@ -18,6 +18,7 @@ SymbolTable* symbolTable = NULL;
     }
     symbolTable->head = NULL;
     symbolTable->size = 0;
+       
 }
 
 %union {
@@ -63,9 +64,10 @@ SymbolTable* symbolTable = NULL;
 
 PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK { 
             NodeInfo *p = newNodeInfo("Program", EMPTY, "Program", NONTERMINAL);
-            printf("\n\n------------------------------------------\n\nAST\n%s\n--------------------------\n",
-            astToString(newAst(p, $1, $2)));
-            $$=newAst(p, $1, $2);
+            printf("\n\n------------------------------------------\n\nAST\n\n--------------------------\n");
+            TAst* ast =newAst(p, $1, $2);
+           checkType(ast);
+            // eval(ast);
         }
     ;
 
