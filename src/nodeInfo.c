@@ -26,14 +26,7 @@ NodeInfo *newEmptyNodeInfo(){
 
 void* setValue(NodeInfo* node, void* value, enum TType type) {
     node->value = malloc(sizeof(value));
-    switch(type){
-        case INTEGER:
-            node->value = value;
-        case BOOLEAN:
-            node->value = value;
-
-    }
-
+    node->value = value;
 }
 
 //NodeInfo newBoolean(enum TBoolean value, char* id, enum TTag tag);
@@ -47,29 +40,33 @@ char* nodeInfoToString(NodeInfo node){
     string = malloc(sizeof(char*));
     switch (node.tag)
     {
-    case 0:
-        strcpy(string, (char*)node.value);
+    case 0://variable 
+            char* t = malloc(sizeof(char*)); 
+            t = typeToString(node.type);
+            size_t totalLength = strlen(t) + strlen(node.id) + 5; // +5 for formatting characters
+            string = malloc(totalLength*sizeof(char));
+            snprintf(string, totalLength, "%s %s", t, node.id); 
         break;
-    case 1:
+    case 1://const expresion
         strcpy(string, constExpreToString(node));
         break;
-    case 2:
+    case 2://operator
         strcpy(string, operatorToString(*(enum TOperator*)node.value));
         break;
-    case 3:
-        strcpy(string, " ");
+    case 3://non terminal
+        strcpy(string, "");
         break;
-    case 4:
-        strcpy(string, " ");
+    case 4://lambda
+        strcpy(string, "");
         break;
-    case 5:
+    case 5://const declaration
         strcpy(string, "const");
         break;
-    case 6:
+    case 6://return
         strcpy(string, "return");
         break;
     default:
-        return " ";
+        return "DEFAULT";
     }
     return string;
 }
@@ -79,7 +76,7 @@ char* constExpreToString(NodeInfo node){
     {
     case 0:
         char* s = malloc(sizeof(char*));
-        sprintf(s, "%d",*(int*)node.value);
+        sprintf(s, "%d",(int*)node.value);
         return s;
         break;
     case 1:
@@ -122,6 +119,8 @@ char *typeToString(enum TType type){
         return "int";
     case 1:
         return "boolean";
+    case 2:
+        return "";
     default:
         break;
     }
@@ -185,4 +184,8 @@ char *operatorToString(enum TOperator op){
     default:
         break;
     }
+}
+
+int isEmptyNode(NodeInfo node){
+    return node.value == NULL && node.type == EMPTY && node.id == "" && node.tag == LAMBDA;
 }

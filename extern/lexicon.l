@@ -47,6 +47,7 @@ digit [0-9]
 "=" {  
         yylval.operator = malloc(sizeof(enum TOperator*));
         *yylval.operator = getOperatorFromText(yytext);
+        // printf("\n\noperator: %d %s\n", *yylval.operator, yytext);
         printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TAssign;
     }
@@ -90,7 +91,8 @@ digit [0-9]
     }
 
 {digit}+ { 
-        printf("TInteger: %d\n",atoi(yytext)); 
+        yylval.integer = atoi(yytext);
+        printf("TInteger: %d\n", yylval.integer); 
         return TInteger;
     }
 

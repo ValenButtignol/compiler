@@ -37,8 +37,9 @@ char* astToStringRecursive(TAst* ast) {
         return strdup(""); // Return an empty string for NULL ast
     }
 
-    char* rootStr = nodeInfoToString(ast->data);
     char* lsStr = astToStringRecursive(ast->ls);
+    char* rootStr;
+    if(!isEmptyNode(ast->data)) rootStr = nodeInfoToString(ast->data);
     char* rsStr = astToStringRecursive(ast->rs);
 
     // Calculate the length of the final string
@@ -51,8 +52,7 @@ char* astToStringRecursive(TAst* ast) {
     }
 
     // Format the result string
-    snprintf(result, totalLength, "[%s %s %s]", rootStr, lsStr, rsStr);
-
+    snprintf(result, totalLength, "%s %s %s", lsStr, rootStr, rsStr);
     free(rootStr);
     free(lsStr);
     free(rsStr);
