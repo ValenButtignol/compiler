@@ -11,7 +11,7 @@
     TAst* ast;
     enum TType* type;
     char* string;
-    int* integer;
+    int integer;
     enum TBoolean* boolean;
     enum TTag* tag;
     enum TOperator* operator;
@@ -22,8 +22,8 @@
 %token <tag> TConst
 %token TSemiColon
 %token <tag> TReturn
-%token <operator> TAssign
-%token <operator> TPlus
+%token <operator>TAssign
+%token <operator>TPlus
 %token <operator>TMinus
 %token <operator>TMultiply
 %token <operator>TDivide
@@ -44,6 +44,7 @@
 %left '-' TMinus
 %left '*' TMultiply
 %left '/' TDivide
+%left '=' TAssign
 
 %%
 
@@ -66,12 +67,19 @@ DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK {
     ;
 
 DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
-            NodeInfo *constantDecl = newNodeInfo("declaration", EMPTY, "=", NONTERMINAL);
+            enum TOperator* op = malloc(sizeof(enum TOperator*));
+            *op = ASSIGN;
+            printf("ASSIGN = %d\n\n", $4);
+            NodeInfo *constantDecl = newNodeInfo($4, EMPTY, "=", OPERATOR);
             TAst *declaredID = newLeaf(newNodeInfo("constantDecl", *$2, $3, CONSTANT_DEC));
             $$ = newAst(constantDecl, declaredID, $5);
         }
     | TType TId TAssign EXPRESSION TSemiColon {
-            NodeInfo *varDecl = newNodeInfo("declaration", EMPTY, "=", NONTERMINAL);
+            enum TOperator* op = malloc(sizeof(enum TOperator*));
+            *op = ASSIGN;
+            printf("ASSIGN = %d\n\n", *$3);
+            NodeInfo *varDecl = newNodeInfo($3, EMPTY, "=", OPERATOR);
+            printf("node = %s\n\n", nodeInfoToString(*varDecl));
             TAst *declaredID = newLeaf(newNodeInfo("variableDecl", *$1, $2, VARIABLE));
             $$ = newAst(varDecl, declaredID, $4);
         }
@@ -90,8 +98,8 @@ STATEMENT_BLOCK: ASSIGNMENT STATEMENT_BLOCK {
     | RETURN { $$ = $1; }
     ;
 
-ASSIGNMENT: TId TAssign EXPRESSION TSemiColon { 
-            NodeInfo *tid = newNodeInfo($1, EMPTY, $1, CONSTANT_DEC);
+ASSIGNMENT: TId TAssign EXPRESSION TSemiColon {
+            NodeInfo *tid = newNodeInfo($1, EMPTY, $1, VARIABLE);
             TAst *t = newLeaf(tid);
             NodeInfo *tassign = newNodeInfo($2, EMPTY, "=", OPERATOR);
             $$ = newAst(tassign, t, $3);
@@ -124,7 +132,10 @@ EXPRESSION: EXPRESSION TPlus EXPRESSION {
             $$ = newAst(ni, (TAst*)&$1, (TAst*)&$3);
         }
     | TOpenParenthesis EXPRESSION TCloseParenthesis { $$ = $2; }
-    | TInteger  { $$ = newLeaf(newNodeInfo($1, INTEGER, "INT", CONSTANT_EXPR)); }
+    | TInteger  { 
+        char* num = malloc(sizeof(char*));
+        sprintf(num, "%d", $1);
+        $$ = newLeaf(newNodeInfo($1, INTEGER, num, CONSTANT_EXPR)); }
     | TBool { $$ = newLeaf(newNodeInfo($1, BOOLEAN, "BOOL", CONSTANT_EXPR)); }
     | TId { $$ = newLeaf(newNodeInfo($1, EMPTY, $1, VARIABLE));  }
     ;
