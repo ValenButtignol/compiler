@@ -19,11 +19,11 @@ SymbolTableNode* createSymbolNode(void* value, enum TType type, char* id, enum T
     return newNode;
 }
 
-SymbolTable* createSymbolTable() {
-    SymbolTable* table = (SymbolTable*)malloc(sizeof(SymbolTable));
-    table->head = NULL;
-    table->size = 0;
-    return table;
+void initializeSymbolTable(SymbolTable** table) {
+
+    printf("Initializing symbol table\n");
+    (*table)->head = NULL;
+    (*table)->size = 0;
 }
 
 // Adds a new block to a reference of the actual level.
@@ -61,7 +61,7 @@ void deleteBlock(SymbolTableNode** block) {
     if (current != NULL) {
         *block = current->nextBlock;
         deleteLevelsFromBlock(block);  // Before deleting the block, delete all it's levels.
-        freeNodeInfo(&current->data);
+        freeNodeInfo(current->data);
         free(current);
         return;
     }
@@ -85,7 +85,7 @@ void deleteLevelsFromBlock(SymbolTableNode** block) {
         }
         
         currentLevel = currentLevel->nextLevel;
-        freeNodeInfo(&levelToDelete->data);
+        freeNodeInfo(levelToDelete->data);
         free(levelToDelete);
     }
 

@@ -19,7 +19,7 @@ typedef struct {
 
 SymbolTableNode* createSymbolNode(void* value, enum TType type, char* id, enum TTag tag);
 
-SymbolTable* createSymbolTable();
+void initializeSymbolTable(SymbolTable** table);
 
 void addBlockToLevel(SymbolTableNode **level, void* value, enum TType type, char* id, enum TTag tag);
 

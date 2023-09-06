@@ -2,7 +2,7 @@
 #include <assert.h>
 
 void testCreateSymbolTable() {
-    SymbolTable* table = createSymbolTable();
+    SymbolTable* table = initializeSymbolTable();
 
     assert(table->head == NULL);
     assert(table->size == 0);
