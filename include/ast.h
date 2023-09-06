@@ -20,7 +20,7 @@ TAst* newLeaf(NodeInfo *root);
 char* astToString(TAst* ast);
 
 char* astToStringRecursive(TAst* ast);
-
+int isEmptyAst(TAst ast);
 #endif
 //arbol *info *ast *ast
 //info = tag nombre tipo value
