@@ -67,3 +67,46 @@ char* astToStringRecursive(TAst* ast) {
 
     return result;
 }
+
+int checkType(TAst* ast){
+    if(ast == NULL || isEmptyAst(*ast)) return 1;
+    if(ast->data.type == EMPTY && ast->data.tag == OPERATOR){
+        ast->data.type = getAstType(ast);
+    }
+    if(ast->data.tag == OPERATOR){
+        if(getAstType(ast->ls) != getAstType(ast->rs)){
+            printf("Type error in %s\n", nodeInfoToString(ast->data));
+            exit(1);
+        }
+        return checkType(ast->ls) && checkType(ast->rs);
+    }else if(ast->data.tag != OPERATOR){
+        return checkType(ast->ls) && checkType(ast->rs);
+    }else{
+
+    }
+}
+
+enum TType getAstType(TAst* ast){
+    if(ast == NULL || isEmptyAst(*ast)){
+        printf("Missing operating\n");
+        exit(1);
+    }else if(ast->data.tag != OPERATOR){
+        if(ast->data.type == EMPTY){
+            printf("Invalid operator\n");
+            exit(1);
+        }else{
+            return ast->data.type;
+        }
+    }else if(ast->data.type != EMPTY){
+        return ast->data.type;
+    }else if(ast->data.type == EMPTY){
+        enum TType lsType = getAstType(ast->ls);
+        enum TType rsType = getAstType(ast->ls);
+        if(lsType != rsType){
+            printf("Can not operate with different types");
+            exit(1);
+        }else{
+            return lsType;
+        }
+    }
+}
