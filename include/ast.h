@@ -21,6 +21,8 @@ char* astToString(TAst* ast);
 
 char* astToStringRecursive(TAst* ast);
 int isEmptyAst(TAst ast);
+int checkType(TAst* ast);
+enum TType getAstType(TAst* ast);
 #endif
 //arbol *info *ast *ast
 //info = tag nombre tipo value
