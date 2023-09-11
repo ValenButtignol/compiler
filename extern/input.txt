@@ -1,8 +1,0 @@
-const int max = 9;
-int a = 3;
-int b = 5;
-int c = 0;
-c = b + a;
-a = c + b;
-b = c + 1;
-return a;

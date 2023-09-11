@@ -1,5 +1,5 @@
 mkdir build
 cd build
 cmake ..
+cmake --build . --target run_language
 cd ..
-cmake --build build/
