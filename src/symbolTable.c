@@ -68,7 +68,6 @@ void addNodeInfoToBlock(SymbolTableNode **level, NodeInfo* node) {
     current->nextBlock = newBlock;
 }
 
-
 // Adds a new level to a reference of the actual block.
 void addLevelToBlock(SymbolTableNode **block, void* value, enum TType type, char* id, enum TTag tag) {
     if (*block == NULL) {
@@ -83,8 +82,6 @@ void addLevelToBlock(SymbolTableNode **block, void* value, enum TType type, char
     }
 }
 
-
-
 void deleteBlock(SymbolTableNode** block) {
     SymbolTableNode* current = *block;
     if (current != NULL) {
@@ -95,7 +92,6 @@ void deleteBlock(SymbolTableNode** block) {
         return;
     }
 }
-
 
 // Function to delete a node of a given index
 void deleteLevelsFromBlock(SymbolTableNode** block) {
@@ -119,7 +115,6 @@ void deleteLevelsFromBlock(SymbolTableNode** block) {
     }
 
 }
-
 
 NodeInfo* searchKey(SymbolTable* block, char* key) {
     SymbolTableNode* current = block->head;

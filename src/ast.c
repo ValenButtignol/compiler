@@ -68,7 +68,7 @@ char* astToStringRecursive(TAst* ast) {
     return result;
 }
 
-int checkType(TAst* ast){
+int checkType(TAst* ast)  {
     if (ast == NULL || isEmptyAst(*ast)) return 1;
     if (ast->data.type == NONETYPE && ast->data.tag == EXPR_OP) {
         ast->data.type = getAstType(ast);
@@ -99,7 +99,7 @@ enum TType getAstType(TAst* ast) {
         }
     } else if (ast->data.type != NONETYPE) {
         return ast->data.type;
-    } else if(ast->data.type == NONETYPE) {
+    } else if (ast->data.type == NONETYPE) {
         enum TType lsType = getAstType(ast->ls);
         enum TType rsType = getAstType(ast->ls);
         if (lsType != rsType) {
@@ -108,5 +108,81 @@ enum TType getAstType(TAst* ast) {
         } else {
             return lsType;
         }
+    }
+}
+
+void evaluateAst(TAst* ast) {
+    enum TTag treeTag = ast->data.tag;
+    if (treeTag == DECL) {
+        evaluateExpression(ast->rs);
+        setValue(&ast->ls->data, ast->rs->data.value, ast->rs->data.type);
+    } else if (treeTag == EXPR_OP) {
+        evaluateExpression(&ast);
+        
+    } else if (treeTag == ASSIGNMENT_OP) {
+        evaluateExpression(&ast->rs);
+        setValue(&ast->ls->data, ast->rs->data.value, ast->rs->data.type);
+
+    } else {    // Probably is left to consider the RETURN and NONETAG cases.
+                // THE RETURN MAY HAVE A VALUE.
+        evaluateAst(ast->ls);
+        evaluateAst(ast->rs);
+    }
+}
+
+void evaluateExpression(TAst* ast) {
+    char* treeOperator = ast->data.id;
+
+    if (ast->data.type == INTEGER) {
+        if (treeOperator == "+") {
+            int result = evaluateInteger(ast->ls) + evaluateInteger(ast->rs);
+            setValue(&ast->data, (int*)result, INTEGER);
+
+        } else if (treeOperator == "-") {
+            int result = evaluateInteger(ast->ls) - evaluateInteger(ast->rs);
+            setValue(&ast->data, (int*)result, INTEGER);
+
+        } else if (treeOperator == "*") {
+            int result = evaluateInteger(ast->ls) * evaluateInteger(ast->rs);
+            setValue(&ast->data, (int*)result, INTEGER);
+
+        } else if (treeOperator == "/") {
+            int divider = evaluateInteger(ast->rs);
+            if (divider == 0) {
+                printf("Can't Divide for 0\n");
+                return ;
+            }
+            int result = evaluateInteger(ast->ls) / divider;
+            setValue(&ast->data, (int*)result, INTEGER);
+            
+        }
+    }
+
+    if (ast->data.type == BOOLEAN) {
+        if (treeOperator == "+") {
+            int result = evaluateBoolean(ast->ls) || evaluateBoolean(ast->rs);
+            setValue(&ast->data, (int*)result, BOOLEAN);
+        } else if (treeOperator == "*") {
+            int result = evaluateBoolean(ast->ls) && evaluateBoolean(ast->rs);
+            setValue(&ast->data, (int*)result, BOOLEAN);
+        }
+    }
+}
+
+int evaluateInteger(TAst* ast) {
+    if (ast->data.value != "") {
+        return (int*) ast->data.value; 
+    } else {
+        evaluateExpression(ast->ls);
+        evaluateExpression(ast->rs);
+    }
+}
+
+int evaluateBoolean(TAst* ast) {
+    if (ast->data.value != "") {
+        return (int*) ast->data.value; 
+    } else {
+        evaluateExpression(ast->ls);
+        evaluateExpression(ast->rs);
     }
 }
