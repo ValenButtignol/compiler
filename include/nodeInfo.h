@@ -27,21 +27,7 @@ char* nodeInfoToString(NodeInfo node);
 
 char* constExprToString(NodeInfo node);
 
-enum TBoolean getBooleanFromText(char* boolean);
 
-char *boolToString(enum TBoolean boolean);
-
-enum TType getTypeFromText(char* type);
-
-char *typeToString(enum TType type);
-
-enum TTag getTagFromText(char* tag);
-
-char *tagToString(enum TTag tag);
-
-enum TOperator getOperatorFromText(char* op);
-
-char *operatorToString(enum TOperator op);
 
 int isEmptyNode(NodeInfo node);
 
