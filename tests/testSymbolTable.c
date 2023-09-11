@@ -12,6 +12,8 @@ void printSuccessMessage() {
     printf("******************************************************************\n");
     printf("************ SymbolTable Tests completed successfully ************\n");
     printf("******************************************************************\n");
+    printf("\n");
+    printf("\n");
 
     printf("\033[0m"); // Reset text color to default
 }
