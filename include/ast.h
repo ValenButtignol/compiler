@@ -4,9 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "nodeInfo.h"
+#include "enums.h"
 
 typedef struct TAst{
-	NodeInfo data; //sentencia, definicion
+	NodeInfo data;
 	struct TAst* ls;
 	struct TAst* rs;
 }TAst;
@@ -23,9 +24,16 @@ char* astToStringRecursive(TAst* ast);
 
 int isEmptyAst(TAst ast);
 
-
 int checkType(TAst* ast);
 
 enum TType getAstType(TAst* ast);
+
+void evaluateAst(TAst* ast);
+
+void evaluateExpression(TAst* ast);
+
+int evaluateInteger(TAst* ast);
+
+int evaluateBoolean(TAst* ast);
 
 #endif

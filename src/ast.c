@@ -116,15 +116,22 @@ void evaluateAst(TAst* ast) {
     if (treeTag == DECL) {
         evaluateExpression(ast->rs);
         setValue(&ast->ls->data, ast->rs->data.value, ast->rs->data.type);
+    
     } else if (treeTag == EXPR_OP) {
-        evaluateExpression(&ast);
+        evaluateExpression(ast);
         
     } else if (treeTag == ASSIGNMENT_OP) {
-        evaluateExpression(&ast->rs);
+        evaluateExpression(ast->rs);
         setValue(&ast->ls->data, ast->rs->data.value, ast->rs->data.type);
-
-    } else {    // Probably is left to consider the RETURN and NONETAG cases.
-                // THE RETURN MAY HAVE A VALUE.
+    
+    } else if (treeTag == RETURN) {
+        evaluateExpression(ast->rs);
+        setValue(&ast->data, ast->rs->data.value, ast->rs->data.type);
+    
+    } else if (treeTag == NONETAG) {
+        return;
+    
+    } else {
         evaluateAst(ast->ls);
         evaluateAst(ast->rs);
     }
@@ -134,17 +141,15 @@ void evaluateExpression(TAst* ast) {
     char* treeOperator = ast->data.id;
 
     if (ast->data.type == INTEGER) {
+        int result;
         if (treeOperator == "+") {
-            int result = evaluateInteger(ast->ls) + evaluateInteger(ast->rs);
-            setValue(&ast->data, (int*)result, INTEGER);
+            result = evaluateInteger(ast->ls) + evaluateInteger(ast->rs);
 
         } else if (treeOperator == "-") {
-            int result = evaluateInteger(ast->ls) - evaluateInteger(ast->rs);
-            setValue(&ast->data, (int*)result, INTEGER);
+            result = evaluateInteger(ast->ls) - evaluateInteger(ast->rs);
 
         } else if (treeOperator == "*") {
-            int result = evaluateInteger(ast->ls) * evaluateInteger(ast->rs);
-            setValue(&ast->data, (int*)result, INTEGER);
+            result = evaluateInteger(ast->ls) * evaluateInteger(ast->rs);
 
         } else if (treeOperator == "/") {
             int divider = evaluateInteger(ast->rs);
@@ -152,26 +157,26 @@ void evaluateExpression(TAst* ast) {
                 printf("Can't Divide for 0\n");
                 return ;
             }
-            int result = evaluateInteger(ast->ls) / divider;
-            setValue(&ast->data, (int*)result, INTEGER);
+            result = evaluateInteger(ast->ls) / divider;
             
         }
+        setValue(&ast->data, (void*)&result, INTEGER);
     }
 
     if (ast->data.type == BOOLEAN) {
+        int result;
         if (treeOperator == "+") {
-            int result = evaluateBoolean(ast->ls) || evaluateBoolean(ast->rs);
-            setValue(&ast->data, (int*)result, BOOLEAN);
+            result = evaluateBoolean(ast->ls) || evaluateBoolean(ast->rs);
         } else if (treeOperator == "*") {
-            int result = evaluateBoolean(ast->ls) && evaluateBoolean(ast->rs);
-            setValue(&ast->data, (int*)result, BOOLEAN);
+            result = evaluateBoolean(ast->ls) && evaluateBoolean(ast->rs);
         }
+        setValue(&ast->data, (void*)&result, BOOLEAN);
     }
 }
 
 int evaluateInteger(TAst* ast) {
-    if (ast->data.value != "") {
-        return (int*) ast->data.value; 
+    if (ast->data.value != NULL) {
+        return *((int*)ast->data.value); 
     } else {
         evaluateExpression(ast->ls);
         evaluateExpression(ast->rs);
@@ -179,8 +184,8 @@ int evaluateInteger(TAst* ast) {
 }
 
 int evaluateBoolean(TAst* ast) {
-    if (ast->data.value != "") {
-        return (int*) ast->data.value; 
+    if (ast->data.value != NULL) {
+        return *((int*)ast->data.value); 
     } else {
         evaluateExpression(ast->ls);
         evaluateExpression(ast->rs);
