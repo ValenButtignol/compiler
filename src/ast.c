@@ -67,47 +67,40 @@ char* astToStringRecursive(TAst* ast) {
 
     return result;
 }
+int isTypeTag(TAst ast){
+    return  ast.data.tag == EXPR_OP || ast.data.tag == VAR_DECL || ast.data.tag == DECL 
+              || ast.data.tag == CONST_DECL || ast.data.tag == ASSIGNMENT_OP;
+}
 
 int checkType(TAst* ast)  {
+    
     if (ast == NULL || isEmptyAst(*ast)) return 1;
-    if (ast->data.type == NONETYPE && ast->data.tag == EXPR_OP) {
-        ast->data.type = getAstType(ast);
-    }
-    if (ast->data.tag == EXPR_OP) {
-        if (getAstType(ast->ls) != getAstType(ast->rs)) {
-            printf("Type error in %s\n", nodeInfoToString(ast->data));
-            exit(1);
-        }
-        return checkType(ast->ls) && checkType(ast->rs);
-    } else if (ast->data.tag != EXPR_OP) {
-        return checkType(ast->ls) && checkType(ast->rs);
-    } else {
+    if(ast->data.type == ERROR) return 0;
 
+    if (ast->data.type == NONETYPE && isTypeTag(*ast)) {
+        ast->data.type = getAstType(ast);
+        if (getAstType(ast->ls) != getAstType(ast->rs)) {
+            return 0;
+        }
     }
+    return checkType(ast->ls) && checkType(ast->rs);
 }
 
 enum TType getAstType(TAst* ast) {
     if (ast == NULL || isEmptyAst(*ast)) {
+        printf("\033[1;31m");
         printf("Missing operating\n");
+        printf("\033[0m"); // Reset text color to default
         exit(1);
-    } else if (ast->data.tag != EXPR_OP) {
-        if (ast->data.type == NONETYPE) {
-            printf("Invalid operator\n");
-            exit(1);
-        } else {
-            return ast->data.type;
-        }
     } else if (ast->data.type != NONETYPE) {
         return ast->data.type;
     } else if (ast->data.type == NONETYPE) {
         enum TType lsType = getAstType(ast->ls);
         enum TType rsType = getAstType(ast->ls);
         if (lsType != rsType) {
-            printf("Can not operate with different types");
-            exit(1);
-        } else {
-            return lsType;
+            return ERROR;
         }
+        return lsType;
     }
 }
 
@@ -155,7 +148,7 @@ void evaluateExpression(TAst* ast) {
             int divider = evaluateInteger(ast->rs);
             if (divider == 0) {
                 printf("Can't Divide for 0\n");
-                return ;
+                exit(1);
             }
             result = evaluateInteger(ast->ls) / divider;
             

@@ -36,4 +36,5 @@ int evaluateInteger(TAst* ast);
 
 int evaluateBoolean(TAst* ast);
 
+int isTypeTag(TAst ast);
 #endif
