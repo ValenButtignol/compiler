@@ -8,6 +8,7 @@
 #include "../include/symbolTable.h"
 
 extern int yylineno;
+extern int yytypeCorrect;
 
 SymbolTable* symbolTable = NULL;
 %}
@@ -66,9 +67,17 @@ SymbolTable* symbolTable = NULL;
 
 PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK { 
             NodeInfo *p = newNodeInfoWithoutValue(NONETYPE, "", PROGRAM);
-            printf("\n\n--------------------\nAST\n--------------------\n\n");
+            // printf("\n\n--------------------\nAST\n--------------------\n\n");
             TAst* ast = newAst(p, $1, $2);
-            checkType(ast);
+            // return(checkType());
+            // yytypeCorrect = checkType(ast);
+            if(!checkType(ast)){
+                printf("\033[1;31m");
+                printf("ERROR DE TIPOS\n");
+                printf("\033[0m"); // Reset text color to default
+
+                 exit(1);
+                 }
             // eval(ast);
         }
     ;

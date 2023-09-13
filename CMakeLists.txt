@@ -31,7 +31,7 @@ add_custom_target(run_language
 add_custom_target(generate_parser
     COMMAND flex lexicon.l
     COMMAND bison -d syntax.y
-    COMMAND gcc lex.yy.c syntax.tab.c ${CMAKE_SOURCE_DIR}/src/*.c -o ${CMAKE_SOURCE_DIR}/output/output.out
+    COMMAND gcc ../main.c lex.yy.c syntax.tab.c ${CMAKE_SOURCE_DIR}/src/*.c -o ${CMAKE_SOURCE_DIR}/output/output.out
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/extern
     COMMENT "\n\n--------------------- Generating lex and yacc output files ---------------------\n\n"
 )
@@ -47,9 +47,13 @@ file(GLOB TEST_SOURCES tests/*.c)
 add_executable(testSymbolTable ${TEST_SOURCES})
 target_link_libraries(testSymbolTable symbolTable)
 
+add_executable(testCheckCorrectTypes ${TEST_SOURCES})
+target_link_libraries(testCheckCorrectTypes ast)
+
 # Create a custom target for running the test suite
 add_custom_target(run_tests
     COMMAND testSymbolTable
+    COMMAND testCheckCorrectTypes
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}  # Set the working directory as needed
     COMMENT "\n\n----------------------------- Running the test suite -----------------------------\n\n"
 )
