@@ -1,1 +1,0 @@
-boolean a = true - false;int b = 2 - 2;return b;return a;

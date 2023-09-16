@@ -2,10 +2,9 @@
 #include "testSymbolTable.c"
 
 
-int main() {
-    // Call your test functions and make assertions here
-    testSymbolTableSuite();
+static void runTests() {
     testCheckTypeSuite();
+    testSymbolTableSuite();
 
-    return 0;
+    return ;
 }

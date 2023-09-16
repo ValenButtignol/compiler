@@ -6,7 +6,6 @@
 #include "../../../include/enums.h"
 #include "../../../include/symbolTable.h"
 
-
 TAst* createCorrectAst1();
 //TAst* createCorrectAst2();
 //TAst* createCorrectAst3();

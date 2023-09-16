@@ -3,9 +3,9 @@
 #include <assert.h>
 
 static void testCheckType01(){
+    createCorrectAst1();
     assert(1);
     // If assert(0) -> Test failed.
-
 }
 
 
@@ -23,5 +23,6 @@ static void printSuccessMessage() {
 
 
 static void testCheckTypeSuite() {
+    testCheckType01();
     printSuccessMessage();
 }
