@@ -10,7 +10,10 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 # Include directories for header files
-include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/tests/utils/include
+)
 
 # Add source files for your project
 file(GLOB SOURCES src/*.c)
@@ -31,7 +34,7 @@ add_custom_target(run_language
 add_custom_target(generate_parser
     COMMAND flex lexicon.l
     COMMAND bison -d syntax.y
-    COMMAND gcc ../main.c lex.yy.c syntax.tab.c ${CMAKE_SOURCE_DIR}/src/*.c -o ${CMAKE_SOURCE_DIR}/output/output.out
+    COMMAND gcc lex.yy.c syntax.tab.c ${CMAKE_SOURCE_DIR}/src/*.c -o ${CMAKE_SOURCE_DIR}/output/output.out
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/extern
     COMMENT "\n\n--------------------- Generating lex and yacc output files ---------------------\n\n"
 )
@@ -42,21 +45,33 @@ set_target_properties(generate_parser PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAK
 # Make "run_language" depend on "generate_parser"
 add_dependencies(run_language generate_parser)
 
-# Add executable for your tests
-file(GLOB TEST_SOURCES tests/*.c)
-add_executable(testSymbolTable ${TEST_SOURCES})
-target_link_libraries(testSymbolTable symbolTable)
 
-add_executable(testCheckCorrectTypes ${TEST_SOURCES})
-target_link_libraries(testCheckCorrectTypes ast)
 
-# Create a custom target for running the test suite
-add_custom_target(run_tests
-    COMMAND testSymbolTable
-    COMMAND testCheckCorrectTypes
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}  # Set the working directory as needed
-    COMMENT "\n\n----------------------------- Running the test suite -----------------------------\n\n"
+
+
+
+
+# Create an executable for your tests
+add_executable(tests ${CMAKE_SOURCE_DIR}/tests/runTests.c)
+
+file(GLOB TESTS_SOURCES tests/*.c)
+file(GLOB TESTS_UTILS_SOURCES tests/utils/src/*.c)
+
+# Add dependencies for your tests (testCheckType.c, testSymbolTable.c, and utils)
+target_sources(tests PRIVATE
+    ${TESTS_SOURCES}
+    ${TESTS_UTILS_SOURCES}
 )
 
-# Make the "run_tests" target depend on the "testSymbolTable" target
-add_dependencies(run_tests testSymbolTable)
+# Link the required libraries to your tests executable
+target_link_libraries(tests ast nodeInfo symbolTable)
+
+# Create a custom target for running the tests
+add_custom_target(run_tests
+    COMMAND ./tests
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "\n\n----------------------------- Running the tests -----------------------------\n\n"
+)
+
+# Make "run_tests" depend on "tests" and "main_project"
+add_dependencies(run_tests tests)
