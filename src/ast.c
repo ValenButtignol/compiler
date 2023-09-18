@@ -3,7 +3,7 @@
 
 #include "../include/ast.h"
 
-TAst* newAst(NodeInfo *root, TAst* ls, TAst* rs){
+TAst* newAst(NodeInfo *root, TAst* ls, TAst* rs) {
     TAst* ast = (TAst*) malloc(sizeof(TAst));
 
     ast->data = *root;
@@ -12,7 +12,7 @@ TAst* newAst(NodeInfo *root, TAst* ls, TAst* rs){
     return ast;
 }
 
-TAst* newEmptyAst(){
+TAst* newEmptyAst() {
     TAst *ast = (TAst*) malloc(sizeof(TAst));
     ast->data = *newEmptyNodeInfo();
     ast->ls = NULL;
@@ -20,7 +20,7 @@ TAst* newEmptyAst(){
     return ast;
 }
 
-int isEmptyAst(TAst ast){
+int isEmptyAst(TAst ast) {
     return isEmptyNode(ast.data) && ast.ls == NULL && ast.rs == NULL;
 }
 
@@ -43,8 +43,8 @@ char* astToStringRecursive(TAst* ast) {
 
     char* lsStr = astToStringRecursive(ast->ls);
     char* rootStr;
-    if(!isEmptyNode(ast->data)) rootStr = nodeInfoToString(ast->data);
-    else{
+    if (!isEmptyNode(ast->data)) rootStr = nodeInfoToString(ast->data);
+    else {
         rootStr = malloc(sizeof(""));
         *rootStr = ""; 
     }
@@ -67,46 +67,120 @@ char* astToStringRecursive(TAst* ast) {
 
     return result;
 }
+int isTypeTag(TAst ast){
+    return  ast.data.tag == EXPR_OP || ast.data.tag == VAR_DECL || ast.data.tag == DECL 
+              || ast.data.tag == CONST_DECL || ast.data.tag == ASSIGNMENT_OP;
+}
 
-int checkType(TAst* ast){
-    if(ast == NULL || isEmptyAst(*ast)) return 1;
-    if(ast->data.type == EMPTY && ast->data.tag == OPERATOR){
+int checkType(TAst* ast)  {
+    
+    if (ast == NULL || isEmptyAst(*ast)) return 1;
+    if(ast->data.type == ERROR) return 0;
+
+    if (ast->data.type == NONETYPE && isTypeTag(*ast)) {
         ast->data.type = getAstType(ast);
-    }
-    if(ast->data.tag == OPERATOR){
-        if(getAstType(ast->ls) != getAstType(ast->rs)){
-            printf("Type error in %s\n", nodeInfoToString(ast->data));
-            exit(1);
+        if (getAstType(ast->ls) != getAstType(ast->rs)) {
+            return 0;
         }
-        return checkType(ast->ls) && checkType(ast->rs);
-    }else if(ast->data.tag != OPERATOR){
-        return checkType(ast->ls) && checkType(ast->rs);
-    }else{
+    }
+    return checkType(ast->ls) && checkType(ast->rs);
+}
 
+enum TType getAstType(TAst* ast) {
+    if (ast == NULL || isEmptyAst(*ast)) {
+        printf("\033[1;31m");
+        printf("Missing operating\n");
+        printf("\033[0m"); // Reset text color to default
+        exit(1);
+    } else if (ast->data.type != NONETYPE) {
+        return ast->data.type;
+    } else if (ast->data.type == NONETYPE) {
+        enum TType lsType = getAstType(ast->ls);
+        enum TType rsType = getAstType(ast->ls);
+        if (lsType != rsType) {
+            return ERROR;
+        }
+        return lsType;
     }
 }
 
-enum TType getAstType(TAst* ast){
-    if(ast == NULL || isEmptyAst(*ast)){
-        printf("Missing operating\n");
-        exit(1);
-    }else if(ast->data.tag != OPERATOR){
-        if(ast->data.type == EMPTY){
-            printf("Invalid operator\n");
-            exit(1);
-        }else{
-            return ast->data.type;
+void evaluateAst(TAst* ast) {
+    enum TTag treeTag = ast->data.tag;
+    if (treeTag == DECL) {
+        evaluateExpression(ast->rs);
+        setValue(&ast->ls->data, ast->rs->data.value, ast->rs->data.type);
+    
+    } else if (treeTag == EXPR_OP) {
+        evaluateExpression(ast);
+        
+    } else if (treeTag == ASSIGNMENT_OP) {
+        evaluateExpression(ast->rs);
+        setValue(&ast->ls->data, ast->rs->data.value, ast->rs->data.type);
+    
+    } else if (treeTag == RETURN) {
+        evaluateExpression(ast->rs);
+        setValue(&ast->data, ast->rs->data.value, ast->rs->data.type);
+    
+    } else if (treeTag == NONETAG) {
+        return;
+    
+    } else {
+        evaluateAst(ast->ls);
+        evaluateAst(ast->rs);
+    }
+}
+
+void evaluateExpression(TAst* ast) {
+    char* treeOperator = ast->data.id;
+
+    if (ast->data.type == INTEGER) {
+        int result;
+        if (treeOperator == "+") {
+            result = evaluateInteger(ast->ls) + evaluateInteger(ast->rs);
+
+        } else if (treeOperator == "-") {
+            result = evaluateInteger(ast->ls) - evaluateInteger(ast->rs);
+
+        } else if (treeOperator == "*") {
+            result = evaluateInteger(ast->ls) * evaluateInteger(ast->rs);
+
+        } else if (treeOperator == "/") {
+            int divider = evaluateInteger(ast->rs);
+            if (divider == 0) {
+                printf("Can't Divide for 0\n");
+                exit(1);
+            }
+            result = evaluateInteger(ast->ls) / divider;
+            
         }
-    }else if(ast->data.type != EMPTY){
-        return ast->data.type;
-    }else if(ast->data.type == EMPTY){
-        enum TType lsType = getAstType(ast->ls);
-        enum TType rsType = getAstType(ast->ls);
-        if(lsType != rsType){
-            printf("Can not operate with different types");
-            exit(1);
-        }else{
-            return lsType;
+        setValue(&ast->data, (void*)&result, INTEGER);
+    }
+
+    if (ast->data.type == BOOLEAN) {
+        int result;
+        if (treeOperator == "+") {
+            result = evaluateBoolean(ast->ls) || evaluateBoolean(ast->rs);
+        } else if (treeOperator == "*") {
+            result = evaluateBoolean(ast->ls) && evaluateBoolean(ast->rs);
         }
+        setValue(&ast->data, (void*)&result, BOOLEAN);
+    }
+}
+
+int evaluateInteger(TAst* ast) {
+    if (ast->data.value != NULL) {
+        return *((int*)ast->data.value); 
+    } else {
+        evaluateExpression(ast->ls);
+        evaluateExpression(ast->rs);
+    }
+}
+
+int evaluateBoolean(TAst* ast) {
+    if (ast->data.value != NULL) {
+        return *((int*)ast->data.value); 
+    } else {
+        evaluateExpression(ast->ls);
+        evaluateExpression(ast->rs);
     }
 }

@@ -1,0 +1,1 @@
+const boolean a = true;a = 2; return a;

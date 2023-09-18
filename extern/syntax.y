@@ -4,21 +4,21 @@
 #include <stdio.h>
 #include "../include/ast.h"
 #include "../include/nodeInfo.h"
-
+#include "../include/enums.h"
 #include "../include/symbolTable.h"
+
 extern int yylineno;
-SymbolTable* symbolTable = NULL;
+extern int yytypeCorrect;
+
+SymbolTable* symbolTable;
+TAst* globalAst;
+
+extern SymbolTable* symbolTable;
+extern TAst* globalAst;
 %}
 
 %initial-action {
-    symbolTable = malloc(sizeof(SymbolTable));
-    if (symbolTable == NULL) {
-        fprintf(stderr, "Failed to allocate memory for symbolTable\n");
-        exit(1);
-    }
-    symbolTable->head = NULL;
-    symbolTable->size = 0;
-       
+    initializeSymbolTable(&symbolTable);
 }
 
 %union {
@@ -63,16 +63,17 @@ SymbolTable* symbolTable = NULL;
 %%
 
 PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK { 
-            NodeInfo *p = newNodeInfo("Program", EMPTY, "Program", NONTERMINAL);
-            printf("\n\n------------------------------------------\n\nAST\n\n--------------------------\n");
-            TAst* ast =newAst(p, $1, $2);
-           checkType(ast);
-            // eval(ast);
+            NodeInfo *p = newNodeInfoWithoutValue(NONETYPE, "", PROGRAM);
+            printf("\n\n--------------------\nAST\n--------------------\n\n");
+            TAst* ast = newAst(p, $1, $2);
+            globalAst = ast;
+            checkType(ast);
+            evaluateAst(ast);
         }
     ;
 
 DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK {
-            NodeInfo *declarationInfo = newNodeInfo("declarationBlock", EMPTY, "declarationBlock", NONTERMINAL);
+            NodeInfo *declarationInfo = newNodeInfoWithoutValue(NONETYPE, "", DECL_BLOCK);
             $$ = newAst(declarationInfo,$1,$2);
         }
     | /* LAMBDA */ {
@@ -82,19 +83,22 @@ DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK {
     ;
 
 DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
-            NodeInfo *constantDecl = newNodeInfo($4, EMPTY, "=", OPERATOR);
+            NodeInfo *constantDecl = newNodeInfoWithoutValue(NONETYPE, "=", DECL);
 
             NodeInfo* constId = searchKey(symbolTable, $3);
             if (constId != NULL) {
                 printf("Error: const identifier %s already declared\n", $3);
                 exit(1);
             }
-            constId = newNodeInfo("constantDecl", *$2, $3, CONSTANT_DEC);
+
+            constId = newNodeInfoWithoutValue(*$2, $3, CONST_DECL);
             TAst *declaredID = newLeaf(constId);
+            addNodeInfoToBlock(&(symbolTable->head), constId);
+
             $$ = newAst(constantDecl, declaredID, $5);
         }
     | TType TId TAssign EXPRESSION TSemiColon {
-            NodeInfo *varDecl = newNodeInfo($3, EMPTY, "=", OPERATOR);
+            NodeInfo *varDecl = newNodeInfoWithoutValue(NONETYPE, "=", DECL);
 
             NodeInfo* varId = searchKey(symbolTable, $2);
             if (varId != NULL) {
@@ -102,7 +106,7 @@ DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
                 exit(1);
             }
 
-            varId = newNodeInfo("variableDecl", *$1, $2, VARIABLE);
+            varId = newNodeInfoWithoutValue(*$1, $2, VAR_DECL);
             addNodeInfoToBlock(&(symbolTable->head), varId);
             TAst *declaredID = newLeaf(varId);
 
@@ -112,11 +116,11 @@ DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
 
 
 STATEMENT_BLOCK: ASSIGNMENT STATEMENT_BLOCK {
-            NodeInfo *statement = newNodeInfo("statement", EMPTY, "assignStatement", NONTERMINAL);
+            NodeInfo *statement = newNodeInfoWithoutValue(NONETYPE, "", STMT_BLOCK);
             $$ = newAst(statement,$1, $2);
         }
     | RETURN STATEMENT_BLOCK {
-            NodeInfo *statement = newNodeInfo("statement", EMPTY, "returnStatement", NONTERMINAL);
+            NodeInfo *statement = newNodeInfoWithoutValue(NONETYPE, "", STMT_BLOCK);
             $$ = newAst(statement,$1, $2);
         }
     | ASSIGNMENT { $$ = $1; }
@@ -130,42 +134,38 @@ ASSIGNMENT: TId TAssign EXPRESSION TSemiColon {
                 exit(1);
             }
             TAst *t = newLeaf(tid);
-            NodeInfo *tassign = newNodeInfo($2, EMPTY, "=", OPERATOR);
+            NodeInfo *tassign = newNodeInfoWithoutValue(NONETYPE, "=", ASSIGNMENT_OP);
             $$ = newAst(tassign, t, $3);
 
         }
     ;
 
 RETURN: TReturn EXPRESSION TSemiColon { 
-            NodeInfo *treturn = newNodeInfo($1, EMPTY, "return", RETURN);
+            NodeInfo *treturn = newNodeInfoWithoutValue(NONETYPE, "", RETURN);
             $$ = newAst(treturn, newEmptyAst(), $2);
         }
     ;
 
 EXPRESSION: EXPRESSION TPlus EXPRESSION {
-            NodeInfo *ni = newNodeInfo($2, EMPTY, "+", OPERATOR);
+            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "+", EXPR_OP); // CHANGE THIS ID'S 
             TAst* ast = newAst(ni, $1, $3); 
             $$ = ast;
         }
     | EXPRESSION TMinus EXPRESSION  {
-            NodeInfo *ni = newNodeInfo($2, EMPTY, "-", OPERATOR);
+            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "-", EXPR_OP);
             $$ = newAst(ni, $1, $3);
         }
     | EXPRESSION TMultiply EXPRESSION {
-            NodeInfo *ni = newNodeInfo($2, EMPTY, "*", OPERATOR);
+            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "*", EXPR_OP);
             $$ = newAst(ni, $1, $3);
         }
     | EXPRESSION TDivide EXPRESSION {
-            NodeInfo *ni = newNodeInfo($2, EMPTY, "/", OPERATOR);
+            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "/", EXPR_OP);
             $$ = newAst(ni, $1, $3);
         }
     | TOpenParenthesis EXPRESSION TCloseParenthesis { $$ = $2; }
-    | TInteger  { 
-            char* num = malloc(sizeof(char*));
-            sprintf(num, "%d", $1);
-            $$ = newLeaf(newNodeInfo($1, INTEGER, num, CONSTANT_EXPR)); 
-        }
-    | TBool { $$ = newLeaf(newNodeInfo($1, BOOLEAN, "BOOL", CONSTANT_EXPR)); }
+    | TInteger  { $$ = newLeaf(newNodeInfo($1, INTEGER, "", CONST_VALUE)); }
+    | TBool { $$ = newLeaf(newNodeInfo($1, BOOLEAN, "", CONST_VALUE)); }
     | TId { 
             NodeInfo *tid = searchKey(symbolTable, $1);
             if (tid == NULL) {

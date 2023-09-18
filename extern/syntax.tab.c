@@ -74,8 +74,15 @@
 #include <stdio.h>
 #include "../include/ast.h"
 #include "../include/nodeInfo.h"
+#include "../include/enums.h"
+#include "../include/symbolTable.h"
 
-#line 79 "syntax.tab.c"
+extern int yylineno;
+extern int yytypeCorrect;
+
+SymbolTable* symbolTable = NULL;
+
+#line 86 "syntax.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -124,14 +131,15 @@ enum yysymbol_kind_t
   YYSYMBOL_18_ = 18,                       /* '-'  */
   YYSYMBOL_19_ = 19,                       /* '*'  */
   YYSYMBOL_20_ = 20,                       /* '/'  */
-  YYSYMBOL_YYACCEPT = 21,                  /* $accept  */
-  YYSYMBOL_PROGRAM = 22,                   /* PROGRAM  */
-  YYSYMBOL_DECLARATION_LIST = 23,          /* DECLARATION_LIST  */
-  YYSYMBOL_ENTITY = 24,                    /* ENTITY  */
-  YYSYMBOL_STATEMENT_LIST = 25,            /* STATEMENT_LIST  */
-  YYSYMBOL_ASSIGNMENT = 26,                /* ASSIGNMENT  */
-  YYSYMBOL_RETURN = 27,                    /* RETURN  */
-  YYSYMBOL_EXPRESSION = 28                 /* EXPRESSION  */
+  YYSYMBOL_21_ = 21,                       /* '='  */
+  YYSYMBOL_YYACCEPT = 22,                  /* $accept  */
+  YYSYMBOL_PROGRAM = 23,                   /* PROGRAM  */
+  YYSYMBOL_DECLARATION_BLOCK = 24,         /* DECLARATION_BLOCK  */
+  YYSYMBOL_DECLARATION = 25,               /* DECLARATION  */
+  YYSYMBOL_STATEMENT_BLOCK = 26,           /* STATEMENT_BLOCK  */
+  YYSYMBOL_ASSIGNMENT = 27,                /* ASSIGNMENT  */
+  YYSYMBOL_RETURN = 28,                    /* RETURN  */
+  YYSYMBOL_EXPRESSION = 29                 /* EXPRESSION  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -457,18 +465,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  7
+#define YYFINAL  8
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   42
+#define YYLAST   56
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  21
+#define YYNTOKENS  22
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  8
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  20
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  36
+#define YYNSTATES  43
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   271
@@ -491,7 +499,7 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,    19,    17,     2,    18,     2,    20,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,    21,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -519,9 +527,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    55,    55,    61,    67,    73,    79,    85,    89,    93,
-      94,    97,   106,   112,   117,   121,   125,   129,   130,   131,
-     132
+       0,    68,    68,    77,    81,    87,   102,   120,   124,   128,
+     129,   132,   145,   151,   156,   160,   164,   168,   169,   170,
+     171
 };
 #endif
 
@@ -540,9 +548,9 @@ static const char *const yytname[] =
   "\"end of file\"", "error", "\"invalid token\"", "TId", "TType",
   "TConst", "TSemiColon", "TReturn", "TAssign", "TPlus", "TMinus",
   "TMultiply", "TDivide", "TOpenParenthesis", "TCloseParenthesis",
-  "TInteger", "TBool", "'+'", "'-'", "'*'", "'/'", "$accept", "PROGRAM",
-  "DECLARATION_LIST", "ENTITY", "STATEMENT_LIST", "ASSIGNMENT", "RETURN",
-  "EXPRESSION", YY_NULLPTR
+  "TInteger", "TBool", "'+'", "'-'", "'*'", "'/'", "'='", "$accept",
+  "PROGRAM", "DECLARATION_BLOCK", "DECLARATION", "STATEMENT_BLOCK",
+  "ASSIGNMENT", "RETURN", "EXPRESSION", YY_NULLPTR
 };
 
 static const char *
@@ -552,7 +560,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-15)
+#define YYPACT_NINF (-16)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -566,10 +574,11 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      26,   -15,    -3,     5,    25,     0,   -15,   -15,    28,     3,
-     -15,    25,    25,    26,     3,   -15,     3,   -15,   -15,    -2,
-     -15,   -15,   -15,    11,    15,   -15,     3,     3,     3,     3,
-     -15,   -15,    23,    27,    -1,   -15
+      24,    -2,    -1,    49,    45,    24,    42,    48,   -16,    46,
+       6,   -16,    45,    45,   -16,     6,    47,     6,   -16,     6,
+     -16,   -16,    14,   -16,   -16,    21,     6,    28,    -4,   -16,
+       6,     6,     6,     6,   -16,    35,   -16,   -16,     2,    31,
+      41,   -16,   -16
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -577,22 +586,23 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       4,     6,     0,     0,     0,     0,     5,     1,     0,     0,
-       2,     9,    10,     4,     0,    20,     0,    18,    19,     0,
-       7,     8,     3,     0,     0,    12,     0,     0,     0,     0,
-      11,    17,    13,    14,    15,    16
+       4,     0,     0,     0,     0,     4,     0,     0,     1,     0,
+       0,     2,     9,    10,     3,     0,     0,     0,    20,     0,
+      18,    19,     0,     7,     8,     0,     0,     0,     0,    12,
+       0,     0,     0,     0,     6,     0,    11,    17,    13,    14,
+      15,    16,     5
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -15,   -15,    24,   -15,    29,    37,   -15,   -14
+     -16,   -16,    51,   -16,    23,   -16,   -16,   -15
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     3,     4,     5,    10,    11,    12,    19
+       0,     3,     4,     5,    11,    12,    13,    22
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -600,44 +610,47 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      23,     6,    24,     8,    25,     7,    15,    26,    27,    28,
-      29,    29,    32,    33,    34,    35,    16,    30,    17,    18,
-      26,    27,    28,    29,    26,    27,    28,    29,     8,    31,
-       1,     2,     9,    27,    28,    29,    14,    22,    28,    29,
-      20,    21,    13
+      25,     6,    27,     7,    28,    30,    31,    32,    33,    18,
+      37,    35,    31,    32,    33,    38,    39,    40,    41,    19,
+      29,    20,    21,    30,    31,    32,    33,    34,     1,     2,
+      30,    31,    32,    33,    36,    23,    24,    30,    31,    32,
+      33,    42,    32,    33,    30,    31,    32,    33,     9,     8,
+      15,    16,    10,    33,    17,    26,    14
 };
 
 static const yytype_int8 yycheck[] =
 {
-      14,     4,    16,     3,     6,     0,     3,     9,    10,    11,
-      12,    12,    26,    27,    28,    29,    13,     6,    15,    16,
-       9,    10,    11,    12,     9,    10,    11,    12,     3,    14,
-       4,     5,     7,    10,    11,    12,     8,    13,    11,    12,
-      11,    12,     5
+      15,     3,    17,     4,    19,     9,    10,    11,    12,     3,
+      14,    26,    10,    11,    12,    30,    31,    32,    33,    13,
+       6,    15,    16,     9,    10,    11,    12,     6,     4,     5,
+       9,    10,    11,    12,     6,    12,    13,     9,    10,    11,
+      12,     6,    11,    12,     9,    10,    11,    12,     3,     0,
+       8,     3,     7,    12,     8,     8,     5
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     4,     5,    22,    23,    24,     4,     0,     3,     7,
-      25,    26,    27,    26,     8,     3,    13,    15,    16,    28,
-      25,    25,    23,    28,    28,     6,     9,    10,    11,    12,
-       6,    14,    28,    28,    28,    28
+       0,     4,     5,    23,    24,    25,     3,     4,     0,     3,
+       7,    26,    27,    28,    24,     8,     3,     8,     3,    13,
+      15,    16,    29,    26,    26,    29,     8,    29,    29,     6,
+       9,    10,    11,    12,     6,    29,     6,    14,    29,    29,
+      29,    29,     6
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    21,    22,    23,    23,    24,    24,    25,    25,    25,
-      25,    26,    27,    28,    28,    28,    28,    28,    28,    28,
-      28
+       0,    22,    23,    24,    24,    25,    25,    26,    26,    26,
+      26,    27,    28,    29,    29,    29,    29,    29,    29,    29,
+      29
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     2,     3,     0,     2,     1,     2,     2,     1,
+       0,     2,     2,     2,     0,     6,     5,     2,     2,     1,
        1,     4,     3,     3,     3,     3,     3,     3,     1,     1,
        1
 };
@@ -904,6 +917,22 @@ yyparse (void)
 
   yychar = YYEMPTY; /* Cause a token to be read.  */
 
+
+/* User initialization code.  */
+#line 16 "syntax.y"
+{
+    symbolTable = malloc(sizeof(SymbolTable));
+    if (symbolTable == NULL) {
+        fprintf(stderr, "Failed to allocate memory for symbolTable\n");
+        exit(1);
+    }
+    symbolTable->head = NULL;
+    symbolTable->size = 0;
+       
+}
+
+#line 935 "syntax.tab.c"
+
   goto yysetstate;
 
 
@@ -1102,169 +1131,201 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2: /* PROGRAM: DECLARATION_LIST STATEMENT_LIST  */
-#line 55 "syntax.y"
-                                         { 
-    NodeInfo *p = newNodeInfo("Program", EMPTY, "Program", NONTERMINAL);
-    (yyval.ast)=newAst(p, (yyvsp[-1].ast), (yyvsp[0].ast)); 
-    }
-#line 1112 "syntax.tab.c"
-    break;
-
-  case 3: /* DECLARATION_LIST: ENTITY ASSIGNMENT DECLARATION_LIST  */
-#line 61 "syntax.y"
-                                                     {
-                    NodeInfo *declarationInfo = newNodeInfo("declaration", EMPTY, "declaration", NONTERMINAL);
-                    TAst* ast = newAst(declarationInfo,(yyvsp[-2].ast),(yyvsp[-1].ast));
-                    NodeInfo *nextDeclInfo = newNodeInfo("declaration", EMPTY, "nextDeclaration", NONTERMINAL);
-                    (yyval.ast) = newAst(nextDeclInfo, ast, (yyvsp[0].ast));
-                }
-#line 1123 "syntax.tab.c"
-    break;
-
-  case 4: /* DECLARATION_LIST: %empty  */
-#line 67 "syntax.y"
-                  {
-        NodeInfo *ni = newEmptyNodeInfo();
-        (yyval.ast) = newLeaf(ni);
-    }
-#line 1132 "syntax.tab.c"
-    break;
-
-  case 5: /* ENTITY: TConst TType  */
-#line 73 "syntax.y"
-                    {
-            NodeInfo *tconst = newNodeInfo((yyvsp[-1].tag), EMPTY, "const", CONSTANT_DEC);
-            NodeInfo *ttype = newNodeInfo((yyvsp[0].type), EMPTY, "value", CONSTANT_DEC);
-            TAst *t = newLeaf(ttype);
-            (yyval.ast) = newAst(tconst, newEmptyAst(), t);
+  case 2: /* PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK  */
+#line 68 "syntax.y"
+                                           { 
+            NodeInfo *p = newNodeInfoWithoutValue(NONETYPE, "", PROGRAM);
+            printf("\n\n--------------------\nAST\n--------------------\n\n");
+            TAst* ast = newAst(p, (yyvsp[-1].ast), (yyvsp[0].ast));
+            checkType(ast);
+            evaluateAst(ast);
         }
-#line 1143 "syntax.tab.c"
+#line 1144 "syntax.tab.c"
     break;
 
-  case 6: /* ENTITY: TType  */
-#line 79 "syntax.y"
-           {
-        NodeInfo *ttype = newNodeInfo((yyvsp[0].type), EMPTY, "value", CONSTANT_DEC);
-        (yyval.ast) = newLeaf(ttype);
-    }
-#line 1152 "syntax.tab.c"
+  case 3: /* DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK  */
+#line 77 "syntax.y"
+                                                 {
+            NodeInfo *declarationInfo = newNodeInfoWithoutValue(NONETYPE, "", DECL_BLOCK);
+            (yyval.ast) = newAst(declarationInfo,(yyvsp[-1].ast),(yyvsp[0].ast));
+        }
+#line 1153 "syntax.tab.c"
     break;
 
-  case 7: /* STATEMENT_LIST: ASSIGNMENT STATEMENT_LIST  */
-#line 85 "syntax.y"
-                                         {
-                    NodeInfo *statement = newNodeInfo("statement", EMPTY, "assignStatement", NONTERMINAL);
-                    (yyval.ast) = newAst(statement,(yyvsp[-1].ast), (yyvsp[0].ast));
-                }
-#line 1161 "syntax.tab.c"
+  case 4: /* DECLARATION_BLOCK: %empty  */
+#line 81 "syntax.y"
+                   {
+            NodeInfo *ni = newEmptyNodeInfo();
+            (yyval.ast) = newLeaf(ni);
+        }
+#line 1162 "syntax.tab.c"
     break;
 
-  case 8: /* STATEMENT_LIST: RETURN STATEMENT_LIST  */
-#line 89 "syntax.y"
-                           {
-                    NodeInfo *statement = newNodeInfo("statement", EMPTY, "returnStatement", NONTERMINAL);
-                    (yyval.ast) = newAst(statement,(yyvsp[-1].ast), (yyvsp[0].ast));
-                }
-#line 1170 "syntax.tab.c"
-    break;
+  case 5: /* DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon  */
+#line 87 "syntax.y"
+                                                            {
+            NodeInfo *constantDecl = newNodeInfoWithoutValue(NONETYPE, "=", DECL);
 
-  case 9: /* STATEMENT_LIST: ASSIGNMENT  */
-#line 93 "syntax.y"
-                {(yyval.ast)=(yyvsp[0].ast);}
-#line 1176 "syntax.tab.c"
-    break;
+            NodeInfo* constId = searchKey(symbolTable, (yyvsp[-3].string));
+            if (constId != NULL) {
+                printf("Error: const identifier %s already declared\n", (yyvsp[-3].string));
+                exit(1);
+            }
 
-  case 10: /* STATEMENT_LIST: RETURN  */
-#line 94 "syntax.y"
-            {(yyval.ast)=(yyvsp[0].ast);}
+            constId = newNodeInfoWithoutValue(*(yyvsp[-4].type), (yyvsp[-3].string), CONST_DECL);
+            TAst *declaredID = newLeaf(constId);
+            addNodeInfoToBlock(&(symbolTable->head), constId);
+
+            (yyval.ast) = newAst(constantDecl, declaredID, (yyvsp[-1].ast));
+        }
 #line 1182 "syntax.tab.c"
     break;
 
+  case 6: /* DECLARATION: TType TId TAssign EXPRESSION TSemiColon  */
+#line 102 "syntax.y"
+                                              {
+            NodeInfo *varDecl = newNodeInfoWithoutValue(NONETYPE, "=", DECL);
+
+            NodeInfo* varId = searchKey(symbolTable, (yyvsp[-3].string));
+            if (varId != NULL) {
+                printf("Error: var identifier %s already declared\n", (yyvsp[-3].string));
+                exit(1);
+            }
+
+            varId = newNodeInfoWithoutValue(*(yyvsp[-4].type), (yyvsp[-3].string), VAR_DECL);
+            addNodeInfoToBlock(&(symbolTable->head), varId);
+            TAst *declaredID = newLeaf(varId);
+
+            (yyval.ast) = newAst(varDecl, declaredID, (yyvsp[-1].ast));
+        }
+#line 1202 "syntax.tab.c"
+    break;
+
+  case 7: /* STATEMENT_BLOCK: ASSIGNMENT STATEMENT_BLOCK  */
+#line 120 "syntax.y"
+                                            {
+            NodeInfo *statement = newNodeInfoWithoutValue(NONETYPE, "", STMT_BLOCK);
+            (yyval.ast) = newAst(statement,(yyvsp[-1].ast), (yyvsp[0].ast));
+        }
+#line 1211 "syntax.tab.c"
+    break;
+
+  case 8: /* STATEMENT_BLOCK: RETURN STATEMENT_BLOCK  */
+#line 124 "syntax.y"
+                             {
+            NodeInfo *statement = newNodeInfoWithoutValue(NONETYPE, "", STMT_BLOCK);
+            (yyval.ast) = newAst(statement,(yyvsp[-1].ast), (yyvsp[0].ast));
+        }
+#line 1220 "syntax.tab.c"
+    break;
+
+  case 9: /* STATEMENT_BLOCK: ASSIGNMENT  */
+#line 128 "syntax.y"
+                 { (yyval.ast) = (yyvsp[0].ast); }
+#line 1226 "syntax.tab.c"
+    break;
+
+  case 10: /* STATEMENT_BLOCK: RETURN  */
+#line 129 "syntax.y"
+             { (yyval.ast) = (yyvsp[0].ast); }
+#line 1232 "syntax.tab.c"
+    break;
+
   case 11: /* ASSIGNMENT: TId TAssign EXPRESSION TSemiColon  */
-#line 97 "syntax.y"
-                                              { 
-            NodeInfo *tid = newNodeInfo((yyvsp[-3].string), EMPTY, (yyvsp[-3].string), CONSTANT_DEC);
+#line 132 "syntax.y"
+                                              {
+            NodeInfo *tid = searchKey(symbolTable, (yyvsp[-3].string));
+            if (tid == NULL) {
+                printf("Error: variable %s not declared\n", (yyvsp[-3].string));
+                exit(1);
+            }
             TAst *t = newLeaf(tid);
-            NodeInfo *tassign = newNodeInfo((yyvsp[-2].operator), EMPTY, "=", OPERATOR);
+            NodeInfo *tassign = newNodeInfoWithoutValue(NONETYPE, "=", ASSIGNMENT_OP);
             (yyval.ast) = newAst(tassign, t, (yyvsp[-1].ast));
 
-            }
-#line 1194 "syntax.tab.c"
+        }
+#line 1248 "syntax.tab.c"
     break;
 
   case 12: /* RETURN: TReturn EXPRESSION TSemiColon  */
-#line 106 "syntax.y"
+#line 145 "syntax.y"
                                       { 
-            NodeInfo *treturn = newNodeInfo((yyvsp[-2].tag), EMPTY, "return", CONSTANT_DEC);
+            NodeInfo *treturn = newNodeInfoWithoutValue(NONETYPE, "", RETURN);
             (yyval.ast) = newAst(treturn, newEmptyAst(), (yyvsp[-1].ast));
-            }
-#line 1203 "syntax.tab.c"
+        }
+#line 1257 "syntax.tab.c"
     break;
 
   case 13: /* EXPRESSION: EXPRESSION TPlus EXPRESSION  */
-#line 112 "syntax.y"
+#line 151 "syntax.y"
                                         {
-                                        NodeInfo *ni = newNodeInfo((yyvsp[-1].operator), EMPTY, "+", OPERATOR);
-                                        TAst* ast = newAst(ni, (yyvsp[-2].ast), (yyvsp[0].ast)); 
-                                        (yyval.ast) = ast;
-                                        }
-#line 1213 "syntax.tab.c"
+            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "+", EXPR_OP); // CHANGE THIS ID'S 
+            TAst* ast = newAst(ni, (yyvsp[-2].ast), (yyvsp[0].ast)); 
+            (yyval.ast) = ast;
+        }
+#line 1267 "syntax.tab.c"
     break;
 
   case 14: /* EXPRESSION: EXPRESSION TMinus EXPRESSION  */
-#line 117 "syntax.y"
+#line 156 "syntax.y"
                                     {
-                                    NodeInfo *ni = newNodeInfo((yyvsp[-1].operator), EMPTY, "-", OPERATOR);
-                                    (yyval.ast) = newAst(ni, (TAst*)&(yyvsp[-2].ast), (TAst*)&(yyvsp[0].ast));
-                                    }
-#line 1222 "syntax.tab.c"
+            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "-", EXPR_OP);
+            (yyval.ast) = newAst(ni, (yyvsp[-2].ast), (yyvsp[0].ast));
+        }
+#line 1276 "syntax.tab.c"
     break;
 
   case 15: /* EXPRESSION: EXPRESSION TMultiply EXPRESSION  */
-#line 121 "syntax.y"
+#line 160 "syntax.y"
                                       {
-                                        NodeInfo *ni = newNodeInfo((yyvsp[-1].operator), EMPTY, "*", OPERATOR);
-                                        (yyval.ast) = newAst(ni, (TAst*)&(yyvsp[-2].ast), (TAst*)&(yyvsp[0].ast));
-                                      }
-#line 1231 "syntax.tab.c"
+            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "*", EXPR_OP);
+            (yyval.ast) = newAst(ni, (yyvsp[-2].ast), (yyvsp[0].ast));
+        }
+#line 1285 "syntax.tab.c"
     break;
 
   case 16: /* EXPRESSION: EXPRESSION TDivide EXPRESSION  */
-#line 125 "syntax.y"
+#line 164 "syntax.y"
                                     {
-                                    NodeInfo *ni = newNodeInfo((yyvsp[-1].operator), EMPTY, "/", OPERATOR);
-                                    (yyval.ast) = newAst(ni, (TAst*)&(yyvsp[-2].ast), (TAst*)&(yyvsp[0].ast));
-                                    }
-#line 1240 "syntax.tab.c"
+            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "/", EXPR_OP);
+            (yyval.ast) = newAst(ni, (yyvsp[-2].ast), (yyvsp[0].ast));
+        }
+#line 1294 "syntax.tab.c"
     break;
 
   case 17: /* EXPRESSION: TOpenParenthesis EXPRESSION TCloseParenthesis  */
-#line 129 "syntax.y"
-                                                    { (yyval.ast) = (yyvsp[-1].ast);}
-#line 1246 "syntax.tab.c"
+#line 168 "syntax.y"
+                                                    { (yyval.ast) = (yyvsp[-1].ast); }
+#line 1300 "syntax.tab.c"
     break;
 
   case 18: /* EXPRESSION: TInteger  */
-#line 130 "syntax.y"
-                { (yyval.ast) = newLeaf(newNodeInfo((yyvsp[0].integer), INTEGER, "INT", CONSTANT_DEC)); }
-#line 1252 "syntax.tab.c"
+#line 169 "syntax.y"
+                { (yyval.ast) = newLeaf(newNodeInfo((yyvsp[0].integer), INTEGER, "", CONST_VALUE)); }
+#line 1306 "syntax.tab.c"
     break;
 
   case 19: /* EXPRESSION: TBool  */
-#line 131 "syntax.y"
-            { (yyval.ast) = newLeaf(newNodeInfo((yyvsp[0].boolean), BOOLEAN, "BOOL", CONSTANT_DEC)); }
-#line 1258 "syntax.tab.c"
+#line 170 "syntax.y"
+            { (yyval.ast) = newLeaf(newNodeInfo((yyvsp[0].boolean), BOOLEAN, "", CONST_VALUE)); }
+#line 1312 "syntax.tab.c"
     break;
 
   case 20: /* EXPRESSION: TId  */
-#line 132 "syntax.y"
-          { (yyval.ast) = newLeaf(newNodeInfo((yyvsp[0].string), EMPTY, (yyvsp[0].string), VARIABLE));  }
-#line 1264 "syntax.tab.c"
+#line 171 "syntax.y"
+          { 
+            NodeInfo *tid = searchKey(symbolTable, (yyvsp[0].string));
+            if (tid == NULL) {
+                printf("Error: variable %s not declared\n", (yyvsp[0].string));
+                exit(1);
+            }
+            (yyval.ast) = newLeaf(tid);
+        }
+#line 1325 "syntax.tab.c"
     break;
 
 
-#line 1268 "syntax.tab.c"
+#line 1329 "syntax.tab.c"
 
       default: break;
     }
@@ -1457,5 +1518,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 134 "syntax.y"
-
+#line 181 "syntax.y"

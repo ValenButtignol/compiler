@@ -1,17 +1,19 @@
-#include "../include/symbolTable.h"
+#include "../include/ast.h"
+#include "utils/include/createInputs.h"
 #include <assert.h>
 
-static void testSymbolTable01() {
+static void testCheckType01(){
+    createCorrectAst1();
     assert(1);
     // If assert(0) -> Test failed.
 }
 
 
-static void printSymbolTableTestsSuccessMessage() {
+static void printSuccessMessage() {
     printf("\n");
     printf("\033[1;32m"); // Set text color to green
     printf("******************************************************************\n");
-    printf("************ SymbolTable Tests completed successfully ************\n");
+    printf("************ Check Type Tests completed successfully ************\n");
     printf("******************************************************************\n");
     printf("\n");
     printf("\n");
@@ -20,8 +22,7 @@ static void printSymbolTableTestsSuccessMessage() {
 }
 
 
-static void testSymbolTableSuite() {
-    testSymbolTable01();
-    // Test 2, 3 ...
-    printSymbolTableTestsSuccessMessage();
+static void testCheckTypeSuite() {
+    testCheckType01();
+    printSuccessMessage();
 }

@@ -33,5 +33,4 @@ void deleteLevelsFromBlock(SymbolTableNode** block);
 
 NodeInfo* searchKey(SymbolTable* block, char* key);
 
-
 #endif

@@ -34,8 +34,11 @@ SymbolTableNode* createSymbolNodeFromNodeInfo(NodeInfo* node) {
 }
 
 void initializeSymbolTable(SymbolTable** table) {
-
-    printf("Initializing symbol table\n");
+    *table = malloc(sizeof(SymbolTable));
+    if (*table == NULL) {
+        fprintf(stderr, "Failed to allocate memory for symbolTable\n");
+        exit(1);
+    }
     (*table)->head = NULL;
     (*table)->size = 0;
 }
@@ -54,6 +57,7 @@ void addBlockToLevel(SymbolTableNode **level, void* value, enum TType type, char
     current->nextBlock = newBlock;
 }
 
+// THIS ONE TAKES A NODEINFO AS PARAMETER
 void addNodeInfoToBlock(SymbolTableNode **level, NodeInfo* node) {
     SymbolTableNode* newBlock = createSymbolNodeFromNodeInfo(node);
     if (*level == NULL) {
@@ -66,7 +70,6 @@ void addNodeInfoToBlock(SymbolTableNode **level, NodeInfo* node) {
     }
     current->nextBlock = newBlock;
 }
-
 
 // Adds a new level to a reference of the actual block.
 void addLevelToBlock(SymbolTableNode **block, void* value, enum TType type, char* id, enum TTag tag) {
@@ -82,8 +85,6 @@ void addLevelToBlock(SymbolTableNode **block, void* value, enum TType type, char
     }
 }
 
-
-
 void deleteBlock(SymbolTableNode** block) {
     SymbolTableNode* current = *block;
     if (current != NULL) {
@@ -94,7 +95,6 @@ void deleteBlock(SymbolTableNode** block) {
         return;
     }
 }
-
 
 // Function to delete a node of a given index
 void deleteLevelsFromBlock(SymbolTableNode** block) {
@@ -118,7 +118,6 @@ void deleteLevelsFromBlock(SymbolTableNode** block) {
     }
 
 }
-
 
 NodeInfo* searchKey(SymbolTable* block, char* key) {
     SymbolTableNode* current = block->head;
