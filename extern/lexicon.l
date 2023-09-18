@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-
+#include "../include/ast.h"
+#include "../include/nodeInfo.h"
 #include "syntax.tab.h"
 
 %}
@@ -17,83 +18,95 @@ digit [0-9]
 
 %%
 
-"boolean" {  
-        printf("TType: %s\n",yytext);
+"boolean"|"int" {
+        yylval.type = malloc(sizeof(enum TType*));
+        *yylval.type = getTypeFromText(yytext);
+        // printf("TType: %s\n", typeToString(*yylval.type));
         return TType;
     }
 
-"int" {  
-        printf("TType: %s\n",yytext);
-        return TType;
-    }
-
-"const" {  
-        printf("TConst: %s\n",yytext);
+"const" {
+        yylval.tag = malloc(sizeof(enum TType*));
+        *yylval.tag = getTagFromText(yytext);
+        // printf("TTag: %s\n", tagToString(*yylval.type));
         return TConst;
     }
 
 ";" {  
-        printf("TSemiColon: %s\n",yytext);
+        // printf("TSemiColon: %s\n",yytext);
         return TSemiColon;
     }
 
-"return" {  
-        printf("TReturn: %s\n",yytext);
+"return" {
+        yylval.tag = malloc(sizeof(enum TTag*));
+        *yylval.tag = getTagFromText(yytext);
+        // printf("TTag: %s\n", tagToString(*yylval.tag));
         return TReturn;
     }
 
 "=" {  
-        printf("TAssign: %s\n",yytext);
+        yylval.operator = malloc(sizeof(enum TOperator*));
+        *yylval.operator = getOperatorFromText(yytext);
+        // printf("\n\noperator: %d %s\n", *yylval.operator, yytext);
+        // printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TAssign;
     }
 
 "+" {  
-        printf("TPlus: %s\n",yytext);
+        yylval.operator = malloc(sizeof(enum TOperator*));
+        *yylval.operator = getOperatorFromText(yytext);
+        // printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TPlus;
     }
 
 "-" {  
-        printf("TMinus: %s\n",yytext);
+        yylval.operator = malloc(sizeof(enum TOperator*));
+        *yylval.operator = getOperatorFromText(yytext);
+        // printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TMinus;
     }    
 
 "*" {  
-        printf("TMultiply: %s\n",yytext);
+        yylval.operator = malloc(sizeof(enum TOperator*));
+        *yylval.operator = getOperatorFromText(yytext);
+        // printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TMultiply;
     }
 
 "/" {  
-        printf("TDivide: %s\n",yytext);
+        yylval.operator = malloc(sizeof(enum TOperator*));
+        *yylval.operator = getOperatorFromText(yytext);
+        // printf("TOperator: %s\n", operatorToString(*yylval.type));
         return TDivide;
     }
 
 "(" {  
-        printf("TOpenParenthesis: %s\n",yytext);
+        // printf("TOpenParenthesis: %s\n",yytext);
         return TOpenParenthesis;
     }
 
 ")" {  
-        printf("TCloseParenthesis: %s\n",yytext);
+        // printf("TCloseParenthesis: %s\n",yytext);
         return TCloseParenthesis;
     }
 
 {digit}+ { 
-        printf("TInteger: %d\n",atoi(yytext)); 
+        yylval.integer = atoi(yytext);
+        // printf("TInteger: %d\n", yylval.integer); 
         return TInteger;
     }
 
-"true" { 
-        printf("TBool: %s\n",yytext); 
-        return TBool;
-    }
-
-"false" { 
-        printf("TBool: %s\n",yytext); 
+"false"|"true" {
+        yylval.boolean = malloc(sizeof(enum TBool*));
+        *yylval.boolean = getBooleanFromText(yytext);
+        // printf("TBoolean: %s\n", boolToString(*yylval.type));
         return TBool;
     }
 
 {letter}({letter}|{digit})* { 
-        printf("TId: %s\n",yytext);
+        yylval.string=(char *) malloc(sizeof(yytext)*yyleng);
+        strcpy(yylval.string,yytext);
+        // printf("ID : %s\n",yytext);
         return TId;
     }
 
@@ -102,16 +115,8 @@ digit [0-9]
 %%
 
 void yyerror(){
+    printf("\033[1;31m");
 	printf("%s%d\n","-> Syntax ERROR at: ",yylineno);
-}
-
-int main(int argc,char *argv[]){
-	++argv,--argc;
-	if (argc > 0)
-		yyin = fopen(argv[0],"r");
-	else
-		yyin = stdin;
-
-	yyparse();
-
+    printf("\033[0m"); // Reset text color to default
+    exit(1);
 }
