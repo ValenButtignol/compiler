@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "tests/runTests.c"
 
 extern FILE *yyin;
 extern FILE *yyout;
@@ -8,10 +9,12 @@ extern int yyparse(void);
 
 int main(int argc,char *argv[]) {
     ++argv,--argc;
-	if (argc > 0)
+    if (argc > 0) {
         yyin = fopen(argv[0], "r");
-	else
-		yyin = stdin;
+    } else {
+        yyin = stdin;
+    }
     yyparse();
+    runTests();
     return 0;
 }

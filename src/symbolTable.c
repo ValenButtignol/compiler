@@ -34,8 +34,11 @@ SymbolTableNode* createSymbolNodeFromNodeInfo(NodeInfo* node) {
 }
 
 void initializeSymbolTable(SymbolTable** table) {
-
-    printf("Initializing symbol table\n");
+    *table = malloc(sizeof(SymbolTable));
+    if (*table == NULL) {
+        fprintf(stderr, "Failed to allocate memory for symbolTable\n");
+        exit(1);
+    }
     (*table)->head = NULL;
     (*table)->size = 0;
 }

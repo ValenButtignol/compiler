@@ -1,6 +1,0 @@
-boolean a = true - false;
-int b = 2 - 2;
-b = b + b * 2;
-a = a + true / a * false;
-return b;
-return a;

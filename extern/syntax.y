@@ -10,18 +10,15 @@
 extern int yylineno;
 extern int yytypeCorrect;
 
-SymbolTable* symbolTable = NULL;
+SymbolTable* symbolTable;
+TAst* globalAst;
+
+extern SymbolTable* symbolTable;
+extern TAst* globalAst;
 %}
 
 %initial-action {
-    symbolTable = malloc(sizeof(SymbolTable));
-    if (symbolTable == NULL) {
-        fprintf(stderr, "Failed to allocate memory for symbolTable\n");
-        exit(1);
-    }
-    symbolTable->head = NULL;
-    symbolTable->size = 0;
-       
+    initializeSymbolTable(&symbolTable);
 }
 
 %union {
@@ -67,18 +64,11 @@ SymbolTable* symbolTable = NULL;
 
 PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK { 
             NodeInfo *p = newNodeInfoWithoutValue(NONETYPE, "", PROGRAM);
-            // printf("\n\n--------------------\nAST\n--------------------\n\n");
+            printf("\n\n--------------------\nAST\n--------------------\n\n");
             TAst* ast = newAst(p, $1, $2);
-            // return(checkType());
-            // yytypeCorrect = checkType(ast);
-            if(!checkType(ast)){
-                printf("\033[1;31m");
-                printf("ERROR DE TIPOS\n");
-                printf("\033[0m"); // Reset text color to default
-
-                 exit(1);
-                 }
-            // eval(ast);
+            globalAst = ast;
+            checkType(ast);
+            evaluateAst(ast);
         }
     ;
 
