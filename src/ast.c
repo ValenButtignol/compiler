@@ -184,3 +184,7 @@ int evaluateBoolean(TAst* ast) {
         evaluateExpression(ast->rs);
     }
 }
+
+int isLeaf(TAst *ast){
+    return (ast->ls == NULL && ast->rs == NULL);   
+}

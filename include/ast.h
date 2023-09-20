@@ -37,4 +37,6 @@ int evaluateInteger(TAst* ast);
 int evaluateBoolean(TAst* ast);
 
 int isTypeTag(TAst ast);
+
+int isLeaf(TAst *ast);//tener en cuenta que si los dos hijos son arboles vacios o null entonces es una hoja
 #endif
