@@ -1,22 +1,28 @@
 #include <string.h>
 #include <assert.h>
 #include "utils/include/suiteMessages.h"
+#include "utils/include/evalAstInputs.h"
+#include "utils/include/testerDfs.h"
+#include "utils/include/testingNodeInfoList.h"
 #include "../include/ast.h"
 
-static void testValidInput1(TAst* globalAst) {
-    
-
-    assert(1);
-}
-
 static void evalAstTestSuite(char* inputTestFileName, TAst* globalAst) {
-    if (strcmp(inputTestFileName, "validInput1.txt") == 0) {
-        testValidInput1(globalAst);
-    } else {
+
+    TestingNodeInfoList* expectedNodes = newTestingNodeInfoList(); 
+    TestingNodeInfoList* nodesToFreeLater = expectedNodes;
+    evalAstExpectedNodesFactory(inputTestFileName, expectedNodes);
+
+    if (expectedNodes->head == NULL) {
         printNoTestSuiteMessage(inputTestFileName);
         return ;
     }
-    printTestSuccessMessage("EvalAst", inputTestFileName);
+    
+    if ((testerDfs(globalAst, expectedNodes))) {
+        printTestSuccessMessage("EvalAst", inputTestFileName);
+    } else {
+        printTestFailedMessage("EvalAst", inputTestFileName);
+    }
 
+    freeTestingNodeInfoList(nodesToFreeLater);
     return ;
 }

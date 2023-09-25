@@ -127,5 +127,5 @@ int isEmptyNode(NodeInfo node) {
 }
 
 int equalsNodeInfo(NodeInfo node1, NodeInfo node2) {
-    return node1.value == node2.value && node1.type == node2.type && strcmp(node1.id, node2.id) == 0 && node1.tag == node2.tag;
+    return (node1.type == node2.type && strcmp(node1.id, node2.id) == 0 && node1.tag == node2.tag && node1.value == node2.value);
 }
