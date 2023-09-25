@@ -110,14 +110,15 @@ ThreeAddressCodeNode *createThreeAddressCodeNode(
         return node;
 }
 
-enum TLabel getLabelFromID(char* id, enum TType type){
-    if(strcmp(id, "+") == 0 && type == INTEGER) return SUM;
-    if(strcmp(id, "-") == 0 && type == INTEGER) return SUB;
-    if(strcmp(id, "*") == 0 && type == INTEGER) return MUL;
-    if(strcmp(id, "/") == 0 && type == INTEGER) return DIV;
-    if(strcmp(id, "+") == 0 && type == BOOLEAN) return OR;//falta determinar cuando es un and o un OR
-    if(strcmp(id, "*") == 0 && type == BOOLEAN) return AND;//podriamos pasar el tipo de la operacion asi es facil
-    if(strcmp(id, "=") == 0) return MOV;
+enum TLabel getLabelFromOperator(enum TOperator op, enum TType type){
+    
+    if(op == PLUS && type == INTEGER) return SUM;
+    if(op == MINUS && type == INTEGER) return SUB;
+    if(op == MULTIPLY && type == INTEGER) return MUL;
+    if(op == DIVIDE && type == INTEGER) return DIV;
+    if(op == PLUS && type == BOOLEAN) return OR;//falta determinar cuando es un and o un OR
+    if(op == MULTIPLY && type == BOOLEAN) return AND;//podriamos pasar el tipo de la operacion asi es facil
+    if(op == 0) return MOV;
 }
 
 NodeInfo *getFirst(ThreeAddressCodeNode *node){

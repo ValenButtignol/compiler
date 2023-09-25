@@ -19,7 +19,7 @@ ThreeAddressCodeNode *threeAddressCodeNodeFactory(
     enum TLabel label, NodeInfo *first, NodeInfo *second, NodeInfo *third);
 ThreeAddressCodeNode *createThreeAddressCodeNode(
     enum TLabel label, NodeInfo *first, NodeInfo *second, NodeInfo *third);
-enum TLabel getLabelFromID(char *id, enum TType type);
+enum TLabel getLabelFromOperator(enum TOperator op, enum TType type);
 NodeInfo *getFirst(ThreeAddressCodeNode *node);
 ThreeAddressCodeNode *newEmtyNodeTAC();
 char *valueToString(NodeInfo *node);

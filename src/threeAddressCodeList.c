@@ -22,7 +22,7 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list){
             if(isLeaf(ast->ls) && isLeaf(ast->rs)){
                 NodeInfo *temp = createTemporalNodeInfo(createTemportalID(list->size), EXPR_OP);
                 ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(
-                    getLabelFromID(ast->data.id, ast->data.type), temp, &ast->ls->data, &ast->rs->data);
+                    getLabelFromOperator(ast->data.operator, ast->data.type), temp, &ast->ls->data, &ast->rs->data);
                 addToTAC(list, node);
             }else{
                
@@ -32,18 +32,18 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list){
                 if(isLeaf(ast->ls) && !isLeaf(ast->rs)){
                     createThreeAddressCodeList(ast->rs, list);
                     node = threeAddressCodeNodeFactory(
-                        getLabelFromID(ast->data.id, ast->data.type), temp, &ast->ls->data, 
+                        getLabelFromOperator(ast->data.operator, ast->data.type), temp, &ast->ls->data, 
                         getFirst(getFromTAC(list, list->size)));
                 }else if(!isLeaf(ast->ls) && isLeaf(ast->rs)){
                     createThreeAddressCodeList(ast->ls, list);
                     node = threeAddressCodeNodeFactory(
-                        getLabelFromID(ast->data.id, ast->data.type), temp, getFirst(getFromTAC(list, list->size)),
+                        getLabelFromOperator(ast->data.operator, ast->data.type), temp, getFirst(getFromTAC(list, list->size)),
                             &ast->rs->data);
                 }else if(!isLeaf(ast->ls) && !isLeaf(ast->rs)){
                     createThreeAddressCodeList(ast->ls, list);
                     createThreeAddressCodeList(ast->rs, list);
                     node = threeAddressCodeNodeFactory(
-                        getLabelFromID(ast->data.id, ast->data.type), temp, getFirst(getFromTAC(list, list->size - 1)),
+                        getLabelFromOperator(ast->data.operator, ast->data.type), temp, getFirst(getFromTAC(list, list->size - 1)),
                         getFirst(getFromTAC(list, list->size)));
                 }
                 
