@@ -1,6 +1,6 @@
 #include "../include/nodeInfo.h"
 
-NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag) {
+NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int lineNumber) {
     NodeInfo *result = malloc(sizeof(NodeInfo*));  
 
     setValue(result, value, type);
@@ -8,10 +8,11 @@ NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag) {
     result->id = strdup(id);     // Remember to free this later.
     result->tag = tag;
 
+    result->lineNumber = lineNumber;
     return result;
 }
 
-NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag) {
+NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag, int lineNumber) {
     NodeInfo *result = malloc(sizeof(NodeInfo*));    
 
     result->value = malloc(sizeof(int*));
@@ -20,6 +21,7 @@ NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag) {
     result->id = strdup(id); 
     result->tag = tag;
 
+    result->lineNumber = lineNumber;
     return result;
 }
 
