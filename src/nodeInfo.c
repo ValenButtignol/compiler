@@ -125,3 +125,7 @@ void freeNodeInfo(NodeInfo* node) {
 int isEmptyNode(NodeInfo node) {
     return node.value == NULL && node.type == NONETYPE && node.id == "" && node.tag == NONETAG;
 }
+
+int equalsNodeInfo(NodeInfo node1, NodeInfo node2) {
+    return (node1.type == node2.type && strcmp(node1.id, node2.id) == 0 && node1.tag == node2.tag && node1.value == node2.value);
+}

@@ -13,9 +13,6 @@ extern int yytypeCorrect;
 
 SymbolTable* symbolTable;
 TAst* globalAst;
-
-extern SymbolTable* symbolTable;
-extern TAst* globalAst;
 %}
 
 %initial-action {
@@ -67,7 +64,7 @@ PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK {
             NodeInfo *p = newNodeInfoWithoutValue(NONETYPE, "", PROGRAM);
             TAst* ast = newAst(p, $1, $2);
             globalAst = ast;
-            checkType(ast);
+            //checkType(ast);
             // evaluateAst(ast);
             // astToString(ast);
             ThreeAddressCodeList *list = createEmptyTAC();
@@ -179,5 +176,13 @@ EXPRESSION: EXPRESSION TPlus EXPRESSION {
             $$ = newLeaf(tid);
         }
     ;
-
 %%
+
+
+TAst* getGlobalAst() {
+    return globalAst;
+}
+
+SymbolTable* getSymbolTable() {
+    return symbolTable;
+}
