@@ -12,7 +12,7 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
             if(strcmp(node->second->id, "") == 0) strcat(str, valueToString(node->second));
             else strcat(str, node->second->id);
             strcat(str, " ");
-            if(node->label != ASS){
+            if(node->label != MOV){
                 if(strcmp(node->third->id, "") == 0) strcat(str, valueToString(node->third));
                 else strcat(str, node->third->id);
             }
@@ -37,8 +37,8 @@ char *labelToString(enum TLabel label){
     case DIV:
         return "DIV";
         break;
-    case ASS:
-        return "ASS";
+    case MOV:
+        return "MOV";
         break;
     case AND:
         return "AND";
@@ -88,7 +88,7 @@ ThreeAddressCodeNode *threeAddressCodeNodeFactory(
         case OR:
             return createThreeAddressCodeNode(label, first, second, third);
             break;
-        case ASS:
+        case MOV:
             return createThreeAddressCodeNode(label, first, second, newEmptyNodeInfo());
             break;
         case RET:
@@ -117,7 +117,7 @@ enum TLabel getLabelFromID(char* id, enum TType type){
     if(strcmp(id, "/") == 0 && type == INTEGER) return DIV;
     if(strcmp(id, "+") == 0 && type == BOOLEAN) return OR;//falta determinar cuando es un and o un OR
     if(strcmp(id, "*") == 0 && type == BOOLEAN) return AND;//podriamos pasar el tipo de la operacion asi es facil
-    if(strcmp(id, "=") == 0) return ASS;
+    if(strcmp(id, "=") == 0) return MOV;
 }
 
 NodeInfo *getFirst(ThreeAddressCodeNode *node){

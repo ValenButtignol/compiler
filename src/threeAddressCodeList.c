@@ -9,12 +9,13 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list){
     }    
     if(treeTag == DECL){
         if(isLeaf(ast->rs)){
-            ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(ASS, &ast->ls->data, &ast->rs->data, newEmptyNodeInfo());
+            ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(MOV, &ast->ls->data, &ast->rs->data, newEmptyNodeInfo());
             addToTAC(list, node);
         }else{
-            createThreeAddressCodeList(ast->rs, list);
             NodeInfo *temp = createTemporalNodeInfo(createTemportalID(list->size), EXPR_OP);
-            ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(ASSIGN, &ast->ls->data, temp, newEmptyNodeInfo());
+            createThreeAddressCodeList(ast->rs, list);
+            ThreeAddressCodeNode *node = 
+            threeAddressCodeNodeFactory(MOV, &ast->ls->data, temp, newEmptyNodeInfo());
             addToTAC(list, node);
         }
     }else if(treeTag == EXPR_OP){
@@ -51,14 +52,14 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list){
     }else if(treeTag == ASSIGNMENT_OP){
         if(isLeaf(ast->rs)){
             ThreeAddressCodeNode *node = malloc(sizeof(ThreeAddressCodeNode*));
-            node = threeAddressCodeNodeFactory(ASS, &ast->ls->data, &ast->rs->data, newEmptyNodeInfo());
+            node = threeAddressCodeNodeFactory(MOV, &ast->ls->data, &ast->rs->data, newEmptyNodeInfo());
             
             addToTAC(list, node);
 
         }else{
             createThreeAddressCodeList(ast->rs, list);
             ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(
-                                            ASS, &ast->ls->data, getFromTAC(list, list->size)->first, newEmptyNodeInfo());
+                                            MOV, &ast->ls->data, getFromTAC(list, list->size)->first, newEmptyNodeInfo());
             
             addToTAC(list, node);
         }

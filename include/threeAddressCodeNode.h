@@ -4,7 +4,7 @@
 #include "nodeInfo.h"
 
 
-enum TLabel{SUM, SUB, MUL, DIV, AND, OR, ASS, RET};
+enum TLabel{SUM, SUB, MUL, DIV, AND, OR, MOV, RET};
 
 typedef struct ThreeAddressCodeNode{
     struct ThreeAddressCodeNode *next;
