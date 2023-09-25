@@ -20,6 +20,8 @@ NodeInfo* newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int
 
 NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag, int lineNumber);
 
+NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int lineNumber, enum TOperator operator);
+
 NodeInfo* newEmptyNodeInfo();
 
 void* setValue(NodeInfo* node, void* value, enum TType type);

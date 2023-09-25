@@ -20,9 +20,15 @@ NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag, int 
     result->type = type;
     result->id = strdup(id); 
     result->tag = tag;
-
+    result->operator = NONOPERATOR;
     result->lineNumber = lineNumber;
     return result;
+}
+
+NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int lineNumber, enum TOperator operator){
+    NodeInfo* node = newNodeInfoWithoutValue(type, id, tag, lineNumber);
+    node->operator = operator;
+    return node;    
 }
 
 NodeInfo *newEmptyNodeInfo() {
