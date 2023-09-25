@@ -67,9 +67,6 @@ PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK {
             //checkType(ast);
             // evaluateAst(ast);
             // astToString(ast);
-            ThreeAddressCodeList *list = createEmptyTAC();
-            createThreeAddressCodeList(ast, list);
-            printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
         }
     ;
 

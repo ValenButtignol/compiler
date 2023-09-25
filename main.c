@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "include/ast.h"
+#include "include/threeAddressCodeList.h"
 
 extern FILE *yyin;
 extern FILE *yyout;
@@ -18,6 +19,9 @@ int main(int argc,char *argv[]) {
     yyparse();
     TAst* globalAst = getGlobalAst();
     checkType(globalAst);
-    evaluateAst(globalAst);
+    // evaluateAst(globalAst);
+    ThreeAddressCodeList *list = createEmptyTAC();
+    createThreeAddressCodeList(globalAst, list);
+    printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
     return 0;
 }
