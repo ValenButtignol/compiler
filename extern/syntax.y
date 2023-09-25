@@ -6,6 +6,7 @@
 #include "../include/nodeInfo.h"
 #include "../include/enums.h"
 #include "../include/symbolTable.h"
+#include "../include/threeAddressCodeList.h"
 
 extern int yylineno;
 extern int yytypeCorrect;
@@ -64,11 +65,14 @@ extern TAst* globalAst;
 
 PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK { 
             NodeInfo *p = newNodeInfoWithoutValue(NONETYPE, "", PROGRAM);
-            printf("\n\n--------------------\nAST\n--------------------\n\n");
             TAst* ast = newAst(p, $1, $2);
             globalAst = ast;
             checkType(ast);
-            evaluateAst(ast);
+            // evaluateAst(ast);
+            // astToString(ast);
+            ThreeAddressCodeList *list = createEmptyTAC();
+            createThreeAddressCodeList(ast, list);
+            printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
         }
     ;
 
@@ -165,7 +169,7 @@ EXPRESSION: EXPRESSION TPlus EXPRESSION {
         }
     | TOpenParenthesis EXPRESSION TCloseParenthesis { $$ = $2; }
     | TInteger  { $$ = newLeaf(newNodeInfo($1, INTEGER, "", CONST_VALUE)); }
-    | TBool { $$ = newLeaf(newNodeInfo($1, BOOLEAN, "", CONST_VALUE)); }
+    | TBool {$$ = newLeaf(newNodeInfo($1, BOOLEAN, "", CONST_VALUE)); }
     | TId { 
             NodeInfo *tid = searchKey(symbolTable, $1);
             if (tid == NULL) {
