@@ -2,5 +2,6 @@ a.out
 lex.yy.c
 syntax.tab.h
 .vscode
-
+output.out
+syntax.tab.c
 build/
