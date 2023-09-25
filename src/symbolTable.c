@@ -11,7 +11,7 @@ SymbolTableNode* createSymbolNode(void* value, enum TType type, char* id, enum T
         exit(1);
     }
 
-    newNode->data = newNodeInfo(value, type, id, tag);
+    newNode->data = newNodeInfo(value, type, id, tag, -999);
     newNode->level = 0;
     newNode->nextBlock = NULL;
     newNode->nextLevel = NULL;

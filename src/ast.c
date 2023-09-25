@@ -89,7 +89,7 @@ int checkType(TAst* ast)  {
 enum TType getAstType(TAst* ast) {
     if (ast == NULL || isEmptyAst(*ast)) {
         printf("\033[1;31m");
-        printf("Missing operating\n");
+        printf("Line: %d Error: Missing operating\n", ast->data.lineNumber);
         printf("\033[0m"); // Reset text color to default
         exit(1);
     } else if (ast->data.type != NONETYPE) {
@@ -147,7 +147,7 @@ void evaluateExpression(TAst* ast) {
         } else if (treeOperator == "/") {
             int divider = evaluateInteger(ast->rs);
             if (divider == 0) {
-                printf("Can't Divide for 0\n");
+                printf("\033[1;31mLine: %d Error:\033[0m Can't Divide for 0\n", ast->data.lineNumber);
                 exit(1);
             }
             result = evaluateInteger(ast->ls) / divider;

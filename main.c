@@ -18,7 +18,8 @@ int main(int argc,char *argv[]) {
 		yyin = stdin;
     yyparse();
     TAst* globalAst = getGlobalAst();
-    checkType(globalAst);
+    printf("Chequeo de tipos = %d", checkType(globalAst));
+    // checkType(globalAst);
     // evaluateAst(globalAst);
     ThreeAddressCodeList *list = createEmptyTAC();
     createThreeAddressCodeList(globalAst, list);
