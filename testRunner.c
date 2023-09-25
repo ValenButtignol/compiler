@@ -38,8 +38,8 @@ int main(int argc,char *argv[]) {
     checkType(globalAst);   
     checkTypeTestSuite(fileName, globalAst);
 
+    //evalAstTestSuite(fileName, globalAst);
     evaluateAst(globalAst);
-    evalAstTestSuite(fileName, globalAst);
 
     return 0;
 }

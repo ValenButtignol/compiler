@@ -4,7 +4,7 @@ void printTestSuccessMessage(char* testType, char* inputFileName) {
     printf("\n");
     printf("\033[1;32m"); // Set text color to green
     printf("******************************************************************\n");
-    printf("************ %s Tests completed successfully for %s ************\n", testType, inputFileName);
+    printf("************ \033[1m\033[32m %s \033[1;32m Tests completed successfully for %s ************\n", testType, inputFileName);
     printf("******************************************************************\n");
     printf("\033[0m"); // Reset text color to default
     printf("\n");
@@ -12,9 +12,9 @@ void printTestSuccessMessage(char* testType, char* inputFileName) {
 
 void printTestFailedMessage(char* testType, char* inputFileName) {
     printf("\n");
-    printf("\033[31m"); // Set text color to green
+    printf("\033[31m"); // Set text color to red
     printf("******************************************************************\n");
-    printf("************ %s Tests failed for %s ************\n", testType, inputFileName);
+    printf("************ \033[1m\033[31m %s \033[31m Tests failed for %s ************\n", testType, inputFileName);
     printf("******************************************************************\n");
     printf("\033[0m"); // Reset text color to default
     printf("\n");
