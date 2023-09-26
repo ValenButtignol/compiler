@@ -15,5 +15,8 @@ void checkTypesExpectedNodesCreator3(TestingNodeInfoList* expectedNodes);
 void checkTypesExpectedNodesCreator4(TestingNodeInfoList* expectedNodes);
 void checkTypesExpectedNodesCreator5(TestingNodeInfoList* expectedNodes);
 void checkTypesExpectedNodesCreator6(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator7(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator8(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator9(TestingNodeInfoList* expectedNodes);
 
 #endif
