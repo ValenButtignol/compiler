@@ -67,40 +67,53 @@ char* astToStringRecursive(TAst* ast) {
 
     return result;
 }
-int isTypeTag(TAst ast){
+
+int isTypeableTag(TAst ast){
     return  ast.data.tag == EXPR_OP || ast.data.tag == VAR_DECL || ast.data.tag == DECL 
-              || ast.data.tag == CONST_DECL || ast.data.tag == ASSIGNMENT_OP;
+              || ast.data.tag == CONST_DECL || ast.data.tag == ASSIGNMENT_OP || ast.data.tag == RETURN;
 }
 
-int checkType(TAst* ast)  {
-    
-    if (ast == NULL || isEmptyAst(*ast)) return 1;
-    if(ast->data.type == ERROR) return 0;
-
-    if (ast->data.type == NONETYPE && isTypeTag(*ast)) {
-        ast->data.type = getAstType(ast);
-        if (getAstType(ast->ls) != getAstType(ast->rs)) {
-            return 0;
-        }
+void setTypesInAst(TAst* ast) {
+    if (ast == NULL || isEmptyAst(*ast) || ast->data.type != NONETYPE) {
+        return;
     }
-    return checkType(ast->ls) && checkType(ast->rs);
+
+    if (isTypeableTag(*ast) && ast->data.type == NONETYPE) {
+        if (ast->data.tag == RETURN) {
+            ast->data.type = getAstType(ast->rs);
+            return;
+        }
+
+        enum TType lsType = getAstType(ast->ls);
+        enum TType rsType = getAstType(ast->rs);
+        
+        if (lsType != rsType || lsType == ERROR || rsType == ERROR) {
+            printf("\033[1;31mLine: %d Error:\033[0m Type mismatch\n", ast->data.lineNumber);
+            return;
+        }
+        ast->data.type = rsType;
+        return;
+    }
+
+    setTypesInAst(ast->ls);
+    setTypesInAst(ast->rs); 
 }
 
 enum TType getAstType(TAst* ast) {
-    if (ast == NULL || isEmptyAst(*ast)) {
-        printf("\033[1;31m");
-        printf("Line: %d Error: Missing operating\n", ast->data.lineNumber);
-        printf("\033[0m"); // Reset text color to default
-        exit(1);
-    } else if (ast->data.type != NONETYPE) {
+    if (ast->data.type != NONETYPE) {
         return ast->data.type;
-    } else if (ast->data.type == NONETYPE) {
-        enum TType lsType = getAstType(ast->ls);
-        enum TType rsType = getAstType(ast->ls);
-        if (lsType != rsType) {
-            return ERROR;
-        }
-        return lsType;
+    }
+    switch (ast->data.tag) {
+        case EXPR_OP:
+            enum TType lsType = getAstType(ast->ls);
+            enum TType rsType = getAstType(ast->rs);
+            if (lsType != rsType) {
+                return ERROR;       // Maybe is good to return the line number, or show the error here.
+            }
+            return lsType;
+
+        default:
+            return ast->data.type;
     }
 }
 
