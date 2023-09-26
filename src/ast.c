@@ -86,11 +86,6 @@ void checkTypes(TAst* ast) {
 
 void setTypesInAst(TAst* ast, ErrorNode* errors) {
 
-    printf("TreeSET value: %d\n", ast->data.value);
-    printf("TreeSET type: %d\n", ast->data.type);
-    printf("TreeSET tag: %d\n", ast->data.tag);
-    printf("TreeSET id: %s\n\n", ast->data.id);
-
     if (ast == NULL || isEmptyAst(*ast) || ast->data.type != NONETYPE) {
         return;
     }

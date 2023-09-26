@@ -10,12 +10,10 @@
 
 void checkTypesExpectedNodesFactory(char* inputTestFileName, TestingNodeInfoList* expectedNodes);
 void checkTypesExpectedNodesCreator1(TestingNodeInfoList* expectedNodes);
-//TAst* createCorrectAst3();
-//TAst* createCorrectAst4();
-//TAst* createCorrectAst5();
-//TAst* createCorrectAst6();
-//TAst* createCorrectAst7();
-//TAst* createCorrectAst8();
-//TAst* createCorrectAst9();
+void checkTypesExpectedNodesCreator2(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator3(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator4(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator5(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator6(TestingNodeInfoList* expectedNodes);
 
 #endif
