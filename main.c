@@ -18,7 +18,7 @@ int main(int argc,char *argv[]) {
 		yyin = stdin;
     yyparse();
     TAst* globalAst = getGlobalAst();
-    setTypesInAst(globalAst);
+    checkTypes(globalAst);
 
     //printf("Chequeo de tipos = %d");
     // checkType(globalAst);

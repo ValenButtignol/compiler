@@ -35,7 +35,7 @@ int main(int argc,char *argv[]) {
     char* fileName = getFileName(argv[0]);
     TAst* globalAst = getGlobalAst();
 
-    setTypesInAst(globalAst);
+    checkTypes(globalAst);
 
     checkTypeTestSuite(fileName, globalAst);
 

@@ -73,7 +73,18 @@ int isTypeableTag(TAst ast){
               || ast.data.tag == CONST_DECL || ast.data.tag == ASSIGNMENT_OP || ast.data.tag == RETURN;
 }
 
-void setTypesInAst(TAst* ast) {
+
+void checkTypes(TAst* ast) {
+    ErrorNode* errors = NULL;
+    setTypesInAst(ast, errors);
+
+    if (errors != NULL) {
+        printErrors(errors);
+    }
+    freeErrorsList(errors);
+}
+
+void setTypesInAst(TAst* ast, ErrorNode* errors) {
     if (ast == NULL || isEmptyAst(*ast) || ast->data.type != NONETYPE) {
         return;
     }
@@ -88,15 +99,15 @@ void setTypesInAst(TAst* ast) {
         enum TType rsType = getAstType(ast->rs);
         
         if (lsType != rsType || lsType == ERROR || rsType == ERROR) {
-            printf("\033[1;31mLine: %d Error:\033[0m Type mismatch\n", ast->data.lineNumber);
+            insertErrorNode(&errors, "\033[1;31mLine:   Error:\033[0m Type mismatch\n");    // Add line number in ast->data.lineNumber
             return;
         }
         ast->data.type = rsType;
         return;
     }
 
-    setTypesInAst(ast->ls);
-    setTypesInAst(ast->rs); 
+    setTypesInAst(ast->ls, errors);
+    setTypesInAst(ast->rs, errors); 
 }
 
 enum TType getAstType(TAst* ast) {
