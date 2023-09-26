@@ -85,6 +85,12 @@ void checkTypes(TAst* ast) {
 }
 
 void setTypesInAst(TAst* ast, ErrorNode* errors) {
+
+    printf("TreeSET value: %d\n", ast->data.value);
+    printf("TreeSET type: %d\n", ast->data.type);
+    printf("TreeSET tag: %d\n", ast->data.tag);
+    printf("TreeSET id: %s\n\n", ast->data.id);
+
     if (ast == NULL || isEmptyAst(*ast) || ast->data.type != NONETYPE) {
         return;
     }
@@ -97,6 +103,7 @@ void setTypesInAst(TAst* ast, ErrorNode* errors) {
 
         enum TType lsType = getAstType(ast->ls);
         enum TType rsType = getAstType(ast->rs);
+
         
         if (lsType != rsType || lsType == ERROR || rsType == ERROR) {
             insertErrorNode(&errors, "\033[1;31mLine:   Error:\033[0m Type mismatch\n");    // Add line number in ast->data.lineNumber
@@ -121,6 +128,7 @@ enum TType getAstType(TAst* ast) {
             if (lsType != rsType) {
                 return ERROR;       // Maybe is good to return the line number, or show the error here.
             }
+            ast->data.type = lsType;
             return lsType;
 
         default:

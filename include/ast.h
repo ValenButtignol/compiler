@@ -5,6 +5,7 @@
 #include <string.h>
 #include "nodeInfo.h"
 #include "enums.h"
+#include "errorNode.h"
 
 typedef struct TAst{
 	NodeInfo data;
@@ -24,7 +25,9 @@ char* astToStringRecursive(TAst* ast);
 
 int isEmptyAst(TAst ast);
 
-void setTypesInAst(TAst* ast);
+void checkTypes(TAst* ast);
+
+void setTypesInAst(TAst* ast, ErrorNode* errors);
 
 enum TType getAstType(TAst* ast);
 

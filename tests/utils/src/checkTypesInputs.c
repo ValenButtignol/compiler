@@ -12,27 +12,27 @@ void checkTypesExpectedNodesCreator1(TestingNodeInfoList* expectedNodes) {
 
     NodeInfo node;
 
-    node = *newNodeInfoWithoutValue(INTEGER, "a", VAR_DECL);
+    node = *newNodeInfoWithoutValue(INTEGER, "a", VAR_DECL,0);
     addNodeToTestingList(expectedNodes, node);
     node = *newEmptyNodeInfo();// Empty
     addNodeToTestingList(expectedNodes, node);
-    node = *newNodeInfoWithoutValue(INTEGER, "", RETURN);// Return
+    node = *newNodeInfoWithoutValue(INTEGER, "", RETURN,0);// Return
     addNodeToTestingList(expectedNodes, node);
     node = *newEmptyNodeInfo();// LAMBDA
     addNodeToTestingList(expectedNodes, node);
-    node = *newNodeInfo((int *)3, INTEGER, "", CONST_VALUE);
+    node = *newNodeInfo((int *)3, INTEGER, "", CONST_VALUE,0);
     addNodeToTestingList(expectedNodes, node);
-    node = *newNodeInfo((int *)2, INTEGER, "", CONST_VALUE);
+    node = *newNodeInfo((int *)2, INTEGER, "", CONST_VALUE,0);
     addNodeToTestingList(expectedNodes, node);
-    node = *newNodeInfoWithoutValue(INTEGER, "+", EXPR_OP);
+    node = *newNodeInfoWithoutValue(INTEGER, "+", EXPR_OP,0);
     addNodeToTestingList(expectedNodes, node);
-    node = *newNodeInfoWithoutValue(INTEGER, "a", VAR_DECL);
+    node = *newNodeInfoWithoutValue(INTEGER, "a", VAR_DECL,0);
     addNodeToTestingList(expectedNodes, node);
-    node = *newNodeInfoWithoutValue(INTEGER, "=", DECL);
+    node = *newNodeInfoWithoutValue(INTEGER, "=", DECL,0);
     addNodeToTestingList(expectedNodes, node);
-    node = *newNodeInfoWithoutValue(NONETYPE, "", DECL_BLOCK);
+    node = *newNodeInfoWithoutValue(NONETYPE, "", DECL_BLOCK,0);
     addNodeToTestingList(expectedNodes, node);
-    node = *newNodeInfoWithoutValue(NONETYPE, "", PROGRAM);
+    node = *newNodeInfoWithoutValue(NONETYPE, "", PROGRAM,0);
     addNodeToTestingList(expectedNodes, node);
 
 }
