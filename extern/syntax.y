@@ -163,7 +163,7 @@ EXPRESSION: EXPRESSION TPlus EXPRESSION {
         }
     | TOpenParenthesis EXPRESSION TCloseParenthesis { $$ = $2; }
     | TInteger  { $$ = newLeaf(newNodeInfo($1, INTEGER, "", CONST_VALUE, yylineno)); }
-    | TBool {$$ = newLeaf(newNodeInfo($1, BOOLEAN, "", CONST_VALUE, yylineno)); }
+    | TBool { $$ = newLeaf(newNodeInfo((int)*$1, BOOLEAN, "", CONST_VALUE, yylineno)); }
     | TId { 
             NodeInfo *tid = searchKey(symbolTable, $1);
             if (tid == NULL) {
