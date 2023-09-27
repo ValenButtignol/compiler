@@ -1,6 +1,6 @@
 #include "../include/checkTypesInputs.h"
 
-void checkTypesExpectedNodesFactory(char* inputTestFileName, TestingNodeInfoList* expectedNodes) {
+void checkTypesFactory(char* inputTestFileName, TestingNodeInfoList* expectedNodes, ErrorNode** expectedErrors) {
     
     if (strcmp(inputTestFileName, "validInput1.txt") == 0) {
         checkTypesExpectedNodesCreator1(expectedNodes);
@@ -20,6 +20,14 @@ void checkTypesExpectedNodesFactory(char* inputTestFileName, TestingNodeInfoList
         checkTypesExpectedNodesCreator8(expectedNodes);
     } else if (strcmp(inputTestFileName, "validInput9.txt") == 0) {
         checkTypesExpectedNodesCreator9(expectedNodes);
+    } else if (strcmp(inputTestFileName, "invalidInput1.txt") == 0) {
+        checkTypesErrorListCreator1(expectedErrors);
+    } else if (strcmp(inputTestFileName, "invalidInput2.txt") == 0) {
+        checkTypesErrorListCreator2(expectedErrors);
+    } else if (strcmp(inputTestFileName, "invalidInput3.txt") == 0) {
+        checkTypesErrorListCreator3(expectedErrors);
+    } else if (strcmp(inputTestFileName, "invalidInput4.txt") == 0) {
+        checkTypesErrorListCreator4(expectedErrors);
     }
 
 }
@@ -331,4 +339,26 @@ void checkTypesExpectedNodesCreator9(TestingNodeInfoList* expectedNodes) {
     node = *newNodeInfoWithoutValue(NONETYPE, "", PROGRAM,0);
     addNodeToTestingList(expectedNodes, node);
 
+}
+
+void checkTypesErrorListCreator1(ErrorNode** expectedErrors) {
+    char* errorStr = "\033[1;31mLine: 1 Error:\033[0m Type mismatch\n";
+    insertErrorNode(expectedErrors, errorStr);   
+}
+ 
+void checkTypesErrorListCreator2(ErrorNode** expectedErrors) {
+    char* errorStr = "\033[1;31mLine: 1 Error:\033[0m Type mismatch\n";
+    insertErrorNode(expectedErrors, errorStr);   
+}
+
+void checkTypesErrorListCreator3(ErrorNode** expectedErrors) {
+    char* errorStr = "\033[1;31mLine: 2 Error:\033[0m Type mismatch\n";
+    insertErrorNode(expectedErrors, errorStr);   
+}
+
+void checkTypesErrorListCreator4(ErrorNode** expectedErrors) {
+    char* errorStr = "\033[1;31mLine: 1 Error:\033[0m Type mismatch\n";
+    insertErrorNode(expectedErrors, errorStr);   
+    errorStr = "\033[1;31mLine: 2 Error:\033[0m Type mismatch\n";
+    insertErrorNode(expectedErrors, errorStr);   
 }

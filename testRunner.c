@@ -35,12 +35,20 @@ int main(int argc,char *argv[]) {
     char* fileName = getFileName(argv[0]);
     TAst* globalAst = getGlobalAst();
 
-    checkTypes(globalAst);
+    ErrorNode* errors = NULL;
+    if (!checkTypes(globalAst, &errors)) {
+        printf("Chequeo de tipos = OK\n");
+    } else {
+        printf("Chequeo de tipos = ERROR\n");
+        printErrors(errors);
+    }
 
-    checkTypeTestSuite(fileName, globalAst);
+    checkTypeTestSuite(fileName, globalAst, &errors);
+
+    freeErrorsList(errors);
 
     //evalAstTestSuite(fileName, globalAst);
-    evaluateAst(globalAst);
+    //evaluateAst(globalAst);
 
     return 0;
 }

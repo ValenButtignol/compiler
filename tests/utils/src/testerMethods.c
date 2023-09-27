@@ -1,20 +1,8 @@
-#include "../include/testerDfs.h"
+#include "../include/testerMethods.h"
 
 
 int testerDfs(TAst* globalAst, TestingNodeInfoList* expectedNodes) {
  
-    /* printf("TREE value: %d\n", (int*)globalAst->data.value);
-    printf("TREE id: %s\n", globalAst->data.id);
-    printf("TREE type: %d\n", globalAst->data.type);
-    printf("TREE tag: %d\n\n", globalAst->data.tag);
-
-    printf("EXPECTED value: %d\n", expectedNodes->head->data.value);
-    printf("EXPECTED id: %s\n", expectedNodes->head->data.id);
-    printf("EXPECTED type: %d\n", expectedNodes->head->data.type);
-    printf("EXPECTED tag: %d\n\n", expectedNodes->head->data.tag); */
-
-    
-
     if (globalAst->ls == NULL && globalAst->rs == NULL) {
         return equalsNodeInfo(globalAst->data, expectedNodes->head->data);
     }
@@ -39,4 +27,18 @@ int testerDfs(TAst* globalAst, TestingNodeInfoList* expectedNodes) {
     }
 
     return result;
+}
+
+
+int testErrors(ErrorNode* errors, ErrorNode* expectedErrors) {
+    ErrorNode* currentError = errors;
+    ErrorNode* currentExpectedError = expectedErrors;
+    while (currentError != NULL && currentExpectedError != NULL) {
+        if (!equalsErrorNode(currentError, currentExpectedError)) {
+            return 0;
+        }
+        currentError = currentError->next;
+        currentExpectedError = currentExpectedError->next;
+    }
+    return currentError == NULL && currentExpectedError == NULL;
 }

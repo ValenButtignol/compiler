@@ -18,13 +18,15 @@ int main(int argc,char *argv[]) {
 		yyin = stdin;
     yyparse();
     TAst* globalAst = getGlobalAst();
-    checkTypes(globalAst);
+
+    ErrorNode* errors = NULL;
+    checkTypes(globalAst, &errors);
 
     //printf("Chequeo de tipos = %d");
     // checkType(globalAst);
     // evaluateAst(globalAst);
     ThreeAddressCodeList *list = createEmptyTAC();
-    createThreeAddressCodeList(globalAst, list);
+    //createThreeAddressCodeList(globalAst, list);
     printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
     return 0;
 }

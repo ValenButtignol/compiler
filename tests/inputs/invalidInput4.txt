@@ -1,0 +1,3 @@
+boolean a = 1;
+a = 2 + false;
+a = false - true;

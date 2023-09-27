@@ -2,7 +2,7 @@
 #include <assert.h>
 #include "utils/include/suiteMessages.h"
 #include "utils/include/evalAstInputs.h"
-#include "utils/include/testerDfs.h"
+#include "utils/include/testerMethods.h"
 #include "utils/include/testingNodeInfoList.h"
 #include "../include/ast.h"
 
