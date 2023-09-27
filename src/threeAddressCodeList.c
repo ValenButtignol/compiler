@@ -8,73 +8,69 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list){
         return ;
     }    
     if(treeTag == DECL){
+        ThreeAddressCodeNode *node;
         if(isLeaf(ast->rs)){
-            ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(MOV, &ast->ls->data, &ast->rs->data, newEmptyNodeInfo());
+            node = threeAddressCodeNodeFactory(MOV, &ast->ls->data, &ast->rs->data, newEmptyNodeInfo());
             addToTAC(list, node);
         }else{
-            NodeInfo *temp = createTemporalNodeInfo(createTemportalID(list->size), EXPR_OP);
+            createTemporalNodeInfo(createTemportalID(list->size), EXPR_OP, &ast->data);
             createThreeAddressCodeList(ast->rs, list);
             ThreeAddressCodeNode *node = 
-            threeAddressCodeNodeFactory(MOV, &ast->ls->data, temp, newEmptyNodeInfo());
+            threeAddressCodeNodeFactory(MOV, &ast->ls->data, &ast->data, newEmptyNodeInfo());
             addToTAC(list, node);
         }
     }else if(treeTag == EXPR_OP){
+            createTemporalNodeInfo(createTemportalID(list->size), EXPR_OP, &ast->data);
+            ThreeAddressCodeNode *node;
+
             if(isLeaf(ast->ls) && isLeaf(ast->rs)){
-                NodeInfo *temp = createTemporalNodeInfo(createTemportalID(list->size), EXPR_OP);
-                ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(
-                    getLabelFromOperator(ast->data.operator, ast->data.type), temp, &ast->ls->data, &ast->rs->data);
-                addToTAC(list, node);
-            }else{
-               
-                NodeInfo *temp = createTemporalNodeInfo(createTemportalID(list->size), EXPR_OP);
-                ThreeAddressCodeNode *node;
-                
+                node = threeAddressCodeNodeFactory(
+                    getLabelFromOperator(ast->data.operator, ast->data.type), &ast->data, &ast->ls->data, &ast->rs->data);
+            }else{    
                 if(isLeaf(ast->ls) && !isLeaf(ast->rs)){
                     createThreeAddressCodeList(ast->rs, list);
                     node = threeAddressCodeNodeFactory(
-                        getLabelFromOperator(ast->data.operator, ast->data.type), temp, &ast->ls->data, 
+                        getLabelFromOperator(ast->data.operator, ast->data.type), &ast->data, &ast->ls->data, 
                         getFirst(getFromTAC(list, list->size)));
+               
                 }else if(!isLeaf(ast->ls) && isLeaf(ast->rs)){
                     createThreeAddressCodeList(ast->ls, list);
                     node = threeAddressCodeNodeFactory(
-                        getLabelFromOperator(ast->data.operator, ast->data.type), temp, getFirst(getFromTAC(list, list->size)),
+                        getLabelFromOperator(ast->data.operator, ast->data.type), &ast->data, getFirst(getFromTAC(list, list->size)),
                             &ast->rs->data);
+               
                 }else if(!isLeaf(ast->ls) && !isLeaf(ast->rs)){
                     createThreeAddressCodeList(ast->ls, list);
                     createThreeAddressCodeList(ast->rs, list);
                     node = threeAddressCodeNodeFactory(
-                        getLabelFromOperator(ast->data.operator, ast->data.type), temp, getFirst(getFromTAC(list, list->size - 1)),
+                        getLabelFromOperator(ast->data.operator, ast->data.type), &ast->data, getFirst(getFromTAC(list, list->size - 1)),
                         getFirst(getFromTAC(list, list->size)));
                 }
-                
-                addToTAC(list, node);
             }
-    }else if(treeTag == ASSIGNMENT_OP){
-        if(isLeaf(ast->rs)){
-            ThreeAddressCodeNode *node = malloc(sizeof(ThreeAddressCodeNode*));
-            node = threeAddressCodeNodeFactory(MOV, &ast->ls->data, &ast->rs->data, newEmptyNodeInfo());
-            
             addToTAC(list, node);
-
+    }else if(treeTag == ASSIGNMENT_OP){
+        ThreeAddressCodeNode *node;
+        if(isLeaf(ast->rs)){
+            node = malloc(sizeof(ThreeAddressCodeNode*));
+            node = threeAddressCodeNodeFactory(MOV, &ast->ls->data, &ast->rs->data, newEmptyNodeInfo());       
+            addToTAC(list, node);
         }else{
             createThreeAddressCodeList(ast->rs, list);
-            ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(
+            node = threeAddressCodeNodeFactory(
                                             MOV, &ast->ls->data, getFromTAC(list, list->size)->first, newEmptyNodeInfo());
-            
             addToTAC(list, node);
         }
     }else if(treeTag == RETURN){
+        ThreeAddressCodeNode *node;
         if(isLeaf(ast->rs)){
-            ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(RET, &ast->rs->data, 
+            node = threeAddressCodeNodeFactory(RET, &ast->rs->data, 
                                                     newEmptyNodeInfo(), newEmptyNodeInfo());
-            addToTAC(list, node);
         }else{
             createThreeAddressCodeList(ast->rs, list);
-            ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(RET, getFromTAC(list, list->size)->first, 
+            node = threeAddressCodeNodeFactory(RET, getFromTAC(list, list->size)->first, 
                                                     newEmptyNodeInfo(), newEmptyNodeInfo());
-
-            addToTAC(list, node);
         }
+        addToTAC(list, node);
     } else if (treeTag == NONETAG) {
         return;
     }else{
@@ -83,11 +79,13 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list){
     }
 
 }
+
 char* threeAddressListToString(ThreeAddressCodeList *list){
+
     ThreeAddressCodeNode *h = list->head->next;
     char *str = malloc(list->size*100);
     while(h != NULL)
-    {
+    {   
         strcat(str, threeAddressCodeNodeToString(h));
         strcat(str, "\n");
         h = h->next;
@@ -96,13 +94,7 @@ char* threeAddressListToString(ThreeAddressCodeList *list){
     return str;
 }
 
-NodeInfo *createTemporalNodeInfo(char* id, enum TTag tag){
-    NodeInfo *temp = newEmptyNodeInfo();
-    temp->id = malloc(20);
-    strcpy(temp->id, id);
-    temp->tag = tag;
-    return temp;
-}
+
 
 char *createTemportalID(int tempNumber){
     char* id = malloc(10);

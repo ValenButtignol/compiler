@@ -9,7 +9,9 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
         strcat(str, " ");
         
         if(node->label != RET){
-            if(strcmp(node->second->id, "") == 0) strcat(str, valueToString(node->second));
+            if(strcmp(node->second->id, "") == 0){
+                strcat(str, valueToString(node->second));
+            }
             else strcat(str, node->second->id);
             strcat(str, " ");
             if(node->label != MOV){
@@ -59,10 +61,10 @@ char *valueToString(NodeInfo *node){
     char *str = malloc(10*sizeof(int));
     if(node->type == INTEGER){
         int *value = (int*)node->value;
-        sprintf(str, "%d", value);
+        sprintf(str, "%d", (int*)node->value);
     }else if(node->type == BOOLEAN){
-        int *value = (int*)node->value;
-        strcat(str, boolToString(*value));
+        int value = (int*)node->value;
+        strcat(str, boolToString(value));
     }
     return str;
 }
