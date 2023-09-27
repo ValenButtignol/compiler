@@ -6,15 +6,13 @@
 #include "../include/nodeInfo.h"
 #include "../include/enums.h"
 #include "../include/symbolTable.h"
+#include "../include/threeAddressCodeList.h"
 
 extern int yylineno;
 extern int yytypeCorrect;
 
 SymbolTable* symbolTable;
 TAst* globalAst;
-
-extern SymbolTable* symbolTable;
-extern TAst* globalAst;
 %}
 
 %initial-action {
@@ -63,17 +61,17 @@ extern TAst* globalAst;
 %%
 
 PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK { 
-            NodeInfo *p = newNodeInfoWithoutValue(NONETYPE, "", PROGRAM);
-            printf("\n\n--------------------\nAST\n--------------------\n\n");
+            NodeInfo *p = newNodeInfoWithoutValue(NONETYPE, "", PROGRAM, yylineno);
             TAst* ast = newAst(p, $1, $2);
             globalAst = ast;
-            checkType(ast);
-            evaluateAst(ast);
+            //checkType(ast);
+            // evaluateAst(ast);
+            // astToString(ast);
         }
     ;
 
 DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK {
-            NodeInfo *declarationInfo = newNodeInfoWithoutValue(NONETYPE, "", DECL_BLOCK);
+            NodeInfo *declarationInfo = newNodeInfoWithoutValue(NONETYPE, "", DECL_BLOCK, yylineno);
             $$ = newAst(declarationInfo,$1,$2);
         }
     | /* LAMBDA */ {
@@ -83,30 +81,30 @@ DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK {
     ;
 
 DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
-            NodeInfo *constantDecl = newNodeInfoWithoutValue(NONETYPE, "=", DECL);
+            NodeInfo *constantDecl = newNodeInfoWithoutValue(NONETYPE, "=", DECL, yylineno);
 
             NodeInfo* constId = searchKey(symbolTable, $3);
             if (constId != NULL) {
-                printf("Error: const identifier %s already declared\n", $3);
+                printf("\033[1;31mLine: %d Error:\033[0m const identifier %s already declared\n", $3);
                 exit(1);
             }
 
-            constId = newNodeInfoWithoutValue(*$2, $3, CONST_DECL);
+            constId = newNodeInfoWithoutValue(*$2, $3, CONST_DECL, yylineno);
             TAst *declaredID = newLeaf(constId);
             addNodeInfoToBlock(&(symbolTable->head), constId);
 
             $$ = newAst(constantDecl, declaredID, $5);
         }
     | TType TId TAssign EXPRESSION TSemiColon {
-            NodeInfo *varDecl = newNodeInfoWithoutValue(NONETYPE, "=", DECL);
+            NodeInfo *varDecl = newNodeInfoWithoutValue(NONETYPE, "=", DECL, yylineno);
 
             NodeInfo* varId = searchKey(symbolTable, $2);
             if (varId != NULL) {
-                printf("Error: var identifier %s already declared\n", $2);
+                printf("\033[1;31mLine: %d Error:\033[0m var identifier %s already declared\n", $2);
                 exit(1);
             }
 
-            varId = newNodeInfoWithoutValue(*$1, $2, VAR_DECL);
+            varId = newNodeInfoWithoutValue(*$1, $2, VAR_DECL, yylineno);
             addNodeInfoToBlock(&(symbolTable->head), varId);
             TAst *declaredID = newLeaf(varId);
 
@@ -116,11 +114,11 @@ DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
 
 
 STATEMENT_BLOCK: ASSIGNMENT STATEMENT_BLOCK {
-            NodeInfo *statement = newNodeInfoWithoutValue(NONETYPE, "", STMT_BLOCK);
+            NodeInfo *statement = newNodeInfoWithoutValue(NONETYPE, "", STMT_BLOCK, yylineno);
             $$ = newAst(statement,$1, $2);
         }
     | RETURN STATEMENT_BLOCK {
-            NodeInfo *statement = newNodeInfoWithoutValue(NONETYPE, "", STMT_BLOCK);
+            NodeInfo *statement = newNodeInfoWithoutValue(NONETYPE, "", STMT_BLOCK, yylineno);
             $$ = newAst(statement,$1, $2);
         }
     | ASSIGNMENT { $$ = $1; }
@@ -130,50 +128,58 @@ STATEMENT_BLOCK: ASSIGNMENT STATEMENT_BLOCK {
 ASSIGNMENT: TId TAssign EXPRESSION TSemiColon {
             NodeInfo *tid = searchKey(symbolTable, $1);
             if (tid == NULL) {
-                printf("Error: variable %s not declared\n", $1);
+                printf("\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", $1);
                 exit(1);
             }
             TAst *t = newLeaf(tid);
-            NodeInfo *tassign = newNodeInfoWithoutValue(NONETYPE, "=", ASSIGNMENT_OP);
+            NodeInfo *tassign = newNodeInfoWithoutValue(NONETYPE, "=", ASSIGNMENT_OP, yylineno);
             $$ = newAst(tassign, t, $3);
 
         }
     ;
 
 RETURN: TReturn EXPRESSION TSemiColon { 
-            NodeInfo *treturn = newNodeInfoWithoutValue(NONETYPE, "", RETURN);
+            NodeInfo *treturn = newNodeInfoWithoutValue(NONETYPE, "", RETURN, yylineno);
             $$ = newAst(treturn, newEmptyAst(), $2);
         }
     ;
 
 EXPRESSION: EXPRESSION TPlus EXPRESSION {
-            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "+", EXPR_OP); // CHANGE THIS ID'S 
+            NodeInfo *ni = newNodeInfoOperator(NONETYPE, "+", EXPR_OP, yylineno, PLUS); // CHANGE THIS ID'S 
             TAst* ast = newAst(ni, $1, $3); 
             $$ = ast;
         }
     | EXPRESSION TMinus EXPRESSION  {
-            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "-", EXPR_OP);
+            NodeInfo *ni = newNodeInfoOperator(NONETYPE, "-", EXPR_OP, yylineno, MINUS);
             $$ = newAst(ni, $1, $3);
         }
     | EXPRESSION TMultiply EXPRESSION {
-            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "*", EXPR_OP);
+            NodeInfo *ni = newNodeInfoOperator(NONETYPE, "*", EXPR_OP, yylineno, MULTIPLY);
             $$ = newAst(ni, $1, $3);
         }
     | EXPRESSION TDivide EXPRESSION {
-            NodeInfo *ni = newNodeInfoWithoutValue(NONETYPE, "/", EXPR_OP);
+            NodeInfo *ni = newNodeInfoOperator(NONETYPE, "/", EXPR_OP, yylineno, DIVIDE);
             $$ = newAst(ni, $1, $3);
         }
     | TOpenParenthesis EXPRESSION TCloseParenthesis { $$ = $2; }
-    | TInteger  { $$ = newLeaf(newNodeInfo($1, INTEGER, "", CONST_VALUE)); }
-    | TBool { $$ = newLeaf(newNodeInfo($1, BOOLEAN, "", CONST_VALUE)); }
+    | TInteger  { $$ = newLeaf(newNodeInfo($1, INTEGER, "", CONST_VALUE, yylineno)); }
+    | TBool { $$ = newLeaf(newNodeInfo((int)*$1, BOOLEAN, "", CONST_VALUE, yylineno)); }
     | TId { 
             NodeInfo *tid = searchKey(symbolTable, $1);
             if (tid == NULL) {
-                printf("Error: variable %s not declared\n", $1);
+                printf("\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", yylineno,$1);
                 exit(1);
             }
             $$ = newLeaf(tid);
         }
     ;
-
 %%
+
+
+TAst* getGlobalAst() {
+    return globalAst;
+}
+
+SymbolTable* getSymbolTable() {
+    return symbolTable;
+}

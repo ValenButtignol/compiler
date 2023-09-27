@@ -19,7 +19,7 @@ enum TTag {PROGRAM, DECL_BLOCK, DECL, VAR_DECL, CONST_DECL, STMT_BLOCK, ASSIGNME
 enum TTag getTagFromText(char* tag);
 char *tagToString(enum TTag tag);
 
-enum TOperator {PLUS, MINUS, MULTIPLY, DIVIDE, ASSIGN};
+enum TOperator {PLUS, MINUS, MULTIPLY, DIVIDE, ASSIGN, NONOPERATOR};
 enum TOperator getOperatorFromText(char* op);
 char *operatorToString(enum TOperator op);
 

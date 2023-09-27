@@ -1,28 +1,32 @@
 #include "../include/ast.h"
-#include "utils/include/createInputs.h"
+#include "../include/errorNode.h"
+#include "utils/include/testerMethods.h"
+#include "utils/include/suiteMessages.h"
+#include "utils/include/checkTypesInputs.h"
 #include <assert.h>
 
-static void testCheckType01(){
-    createCorrectAst1();
-    assert(1);
-    // If assert(0) -> Test failed.
-}
+static void checkTypeTestSuite(char* inputTestFileName, TAst* globalAst, ErrorNode** errors) {
+    TestingNodeInfoList* expectedNodes = newTestingNodeInfoList(); 
+    TestingNodeInfoList* nodesToFreeLater = expectedNodes;
+    ErrorNode* expectedErrors = NULL;
+    checkTypesFactory(inputTestFileName, expectedNodes, &expectedErrors);
 
-
-static void printSuccessMessage() {
-    printf("\n");
-    printf("\033[1;32m"); // Set text color to green
-    printf("******************************************************************\n");
-    printf("************ Check Type Tests completed successfully ************\n");
-    printf("******************************************************************\n");
-    printf("\n");
-    printf("\n");
-
-    printf("\033[0m"); // Reset text color to default
-}
-
-
-static void testCheckTypeSuite() {
-    testCheckType01();
-    printSuccessMessage();
+    if (expectedNodes->head == NULL && *errors == NULL) {
+        printNoTestSuiteMessage(inputTestFileName);
+        return ;
+    }
+    
+    if (expectedNodes->head != NULL) {
+        if (testerDfs(globalAst, expectedNodes))
+            printTestSuccessMessage("CheckTypes", inputTestFileName);
+            freeTestingNodeInfoList(nodesToFreeLater);
+    } else if (*errors != NULL) {
+        if (testErrors(*errors, expectedErrors)) 
+            printTestSuccessMessage("CheckTypes", inputTestFileName);
+            freeErrorsList(expectedErrors);
+    } else {
+        printTestFailedMessage("CheckTypes", inputTestFileName);
+    }
+    
+    return ;
 }

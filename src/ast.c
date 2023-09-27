@@ -67,40 +67,71 @@ char* astToStringRecursive(TAst* ast) {
 
     return result;
 }
-int isTypeTag(TAst ast){
+
+int isTypeableTag(TAst ast){
     return  ast.data.tag == EXPR_OP || ast.data.tag == VAR_DECL || ast.data.tag == DECL 
-              || ast.data.tag == CONST_DECL || ast.data.tag == ASSIGNMENT_OP;
+              || ast.data.tag == CONST_DECL || ast.data.tag == ASSIGNMENT_OP || ast.data.tag == RETURN;
 }
 
-int checkType(TAst* ast)  {
-    
-    if (ast == NULL || isEmptyAst(*ast)) return 1;
-    if(ast->data.type == ERROR) return 0;
 
-    if (ast->data.type == NONETYPE && isTypeTag(*ast)) {
-        ast->data.type = getAstType(ast);
-        if (getAstType(ast->ls) != getAstType(ast->rs)) {
-            return 0;
-        }
+int checkTypes(TAst* ast, ErrorNode** errors) {
+    setTypesInAst(ast, errors);
+
+    if (*errors != NULL) {
+        return 1;
     }
-    return checkType(ast->ls) && checkType(ast->rs);
+
+    return 0;
+}
+
+void setTypesInAst(TAst* ast, ErrorNode** errors) {
+
+    if (ast == NULL || isEmptyAst(*ast) || ast->data.type != NONETYPE) {
+        return;
+    }
+
+    if (isTypeableTag(*ast) && ast->data.type == NONETYPE) {
+        if (ast->data.tag == RETURN) {
+            ast->data.type = getAstType(ast->rs);
+            return;
+        }
+
+        enum TType lsType = getAstType(ast->ls);
+        enum TType rsType = getAstType(ast->rs);
+
+        
+        if (lsType != rsType || lsType == ERROR || rsType == ERROR) {
+            char* errorStr;
+            sprintf(errorStr, "\033[1;31mLine: %d Error:\033[0m Type mismatch\n", ast->data.lineNumber);
+            insertErrorNode(errors, errorStr);    // Add line number in ast->data.lineNumber
+            ast->data.type = ERROR;
+        } else {
+            ast->data.type = lsType;
+            return;
+        }
+    } else {
+        setTypesInAst(ast->ls, errors);
+        setTypesInAst(ast->rs, errors); 
+    }
 }
 
 enum TType getAstType(TAst* ast) {
-    if (ast == NULL || isEmptyAst(*ast)) {
-        printf("\033[1;31m");
-        printf("Missing operating\n");
-        printf("\033[0m"); // Reset text color to default
-        exit(1);
-    } else if (ast->data.type != NONETYPE) {
+    
+    if (ast->data.type != NONETYPE) {
         return ast->data.type;
-    } else if (ast->data.type == NONETYPE) {
-        enum TType lsType = getAstType(ast->ls);
-        enum TType rsType = getAstType(ast->ls);
-        if (lsType != rsType) {
-            return ERROR;
-        }
-        return lsType;
+    }
+    switch (ast->data.tag) {
+        case EXPR_OP:
+            enum TType lsType = getAstType(ast->ls);
+            enum TType rsType = getAstType(ast->rs);
+            if (lsType != rsType) {
+                return ERROR;
+            }
+            ast->data.type = lsType;
+            return lsType;
+
+        default:
+            return ast->data.type;
     }
 }
 
@@ -147,7 +178,7 @@ void evaluateExpression(TAst* ast) {
         } else if (treeOperator == "/") {
             int divider = evaluateInteger(ast->rs);
             if (divider == 0) {
-                printf("Can't Divide for 0\n");
+                printf("\033[1;31mLine: %d Error:\033[0m Can't Divide for 0\n", ast->data.lineNumber);
                 exit(1);
             }
             result = evaluateInteger(ast->ls) / divider;
@@ -162,7 +193,7 @@ void evaluateExpression(TAst* ast) {
             result = evaluateBoolean(ast->ls) || evaluateBoolean(ast->rs);
         } else if (treeOperator == "*") {
             result = evaluateBoolean(ast->ls) && evaluateBoolean(ast->rs);
-        }
+        }           // TODO: ADD INVALID OPERATORS AS ERRORS. 
         setValue(&ast->data, (void*)&result, BOOLEAN);
     }
 }
@@ -183,4 +214,8 @@ int evaluateBoolean(TAst* ast) {
         evaluateExpression(ast->ls);
         evaluateExpression(ast->rs);
     }
+}
+
+int isLeaf(TAst *ast){
+    return (ast->ls == NULL && ast->rs == NULL);   
 }

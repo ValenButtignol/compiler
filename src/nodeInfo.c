@@ -1,6 +1,6 @@
 #include "../include/nodeInfo.h"
 
-NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag) {
+NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int lineNumber) {
     NodeInfo *result = malloc(sizeof(NodeInfo*));  
 
     setValue(result, value, type);
@@ -8,10 +8,11 @@ NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag) {
     result->id = strdup(id);     // Remember to free this later.
     result->tag = tag;
 
+    result->lineNumber = lineNumber;
     return result;
 }
 
-NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag) {
+NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag, int lineNumber) {
     NodeInfo *result = malloc(sizeof(NodeInfo*));    
 
     result->value = malloc(sizeof(int*));
@@ -19,8 +20,15 @@ NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag) {
     result->type = type;
     result->id = strdup(id); 
     result->tag = tag;
-
+    result->operator = NONOPERATOR;
+    result->lineNumber = lineNumber;
     return result;
+}
+
+NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int lineNumber, enum TOperator operator){
+    NodeInfo* node = newNodeInfoWithoutValue(type, id, tag, lineNumber);
+    node->operator = operator;
+    return node;    
 }
 
 NodeInfo *newEmptyNodeInfo() {
@@ -124,4 +132,16 @@ void freeNodeInfo(NodeInfo* node) {
 
 int isEmptyNode(NodeInfo node) {
     return node.value == NULL && node.type == NONETYPE && node.id == "" && node.tag == NONETAG;
+}
+
+int equalsNodeInfo(NodeInfo node1, NodeInfo node2) {
+    return (node1.type == node2.type && strcmp(node1.id, node2.id) == 0 && node1.tag == node2.tag && node1.value == node2.value);
+}
+
+void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp){
+    free(temp->id);
+    temp->id = malloc(20);
+    strcpy(temp->id, id);
+    temp->tag = tag;
+    return temp;
 }

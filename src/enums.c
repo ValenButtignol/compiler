@@ -2,6 +2,7 @@
 
 enum TBoolean getBooleanFromText(char* boolean) {
     if (strcmp(boolean, "true")) {
+
         return TRUE;
     } else if(strcmp(boolean, "false")) {
         return FALSE;
