@@ -74,17 +74,17 @@ int isTypeableTag(TAst ast){
 }
 
 
-void checkTypes(TAst* ast) {
-    ErrorNode* errors = NULL;
+int checkTypes(TAst* ast, ErrorNode** errors) {
     setTypesInAst(ast, errors);
 
-    if (errors != NULL) {
-        printErrors(errors);
+    if (*errors != NULL) {
+        return 1;
     }
-    freeErrorsList(errors);
+
+    return 0;
 }
 
-void setTypesInAst(TAst* ast, ErrorNode* errors) {
+void setTypesInAst(TAst* ast, ErrorNode** errors) {
 
     if (ast == NULL || isEmptyAst(*ast) || ast->data.type != NONETYPE) {
         return;
@@ -101,18 +101,22 @@ void setTypesInAst(TAst* ast, ErrorNode* errors) {
 
         
         if (lsType != rsType || lsType == ERROR || rsType == ERROR) {
-            insertErrorNode(&errors, "\033[1;31mLine:   Error:\033[0m Type mismatch\n");    // Add line number in ast->data.lineNumber
+            char* errorStr;
+            sprintf(errorStr, "\033[1;31mLine: %d Error:\033[0m Type mismatch\n", ast->data.lineNumber);
+            insertErrorNode(errors, errorStr);    // Add line number in ast->data.lineNumber
+            ast->data.type = ERROR;
+        } else {
+            ast->data.type = lsType;
             return;
         }
-        ast->data.type = rsType;
-        return;
+    } else {
+        setTypesInAst(ast->ls, errors);
+        setTypesInAst(ast->rs, errors); 
     }
-
-    setTypesInAst(ast->ls, errors);
-    setTypesInAst(ast->rs, errors); 
 }
 
 enum TType getAstType(TAst* ast) {
+    
     if (ast->data.type != NONETYPE) {
         return ast->data.type;
     }
@@ -121,7 +125,7 @@ enum TType getAstType(TAst* ast) {
             enum TType lsType = getAstType(ast->ls);
             enum TType rsType = getAstType(ast->rs);
             if (lsType != rsType) {
-                return ERROR;       // Maybe is good to return the line number, or show the error here.
+                return ERROR;
             }
             ast->data.type = lsType;
             return lsType;
@@ -189,7 +193,7 @@ void evaluateExpression(TAst* ast) {
             result = evaluateBoolean(ast->ls) || evaluateBoolean(ast->rs);
         } else if (treeOperator == "*") {
             result = evaluateBoolean(ast->ls) && evaluateBoolean(ast->rs);
-        }
+        }           // TODO: ADD INVALID OPERATORS AS ERRORS. 
         setValue(&ast->data, (void*)&result, BOOLEAN);
     }
 }

@@ -18,4 +18,6 @@ void printErrors(ErrorNode* head);
 
 void freeErrorsList(ErrorNode* head);
 
+int equalsErrorNode(ErrorNode* error1, ErrorNode* error2);
+
 #endif

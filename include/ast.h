@@ -25,9 +25,9 @@ char* astToStringRecursive(TAst* ast);
 
 int isEmptyAst(TAst ast);
 
-void checkTypes(TAst* ast);
+int checkTypes(TAst* ast, ErrorNode** errors);
 
-void setTypesInAst(TAst* ast, ErrorNode* errors);
+void setTypesInAst(TAst* ast, ErrorNode** errors);
 
 enum TType getAstType(TAst* ast);
 

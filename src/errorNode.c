@@ -41,3 +41,13 @@ void freeErrorsList(ErrorNode* head) {
         free(temp);
     }
 }
+
+int equalsErrorNode(ErrorNode* error1, ErrorNode* error2) {
+    if (error1 == NULL && error2 == NULL) {
+        return 1;
+    } else if (error1 == NULL || error2 == NULL) {
+        return 0;
+    } else {
+        return strcmp(error1->data, error2->data) == 0;
+    }
+}
