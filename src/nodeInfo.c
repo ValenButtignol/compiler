@@ -137,3 +137,11 @@ int isEmptyNode(NodeInfo node) {
 int equalsNodeInfo(NodeInfo node1, NodeInfo node2) {
     return (node1.type == node2.type && strcmp(node1.id, node2.id) == 0 && node1.tag == node2.tag && node1.value == node2.value);
 }
+
+void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp){
+    free(temp->id);
+    temp->id = malloc(20);
+    strcpy(temp->id, id);
+    temp->tag = tag;
+    return temp;
+}

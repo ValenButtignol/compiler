@@ -36,4 +36,5 @@ int equalsNodeInfo(NodeInfo node1, NodeInfo node2);
 
 int isEmptyNode(NodeInfo node);
 
+void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp);
 #endif
