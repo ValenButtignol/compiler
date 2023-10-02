@@ -18,7 +18,11 @@ typedef struct{
 
 NodeInfo* newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int lineNumber);
 
+NodeInfo *newNodeInfoWithOffset(void* value, enum TType type, char* id, enum TTag tag, int lineNumber, int offset);
+
 NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag, int lineNumber);
+
+NodeInfo* newNodeInfoWithoutValueWithOffset(enum TType type, char* id, enum TTag tag, int lineNumber, int offset);
 
 NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int lineNumber, enum TOperator operator);
 
@@ -36,5 +40,5 @@ int equalsNodeInfo(NodeInfo node1, NodeInfo node2);
 
 int isEmptyNode(NodeInfo node);
 
-void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp);
+void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset);
 #endif

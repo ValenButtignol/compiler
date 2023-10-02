@@ -9,6 +9,7 @@ extern FILE *yyin;
 extern FILE *yyout;
 extern int yyparse(void);
 extern TAst* getGlobalAst(void);
+extern int getOffset(void);
 
 
 int main(int argc,char *argv[]) {
@@ -19,14 +20,15 @@ int main(int argc,char *argv[]) {
 		yyin = stdin;
     yyparse();
     TAst* globalAst = getGlobalAst();
-
     ErrorNode* errors = NULL;
     checkTypes(globalAst, &errors);
 
     // evaluateAst(globalAst);
     ThreeAddressCodeList *list = createEmptyTAC();
 
-    createThreeAddressCodeList(globalAst, list);
+    int offset = getOffset();
+
+    createThreeAddressCodeList(globalAst, list, &offset);
     printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
     
     generateAssembly(list);

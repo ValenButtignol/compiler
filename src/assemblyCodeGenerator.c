@@ -6,15 +6,13 @@ void generateAssembly(ThreeAddressCodeList* list) {
     if (file == NULL) {
         // Error handling code
         perror("Error opening the file");
-        return 1; // Return a non-zero value to indicate failure
+        exit(1); // Return a non-zero value to indicate failure
     }
 
     generateMain(file, list);
     ThreeAddressCodeNode* current = list->head->next;
 
     while (current != NULL) {
-        printf("aAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
-        
         instructionFactory(file, current);
         current = current->next;
     }
@@ -38,6 +36,7 @@ void generateFooter(FILE* file) {                               // Probably this
 
 
 void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
+
     char* firstValue = generateValue(current->first);
     char* secondValue = generateValue(current->second);
     char* thirdValue = generateValue(current->third);
@@ -79,12 +78,16 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
 void generateSum(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
     fprintf(file, "    mov %s, %s\n", firstValue, secondValue);
     fprintf(file, "    add %s, %s\n", firstValue, thirdValue);
+    fprintf(file, "\n");
+
 }
 
 
 void generateSub(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
     fprintf(file, "    mov %s, %s\n", firstValue, secondValue);
     fprintf(file, "    sub %s, %s\n", firstValue, thirdValue);
+    fprintf(file, "\n");
+
 }
 
 void generateMul(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
@@ -92,6 +95,8 @@ void generateMul(FILE* file, char* firstValue, char* secondValue, char* thirdVal
     fprintf(file, "    mov ebx, %s\n", thirdValue);
     fprintf(file, "    imul eax, ebx\n");
     fprintf(file, "    mov %s, eax\n", firstValue);
+    fprintf(file, "\n");
+
 }
 
 void generateDiv(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
@@ -100,29 +105,43 @@ void generateDiv(FILE* file, char* firstValue, char* secondValue, char* thirdVal
     fprintf(file, "    xor edx, edx\n");                    // Clear EDX to prepare for the result
     fprintf(file, "    div ebx\n");                         // Divide EAX by EBX, quotient in EAX, remainder in EDX
     fprintf(file, "    mov %s, eax\n", firstValue);         // Store value
+    fprintf(file, "\n");
+
 }
 
 void generateAnd(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
     fprintf(file, "    mov %s, %s\n", firstValue, secondValue);
     fprintf(file, "    and %s, %s\n", firstValue, thirdValue);
+    fprintf(file, "\n");
 }
 
 void generateOr(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
     fprintf(file, "    mov %s, %s\n", firstValue, secondValue);
     fprintf(file, "    or %s, %s\n", firstValue, thirdValue);
+    fprintf(file, "\n");
+
 }
 
 void generateMov(FILE* file, char* firstValue, char* secondValue) {
     fprintf(file, "    mov %s, %s\n", firstValue, secondValue);
+    fprintf(file, "\n");
+
 }
 
 void generateRet(FILE* file, char* firstValue) {
     fprintf(file, "    mov eax, %s\n", firstValue);
     fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
     fprintf(file, "    ret\n");
+    fprintf(file, "\n");
+
 }
 
 char* generateValue(NodeInfo* node) {
+    printf("ID: %s\n", node->id);
+    printf("VALUE: %d\n", node->value);
+    printf("TAG: %d\n", node->tag);
+    printf("OFFSET: %d\n", node->offset);
+    printf("TYPE: %d\n\n", node->type);
     char* result;
     result = (char*)malloc(20);
     if (result == NULL) {
@@ -136,6 +155,7 @@ char* generateValue(NodeInfo* node) {
     } {
         sprintf(result, "%d(%%ebp)", node->offset*4);
     }
+
     return result;
 }
 
