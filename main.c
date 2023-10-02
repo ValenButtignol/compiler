@@ -3,6 +3,7 @@
 #include <string.h>
 #include "include/ast.h"
 #include "include/threeAddressCodeList.h"
+#include "include/assemblyCodeGenerator.h"
 
 extern FILE *yyin;
 extern FILE *yyout;
@@ -22,11 +23,31 @@ int main(int argc,char *argv[]) {
     ErrorNode* errors = NULL;
     checkTypes(globalAst, &errors);
 
-    //printf("Chequeo de tipos = %d");
-    // checkType(globalAst);
     // evaluateAst(globalAst);
     ThreeAddressCodeList *list = createEmptyTAC();
-    //createThreeAddressCodeList(globalAst, list);
+
+    createThreeAddressCodeList(globalAst, list);
     printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
+    
+    generateAssembly(list);
+
     return 0;
 }
+
+
+
+
+/*
+	.text
+    .globl	main
+	.type	main, @function
+main:
+    enter
+    ...
+    leave
+    ret
+    
+.LFE6:
+	.size	main, .-main
+	.section	.note.GNU-stack,"",@progbits
+*/
