@@ -68,6 +68,7 @@ char *valueToString(NodeInfo *node){
     }
     return str;
 }
+
 ThreeAddressCodeNode *threeAddressCodeNodeFactory(
     enum TLabel label, NodeInfo *first, NodeInfo *second, NodeInfo *third){
         switch (label)

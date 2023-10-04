@@ -13,9 +13,11 @@ extern int yytypeCorrect;
 
 SymbolTable* symbolTable;
 TAst* globalAst;
+int offset;
 %}
 
 %initial-action {
+    offset = 0;
     initializeSymbolTable(&symbolTable);
 }
 
@@ -72,7 +74,9 @@ PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK {
 
 DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK {
             NodeInfo *declarationInfo = newNodeInfoWithoutValue(NONETYPE, "", DECL_BLOCK, yylineno);
-            $$ = newAst(declarationInfo,$1,$2);
+            $$ = newAst(declarationInfo,$1,$2);            //checkType(ast);
+            // evaluateAst(ast);
+            // astToString(ast);
         }
     | /* LAMBDA */ {
             NodeInfo *ni = newEmptyNodeInfo();
@@ -88,8 +92,8 @@ DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
                 printf("\033[1;31mLine: %d Error:\033[0m const identifier %s already declared\n", $3);
                 exit(1);
             }
-
-            constId = newNodeInfoWithoutValue(*$2, $3, CONST_DECL, yylineno);
+            offset++;
+            constId = newNodeInfoWithoutValueWithOffset(*$2, $3, CONST_DECL, yylineno, offset);
             TAst *declaredID = newLeaf(constId);
             addNodeInfoToBlock(&(symbolTable->head), constId);
 
@@ -104,7 +108,8 @@ DECLARATION: TConst TType TId TAssign EXPRESSION TSemiColon {
                 exit(1);
             }
 
-            varId = newNodeInfoWithoutValue(*$1, $2, VAR_DECL, yylineno);
+            offset++;
+            varId = newNodeInfoWithoutValueWithOffset(*$1, $2, VAR_DECL, yylineno, offset);
             addNodeInfoToBlock(&(symbolTable->head), varId);
             TAst *declaredID = newLeaf(varId);
 
@@ -162,8 +167,14 @@ EXPRESSION: EXPRESSION TPlus EXPRESSION {
             $$ = newAst(ni, $1, $3);
         }
     | TOpenParenthesis EXPRESSION TCloseParenthesis { $$ = $2; }
-    | TInteger  { $$ = newLeaf(newNodeInfo($1, INTEGER, "", CONST_VALUE, yylineno)); }
-    | TBool { $$ = newLeaf(newNodeInfo((int)*$1, BOOLEAN, "", CONST_VALUE, yylineno)); }
+    | TInteger  { 
+            offset++;
+            $$ = newLeaf(newNodeInfoWithOffset($1, INTEGER, "", CONST_VALUE, yylineno, offset));
+        }
+    | TBool { 
+            offset++;
+            $$ = newLeaf(newNodeInfoWithOffset((int)*$1, BOOLEAN, "", CONST_VALUE, yylineno, offset)); 
+        }
     | TId { 
             NodeInfo *tid = searchKey(symbolTable, $1);
             if (tid == NULL) {
@@ -175,6 +186,9 @@ EXPRESSION: EXPRESSION TPlus EXPRESSION {
     ;
 %%
 
+int getOffset() {
+    return offset;
+}
 
 TAst* getGlobalAst() {
     return globalAst;
