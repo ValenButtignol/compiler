@@ -2,12 +2,16 @@
 
 
 int testerDfs(TAst* globalAst, TestingNodeInfoList* expectedNodes) {
- 
+    // printf("\n%s\n", astToString(globalAst));
+    // printf("\n\n\nvalueAST: %d == %d\n", (globalAst->data)->value, expectedNodes->head->data.value);
+    // printf("idAST: %s == %s\n", (globalAst->data)->id, expectedNodes->head->data.id);
+    // printf("tagAST: %s == %s\n", tagToString(globalAst->data->tag), tagToString(expectedNodes->head->data.tag));
+    // printf("NODE:  %s\n\n", nodeInfoToString(*globalAst->data));
     if (globalAst->ls == NULL && globalAst->rs == NULL) {
-        return equalsNodeInfo(globalAst->data, expectedNodes->head->data);
+        return equalsNodeInfo(*globalAst->data, expectedNodes->head->data);
     }
 
-    if (!equalsNodeInfo(globalAst->data, expectedNodes->head->data)) {
+    if (!equalsNodeInfo(*globalAst->data, expectedNodes->head->data)) {
         return 0;
     }
 
