@@ -11,7 +11,7 @@ static void evalAstTestSuite(char* inputTestFileName, TAst* globalAst) {
     TestingNodeInfoList* expectedNodes = newTestingNodeInfoList(); 
     TestingNodeInfoList* nodesToFreeLater = expectedNodes;
     evalAstExpectedNodesFactory(inputTestFileName, expectedNodes);
-
+    
     if (expectedNodes->head == NULL) {
         printNoTestSuiteMessage(inputTestFileName);
         return ;
