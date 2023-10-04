@@ -7,8 +7,8 @@
 #include "nodeInfo.h"
 
 void generateAssembly(ThreeAddressCodeList* list);
-void generateMain(FILE* file, ThreeAddressCodeList* list);
-void generateFooter(FILE* file);
+void generatePrologue(FILE* file, ThreeAddressCodeList* list);
+void generateHeader(FILE* file, ThreeAddressCodeList* list);
 void instructionFactory(FILE* file, ThreeAddressCodeNode* current);
 void generateSum(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
 void generateSub(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
@@ -18,6 +18,7 @@ void generateAnd(FILE* file, char* firstValue, char* secondValue, char* thirdVal
 void generateOr(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
 void generateMov(FILE* file, char* firstValue, char* secondValue);
 void generateRet(FILE* file, char* firstValue);
+void generatePrint(FILE* file, char* valueToPrint);
 char* generateValue(NodeInfo* value);
 
 #endif

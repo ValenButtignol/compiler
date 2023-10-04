@@ -9,7 +9,8 @@ void generateAssembly(ThreeAddressCodeList* list) {
         exit(1); // Return a non-zero value to indicate failure
     }
 
-    generateMain(file, list);
+    generateHeader(file, list);
+    generatePrologue(file, list);
     ThreeAddressCodeNode* current = list->head->next;
 
     while (current != NULL) {
@@ -17,21 +18,20 @@ void generateAssembly(ThreeAddressCodeList* list) {
         current = current->next;
     }
 
-    generateFooter(file);
-
     fclose(file);
 }
 
-
-void generateMain(FILE* file, ThreeAddressCodeList* list) {     // Probably this would be converted into generatePrologue
-    fprintf(file, "    .text\n");
-    fprintf(file, ".globl main\n");
-    fprintf(file, "main:\n");
+void generatePrologue(FILE* file, ThreeAddressCodeList* list) {
+    fprintf(file, "    pushq   %rbp\n");
+    fprintf(file, "    movq    %rsp, %rbp\n");
+    fprintf(file, "    subq    $64, %rsp\n\n");
 }
 
-void generateFooter(FILE* file) {                               // Probably this would be converted into generateEpilogue
-    fprintf(file, "    leave\n");
-    fprintf(file, "    ret\n");
+void generateHeader(FILE* file, ThreeAddressCodeList* list) {     // Probably this would be converted into generatePrologue
+    fprintf(file, "    .text\n");
+    fprintf(file, "    .globl  main\n");
+    fprintf(file, "    .type   main, @function\n");
+    fprintf(file, "main:\n");
 }
 
 
@@ -40,6 +40,11 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
     char* firstValue = generateValue(current->first);
     char* secondValue = generateValue(current->second);
     char* thirdValue = generateValue(current->third);
+
+    printf("\n\n\nPRIMERO: %s\n", firstValue);
+    printf("SEGUNDO: %s\n", secondValue);
+    printf("TERCERO: %s\n\n\n", thirdValue);
+
     
     switch(current->label) {
         case SUM:
@@ -76,60 +81,63 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
 }
 
 void generateSum(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    mov %s, %s\n", firstValue, secondValue);
-    fprintf(file, "    add %s, %s\n", firstValue, thirdValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    addl    %s, %%eax\n", thirdValue);
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
-
 }
 
 
 void generateSub(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    mov %s, %s\n", firstValue, secondValue);
-    fprintf(file, "    sub %s, %s\n", firstValue, thirdValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    subl    %s, %%eax\n", thirdValue);
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
-
 }
 
 void generateMul(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    mov eax, %s\n", secondValue);
-    fprintf(file, "    mov ebx, %s\n", thirdValue);
-    fprintf(file, "    imul eax, ebx\n");
-    fprintf(file, "    mov %s, eax\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
+    fprintf(file, "    imul    %%eax, %%ebx\n");
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
-
 }
 
 void generateDiv(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    mov eax, %s\n", secondValue);        // Dividend
-    fprintf(file, "    mov ebx, %s\n", thirdValue);         // Divisor
-    fprintf(file, "    xor edx, edx\n");                    // Clear EDX to prepare for the result
-    fprintf(file, "    div ebx\n");                         // Divide EAX by EBX, quotient in EAX, remainder in EDX
-    fprintf(file, "    mov %s, eax\n", firstValue);         // Store value
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);  // Dividend
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);   // Divisor
+    fprintf(file, "    xor     %%edx, %%edx\n");            // Clear EDX to prepare for the result
+    fprintf(file, "    div     %%ebx\n");                   // Divide EAX by EBX, quotient in EAX, remainder in EDX
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);   // Store value
     fprintf(file, "\n");
-
 }
 
 void generateAnd(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    mov %s, %s\n", firstValue, secondValue);
-    fprintf(file, "    and %s, %s\n", firstValue, thirdValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
+    fprintf(file, "    andl    %%ebx, %%eax\n");
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateOr(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    mov %s, %s\n", firstValue, secondValue);
-    fprintf(file, "    or %s, %s\n", firstValue, thirdValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
+    fprintf(file, "    orl     %%ebx, %%eax\n");
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
-
 }
 
 void generateMov(FILE* file, char* firstValue, char* secondValue) {
-    fprintf(file, "    mov %s, %s\n", firstValue, secondValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
-
 }
 
 void generateRet(FILE* file, char* firstValue) {
-    fprintf(file, "    mov eax, %s\n", firstValue);
+    generatePrint(file, firstValue);
+
+    fprintf(file, "    movl    %s, %%eax\n", firstValue);
     fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
     fprintf(file, "    ret\n");
     fprintf(file, "\n");
@@ -152,10 +160,14 @@ char* generateValue(NodeInfo* node) {
         sprintf(result, "$%d", node->value);
     } else if (node->tag == NONETAG) {
         sprintf(result, "");
-    } {
-        sprintf(result, "%d(%%ebp)", node->offset*4);
+    } else {
+        sprintf(result, "-%d(%%rbp)", node->offset*4);
     }
-
     return result;
 }
 
+void generatePrint(FILE* file, char* valueToPrint) {
+    fprintf(file, "    movl    %s, %%edi\n", valueToPrint);
+    fprintf(file, "    call    print\n");
+    fprintf(file, "\n");
+}
