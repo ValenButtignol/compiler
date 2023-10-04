@@ -7,7 +7,7 @@ NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int
     result->type = type;
     result->id = strdup(id);     // Remember to free this later.
     result->tag = tag;
-
+    result->operator = NONOPERATOR;
     result->lineNumber = lineNumber;
     return result;
 }
@@ -90,7 +90,7 @@ char* nodeInfoToString(NodeInfo node) {
         break;
     
     case 8: // EXPR_OP
-        strcpy(string, operatorToString(*(enum TOperator*)node.value));
+        strcpy(string, operatorToString(node.operator));
         break;
     
     case 9: // CONST_VALUE
