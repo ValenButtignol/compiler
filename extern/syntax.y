@@ -25,8 +25,7 @@ int offset;
     TAst* ast;
     enum TType* type;
     char* string;
-    int integer;
-    enum TBoolean* boolean;
+    void *value;
     enum TTag* tag;
     enum TOperator* operator;
 }
@@ -43,8 +42,8 @@ int offset;
 %token <operator>TDivide
 %token TOpenParenthesis
 %token TCloseParenthesis
-%token <integer>TInteger
-%token <boolean>TBool
+%token <value>TInteger
+%token <value>TBool
 
 %type <ast>PROGRAM
 %type <ast>EXPRESSION
@@ -66,17 +65,12 @@ PROGRAM: DECLARATION_BLOCK STATEMENT_BLOCK {
             NodeInfo *p = newNodeInfoWithoutValue(NONETYPE, "", PROGRAM, yylineno);
             TAst* ast = newAst(p, $1, $2);
             globalAst = ast;
-            //checkType(ast);
-            // evaluateAst(ast);
-            // astToString(ast);
         }
     ;
 
 DECLARATION_BLOCK: DECLARATION DECLARATION_BLOCK {
             NodeInfo *declarationInfo = newNodeInfoWithoutValue(NONETYPE, "", DECL_BLOCK, yylineno);
             $$ = newAst(declarationInfo,$1,$2);            //checkType(ast);
-            // evaluateAst(ast);
-            // astToString(ast);
         }
     | /* LAMBDA */ {
             NodeInfo *ni = newEmptyNodeInfo();
@@ -171,11 +165,16 @@ EXPRESSION: EXPRESSION TPlus EXPRESSION {
 
     | TInteger  { 
             offset++;
-            $$ = newLeaf(newNodeInfoWithOffset($1, INTEGER, "", CONST_VALUE, yylineno, offset));
+            NodeInfo *node = malloc(sizeof(NodeInfo*));
+            node = newNodeInfoWithOffset($1, INTEGER, "", CONST_VALUE, yylineno, offset);
+            $$ = newLeaf(&node);
+
         }
     | TBool { 
             offset++;
-            $$ = newLeaf(newNodeInfoWithOffset((void)*$1, BOOLEAN, "", CONST_VALUE, yylineno, offset)); 
+            NodeInfo *node = malloc(sizeof(NodeInfo*));
+            node = newNodeInfoWithOffset($1, BOOLEAN, "", CONST_VALUE, yylineno, offset);
+            $$ = newLeaf(&node); 
         }
     | TId { 
             NodeInfo *tid = searchKey(symbolTable, $1);
