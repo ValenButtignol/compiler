@@ -86,7 +86,6 @@ int checkTypes(TAst* ast, ErrorNode** errors) {
 }
 
 void setTypesInAst(TAst* ast, ErrorNode** errors) {
-
     if (ast == NULL || isEmptyAst(*ast) || (ast->data)->type != NONETYPE) {
         return;
     }
@@ -117,7 +116,6 @@ void setTypesInAst(TAst* ast, ErrorNode** errors) {
 }
 
 enum TType getAstType(TAst* ast) {
-    
     if ((ast->data)->type != NONETYPE) {
         return (ast->data)->type;
     }
@@ -140,17 +138,17 @@ void evaluateAst(TAst* ast) {
     enum TTag treeTag = (ast->data)->tag;
     if (treeTag == DECL) {
         evaluateExpression(ast->rs);   
-        setValue(ast->ls->data, (ast->rs->data)->value, (ast->rs->data)->type);
+        setValue(&(ast->ls->data), (ast->rs->data)->value, (ast->rs->data)->type);
     } else if (treeTag == EXPR_OP) {
         evaluateExpression(ast);
         
     } else if (treeTag == ASSIGNMENT_OP) {
         evaluateExpression(ast->rs);
-        setValue(ast->ls->data, (ast->rs->data)->value, (ast->rs->data)->type);
+        setValue(&(ast->ls->data), (ast->rs->data)->value, (ast->rs->data)->type);
     
     } else if (treeTag == RETURN) {
         evaluateExpression(ast->rs);
-        setValue(ast->data, (ast->rs->data)->value, (ast->rs->data)->type);
+        setValue(&(ast->data), (ast->rs->data)->value, (ast->rs->data)->type);
     
     } else if (treeTag == NONETAG) {
         return;
@@ -163,17 +161,17 @@ void evaluateAst(TAst* ast) {
 void evaluateExpression(TAst* ast) {
     enum TOperator treeOperator = (ast->data)->operator;
     if ((ast->data)->type == INTEGER) {
-        int result;
+        int *result = malloc(sizeof(int*));
         if (treeOperator == PLUS) {
             int a = evaluateInteger(ast->ls);
             int b = evaluateInteger(ast->rs);
-            result =  a + b;
+            *result =  a + b;
         } else if (treeOperator == MINUS) {
             int a = evaluateInteger(ast->ls);
             int b = evaluateInteger(ast->rs);
-            result =  a - b;
+            *result =  a - b;
         } else if (treeOperator == MULTIPLY) {
-            result = evaluateInteger(ast->ls) * evaluateInteger(ast->rs);
+            *result = evaluateInteger(ast->ls) * evaluateInteger(ast->rs);
 
         } else if (treeOperator == DIVIDE) {
             int divider = evaluateInteger(ast->rs);
@@ -181,20 +179,20 @@ void evaluateExpression(TAst* ast) {
                 printf("\033[1;31mLine: %d Error:\033[0m Can't Divide for 0\n", (ast->data)->lineNumber);
                 exit(1);
             }
-            result = evaluateInteger(ast->ls) / divider;
+            *result = evaluateInteger(ast->ls) / divider;
             
         }else if(treeOperator == NONOPERATOR){
             return;
         }
-        setValue(ast->data, (void*)result, INTEGER);
+        setValue(&(ast->data), (void*)result, INTEGER);
     }
 
     if ((ast->data)->type == BOOLEAN) {
-        int result;
+        int *result = malloc(sizeof(int*));
         if (treeOperator == PLUS) {//TODO: PODRIAMOS ACTUALIZAR EL PLUS POR OR
-            result = evaluateBoolean(ast->ls) || evaluateBoolean(ast->rs);
+            *result = evaluateBoolean(ast->ls) || evaluateBoolean(ast->rs);
         } else if (treeOperator == MULTIPLY) {
-            result = evaluateBoolean(ast->ls) && evaluateBoolean(ast->rs);
+            *result = evaluateBoolean(ast->ls) && evaluateBoolean(ast->rs);
         }else if (treeOperator == MINUS || treeOperator == DIVIDE) {
             printf("\033[1;31mLine: %d Error:\033[0m Can't do %s in booleans\n", 
                     (ast->data)->lineNumber, operatorToString(treeOperator)
@@ -204,13 +202,13 @@ void evaluateExpression(TAst* ast) {
             int* a = ast->data->value;
             return;
         }           // TODO: ADD INVALID OPERATORS AS ERRORS. 
-        setValue(ast->data, (void*)result, BOOLEAN);
+        setValue(&(ast->data), (void*)result, BOOLEAN);
     }
 }
 
 int evaluateInteger(TAst* ast) {
     if ((ast->data)->value != NULL) {
-        return (int*)(ast->data)->value; 
+        return *((int*)(ast->data)->value); 
     } else {
         evaluateExpression(ast);
     }
@@ -218,7 +216,7 @@ int evaluateInteger(TAst* ast) {
 
 int evaluateBoolean(TAst* ast) {
     if (&(ast->data)->value != NULL) {
-        return (ast->data)->value; 
+        return *((int *)(ast->data)->value); 
     } else {
         evaluateExpression(ast);
     }
