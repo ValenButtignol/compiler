@@ -59,12 +59,12 @@ char *labelToString(enum TLabel label){
 
 char *valueToString(NodeInfo *node){
     char *str = malloc(10*sizeof(int));
+    int *value = (int*)node->value;
     if(node->type == INTEGER){
-        int *value = (int*)node->value;
-        sprintf(str, "%d", (int*)node->value);
+        sprintf(str, "%d", *(int*)node->value);
     }else if(node->type == BOOLEAN){
-        int value = (int*)node->value;
-        strcat(str, boolToString(value));
+        // int value = (int*)node->value;
+        strcat(str, boolToString(*value));
     }
     return str;
 }
