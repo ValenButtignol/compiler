@@ -1,26 +1,26 @@
 %{
 
-#include <stdlib.h>
+/* #include <stdlib.h>
 #include <stdio.h>
 #include "../include/ast.h"
 #include "../include/nodeInfo.h"
 #include "../include/enums.h"
 #include "../include/symbolTable.h"
 #include "../include/threeAddressCodeList.h"
-
+ */
 extern int yylineno;
 extern int yytypeCorrect;
 
-SymbolTable* symbolTable;
+/* SymbolTable* symbolTable;
 TAst* globalAst;
-int offset;
+int offset; */
 %}
 
-%initial-action {
+/* %initial-action {
     offset = 0;
     initializeSymbolTable(&symbolTable);
-}
-
+} */
+/* 
 %union {
     TAst* ast;
     enum TType* type;
@@ -29,7 +29,7 @@ int offset;
     enum TBoolean* boolean;
     enum TTag* tag;
     enum TOperator* operator;
-}
+} */
 
 %token TProgram
 %token TOpenCurlyBracket
@@ -170,7 +170,7 @@ STATEMENT: ASSIGNMENT TSemiColon {
     | WHILE_STATEMENT {
 
         }
-    | RETURN_STATEMENT TSemiColon {
+    | RETURN_STATEMENT {
 
         }
     | BLOCK {
@@ -288,7 +288,7 @@ LITERAL: TIntegerLiteral {
 
 %%
 
-int getOffset() {
+/* int getOffset() {
     return offset;
 }
 
@@ -299,3 +299,4 @@ TAst* getGlobalAst() {
 SymbolTable* getSymbolTable() {
     return symbolTable;
 }
+ */
