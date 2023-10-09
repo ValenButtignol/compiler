@@ -243,6 +243,12 @@ void checkTypesExpectedNodesCreator8(TestingNodeInfoList* expectedNodes) {
 
     NodeInfo node;
 
+    node = *newNodeInfoWithoutValue(BOOLEAN, "a", VAR_DECL,0);
+    addNodeToTestingList(expectedNodes, node);
+    node = *newEmptyNodeInfo();// Empty
+    addNodeToTestingList(expectedNodes, node);
+    node = *newNodeInfoWithoutValue(BOOLEAN, "", RETURN,0);// Return
+    addNodeToTestingList(expectedNodes, node);
     node = *newNodeInfo((int *)0, BOOLEAN, "", CONST_VALUE,0);
     addNodeToTestingList(expectedNodes, node);
     node = *newNodeInfoWithoutValue(BOOLEAN, "b", VAR_DECL,0);
@@ -252,6 +258,8 @@ void checkTypesExpectedNodesCreator8(TestingNodeInfoList* expectedNodes) {
     node = *newNodeInfoWithoutValue(BOOLEAN, "b", VAR_DECL,0);
     addNodeToTestingList(expectedNodes, node);
     node = *newNodeInfoWithoutValue(BOOLEAN, "=", ASSIGNMENT_OP, 0);
+    addNodeToTestingList(expectedNodes, node);
+    node = *newNodeInfoWithoutValue(NONETYPE, "", STMT_BLOCK,0);
     addNodeToTestingList(expectedNodes, node);
     node = *newNodeInfo((int *)1, BOOLEAN, "", CONST_VALUE,0);
     addNodeToTestingList(expectedNodes, node);

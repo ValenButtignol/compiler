@@ -99,7 +99,7 @@ digit [0-9]
 "false"|"true" {
         yylval.boolean = malloc(sizeof(enum TBool*));
         *yylval.boolean = getBooleanFromText(yytext);
-        // printf("TBoolean: %s\n", boolToString(*yylval.type));
+        // printf("TBoolean: %s %d\n", boolToString(*yylval.type), getBooleanFromText(yytext));
         return TBool;
     }
 

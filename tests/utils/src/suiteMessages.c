@@ -29,3 +29,13 @@ void printNoTestSuiteMessage(char* inputFileName) {
     printf("\033[0m"); // Reset text color to default
     printf("\n");
 }
+
+void printIncorrectTypeTestMessage(char* invalidType) {
+    printf("\n");
+    printf("\033[33m"); // Set text color to yellow
+    printf("******************************************************************\n");
+    printf("************ No tests implemented for %s ************\n", invalidType);
+    printf("******************************************************************\n");
+    printf("\033[0m"); // Reset text color to default
+    printf("\n");
+}

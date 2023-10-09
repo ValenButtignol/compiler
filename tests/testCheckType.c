@@ -10,16 +10,19 @@ static void checkTypeTestSuite(char* inputTestFileName, TAst* globalAst, ErrorNo
     TestingNodeInfoList* nodesToFreeLater = expectedNodes;
     ErrorNode* expectedErrors = NULL;
     checkTypesFactory(inputTestFileName, expectedNodes, &expectedErrors);
-
     if (expectedNodes->head == NULL && *errors == NULL) {
         printNoTestSuiteMessage(inputTestFileName);
         return ;
     }
+
     
     if (expectedNodes->head != NULL) {
-        if (testerDfs(globalAst, expectedNodes))
+        if (testerDfs(globalAst, expectedNodes)){
             printTestSuccessMessage("CheckTypes", inputTestFileName);
             freeTestingNodeInfoList(nodesToFreeLater);
+        }else {
+            printTestFailedMessage("CheckTypes", inputTestFileName);
+        }
     } else if (*errors != NULL) {
         if (testErrors(*errors, expectedErrors)) 
             printTestSuccessMessage("CheckTypes", inputTestFileName);

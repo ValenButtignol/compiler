@@ -32,9 +32,12 @@ char *typeToString(enum TType type) {
         return "boolean";
     
     case 2:
-        return "";
+        return "NOTYPE";
     
+    case 3:
+        return "ERROR";
     default:
+        return "MAYBE NULL :/";
         break;
     }
 }
@@ -120,6 +123,7 @@ char *operatorToString(enum TOperator op) {
         return "=";
     
     default:
+        return "NO OPERATOR";
         break;
     }
 }
