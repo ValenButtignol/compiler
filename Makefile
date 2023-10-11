@@ -57,7 +57,7 @@ TYPE ?=	eval
 test_file:
 	$(SCRIPT_DIR)/test_file.sh $(TEST_DIR)/inputs/$(IN_TEST) $(TYPE)
 
-IN_FILE ?= input.txt
+IN_FILE ?= input/input.txt
 
 run:
 	$(TARGET) ./$(IN_FILE) 
