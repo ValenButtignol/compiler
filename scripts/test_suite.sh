@@ -28,5 +28,12 @@ for input_file in tests/inputs/valid*; do
     fi
 done
 
+for input_file in tests/inputs/valid*; do
+	if [ -f "$input_file" ]; then
+        ./scripts/test_file.sh "$input_file" "assemble"
+    fi
+    echo "Processed $base_name"
+done
+
 
 echo "All files processed."
