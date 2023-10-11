@@ -1,8 +1,17 @@
-const int max = 9;
-int a = 3;
-int b = 5;
-int c = 0;
-c = b + a;
-a = c + b;
-b = c + 1;
-return a;
+Program {
+    integer inc(integer x) {
+        return x + 1;
+    }
+
+    integer get_int() extern;
+    void print_int(integer i) extern;   // Hola soy comentario.
+    void main() {
+        integer y = 0;
+        y = get_int();
+        if (y == 1) then {
+            print_int(y);
+        } else {
+            return print_int(inc(y));
+        }
+    }
+}
