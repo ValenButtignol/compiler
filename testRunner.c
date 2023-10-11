@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "include/ast.h"
+#include "include/threeAddressCodeList.h"
 #include "tests/testEvalAst.c"
 #include "tests/testCheckType.c"
+#include "tests/assemblyTestSuite.c"
 
 extern FILE *yyin;
 extern FILE *yyout;
@@ -37,7 +39,6 @@ int main(int argc,char *argv[]) {
     char* fileName = getFileName(argv[0]);
     char* testType = argv[1];
     
-
     ErrorNode* errors = NULL;
 
     if(strcmp(testType, "type") == 0){
@@ -52,12 +53,18 @@ int main(int argc,char *argv[]) {
     }
     else if(strcmp(testType, "eval") == 0){
         if (checkTypes(globalAst, &errors)) {
-            printf("Chequeo de tipos = OK\n");
-            evaluateAst(globalAst);;
+            evaluateAst(globalAst);
             evalAstTestSuite(fileName, globalAst);
         } else {
-            printTestFailedMessage("CheckTypes", fileName);
+            printTestFailedMessage("Can't evaluate, check type FAIL", fileName);
         }
+    }else if(strcmp(testType, "assemble") == 0){
+        if (checkTypes(globalAst, &errors)) {
+            assemblyTestSuite(fileName);
+        } else {
+            printTestFailedMessage("Can't assemble, check type FAIL", fileName);
+        }
+    
     }else{
         printIncorrectTypeTestMessage(testType);
     }

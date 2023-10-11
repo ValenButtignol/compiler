@@ -1,5 +1,5 @@
 #include "../include/assemblyCodeGenerator.h"
-
+#include <stdint.h>
 
 void generateAssembly(ThreeAddressCodeList* list) {
     FILE* file = fopen("assembly.s", "w");
@@ -18,13 +18,16 @@ void generateAssembly(ThreeAddressCodeList* list) {
         current = current->next;
     }
 
+    fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
+    fprintf(file, "    ret\n");
+
     fclose(file);
 }
 
 void generatePrologue(FILE* file, ThreeAddressCodeList* list) {
-    fprintf(file, "    pushq   %rbp\n");
-    fprintf(file, "    movq    %rsp, %rbp\n");
-    fprintf(file, "    subq    $64, %rsp\n\n");
+    fprintf(file, "    pushq   %%rbp\n");
+    fprintf(file, "    movq    %%rsp, %%rbp\n");
+    fprintf(file, "    subq    $64, %%rsp\n\n");
 }
 
 void generateHeader(FILE* file, ThreeAddressCodeList* list) {     // Probably this would be converted into generatePrologue
@@ -41,10 +44,10 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
     char* secondValue = generateValue(current->second);
     char* thirdValue = generateValue(current->third);
 
-    printf("\n\n\nPRIMERO: %s\n", firstValue);
-    printf("SEGUNDO: %s\n", secondValue);
-    printf("TERCERO: %s\n\n\n", thirdValue);
-
+    // printf("LABEL = %s\n", labelToString(current->label));
+    // printf("\n\n\nPRIMERO: %s\n", firstValue);
+    // printf("SEGUNDO: %s\n", secondValue);
+    // printf("TERCERO: %s\n\n\n", thirdValue);
     
     switch(current->label) {
         case SUM:
@@ -99,7 +102,7 @@ void generateMul(FILE* file, char* firstValue, char* secondValue, char* thirdVal
     fprintf(file, "    movl    %s, %%eax\n", secondValue);
     fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
     fprintf(file, "    imul    %%eax, %%ebx\n");
-    fprintf(file, "    movl    %%eax, %s\n", firstValue);
+    fprintf(file, "    movl    %%ebx, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
@@ -138,18 +141,19 @@ void generateRet(FILE* file, char* firstValue) {
     generatePrint(file, firstValue);
 
     fprintf(file, "    movl    %s, %%eax\n", firstValue);
-    fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
-    fprintf(file, "    ret\n");
+    // fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
+    // fprintf(file, "    ret\n");
     fprintf(file, "\n");
 
 }
 
 char* generateValue(NodeInfo* node) {
-    printf("ID: %s\n", node->id);
-    printf("VALUE: %d\n", node->value);
-    printf("TAG: %d\n", node->tag);
-    printf("OFFSET: %d\n", node->offset);
-    printf("TYPE: %d\n\n", node->type);
+    // printf("ID: %s\n", node->id);
+    // printf("VALUE: %d\n", ((int *)node->value)!=NULL?*((int *)node->value):-9999);
+    // // printf("VALUE: %lu\n", (uintptr_t)node->value);
+    // printf("TAG: %s\n",tagToString(node->tag));
+    // printf("OFFSET: %d\n\n", node->offset);
+    // printf("TYPE: %d\n\n",  node->type);
     char* result;
     result = (char*)malloc(20);
     if (result == NULL) {
@@ -157,9 +161,9 @@ char* generateValue(NodeInfo* node) {
         exit(1);
     }
     if (node->tag == CONST_VALUE) {
-        sprintf(result, "$%d", node->value);
+        sprintf(result, "$%d", *((int*)node->value));
     } else if (node->tag == NONETAG) {
-        sprintf(result, "");
+        sprintf(result, "%s" ,"");
     } else {
         sprintf(result, "-%d(%%rbp)", node->offset*4);
     }

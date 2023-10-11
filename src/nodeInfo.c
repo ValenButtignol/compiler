@@ -3,7 +3,7 @@
 NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int lineNumber) {
     NodeInfo *result = malloc(sizeof(NodeInfo*));  
 
-    setValue(result, value, type);
+    setValue(&result, value, type);
     result->type = type;
     result->id = strdup(id);     // Remember to free this later.
     result->tag = tag;
@@ -55,9 +55,9 @@ NodeInfo *newEmptyNodeInfo() {
     return result;
 }
 
-void* setValue(NodeInfo* node, void* value, enum TType type) {
-    node->value = malloc(sizeof(value));
-    node->value = value;
+void* setValue(NodeInfo** node, void* value, enum TType type) {
+    (*node)->value = malloc(sizeof(void*));
+    (*node)->value = value;
 }
 
 char* nodeInfoToString(NodeInfo node) {
@@ -124,7 +124,7 @@ char* constExprToString(NodeInfo node) {
     {
     case 0:
         char* s = malloc(sizeof(char*));
-        sprintf(s, "%d",(int*)node.value);
+        sprintf(s, "%d",*(int*)node.value);
         return s;
         break;
 
@@ -147,7 +147,10 @@ int isEmptyNode(NodeInfo node) {
 }
 
 int equalsNodeInfo(NodeInfo node1, NodeInfo node2) {
-    return (node1.type == node2.type && strcmp(node1.id, node2.id) == 0 && node1.tag == node2.tag && node1.value == node2.value);
+    // printf("value %d\n", (int*)node1.value!=NULL? *(int*)node1.value : -9999);
+    // printf("%d == %d\n", *(int*)node1.value, node2.value);
+    return (node1.type == node2.type && strcmp(node1.id, node2.id) == 0 && node1.tag == node2.tag && 
+    ((int*)node1.value!=NULL? *(int*)node1.value : NULL) == node2.value);
 }
 
 void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset){
