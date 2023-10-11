@@ -91,22 +91,22 @@ digit [0-9]
     }
 
 {digit}+ { 
-        yylval.integer = atoi(yytext);
-        // printf("TInteger: %d\n", yylval.integer); 
+        void* number = malloc(sizeof(int));
+        *((int*)number) = atoi(yytext);
+        yylval.value = number; // Assuming yylval has a field named 'value'
         return TInteger;
     }
 
 "false"|"true" {
-        yylval.boolean = malloc(sizeof(enum TBool*));
-        *yylval.boolean = getBooleanFromText(yytext);
-        // printf("TBoolean: %s %d\n", boolToString(*yylval.type), getBooleanFromText(yytext));
+        void* boolean = malloc(sizeof(TBool));
+        *((int*) boolean) = getBooleanFromText(yytext);
+        yylval.value = boolean;
         return TBool;
     }
 
 {letter}({letter}|{digit})* { 
         yylval.string=(char *) malloc(sizeof(yytext)*yyleng);
         strcpy(yylval.string,yytext);
-        // printf("ID : %s\n",yytext);
         return TId;
     }
 

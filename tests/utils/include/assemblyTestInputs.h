@@ -1,5 +1,7 @@
-#ifndef UTILS_EVALAST_INPUTS_H
-#define UTILS_EVALAST_INPUTS_H
+#ifndef UTILS_ASSEMBLYTEST_INPUTS_H
+#define UTILS_ASSEMBLYTEST_INPUTS_H
+
+#define MAXOUTPUTS 100
 
 #include <string.h>
 #include "../../../include/ast.h"
@@ -8,6 +10,6 @@
 #include "../../../include/symbolTable.h"
 #include "testingNodeInfoList.h"
 
-void evalAstExpectedNodesFactory(char* inputTestFileName, TestingNodeInfoList* expectedNodes);
+void assembleExpectedOutputsFactory(char* inputTestFileName, int expectedNodes[MAXOUTPUTS]);
 
 #endif

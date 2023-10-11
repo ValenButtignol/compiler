@@ -10,4 +10,5 @@ int testerDfs(TAst* ast, TestingNodeInfoList* expectedValues);
 
 int testErrors(ErrorNode* errors, ErrorNode* expectedErrors);
 
+int testerOutputs(char *filename, int expectedOutput[]);
 #endif

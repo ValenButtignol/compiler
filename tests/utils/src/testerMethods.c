@@ -1,9 +1,32 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "../include/testerMethods.h"
 
+int testerOutputs(char *filename, int expectedOutput[]){
+    FILE *file; 
+    file = fopen(filename, "r");
+    char buffer[100];
+    if (file == NULL) {
+        perror("Error opening file");
+        return 0;
+    }
 
+    int i = 0;
+    while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        if(expectedOutput[i] != atoi(buffer)){
+            return 0;
+        }        
+        i++;
+    }
+
+    fclose(file);
+
+    return expectedOutput[i] == -999999;
+}
 int testerDfs(TAst* globalAst, TestingNodeInfoList* expectedNodes) {
     // printf("\n%s\n", astToString(globalAst));
-    // printf("\n\n\nvalueAST: %d == %d\n", (globalAst->data)->value, expectedNodes->head->data.value);
+    // int a = (*(int*)(globalAst->data)->value);
+    // printf("\n\n\nvalueAST: %d == %d\n", a, expectedNodes->head->data.value);
     // printf("idAST: %s == %s\n", (globalAst->data)->id, expectedNodes->head->data.id);
     // printf("tagAST: %s == %s\n", tagToString(globalAst->data->tag), tagToString(expectedNodes->head->data.tag));
     // printf("NODE:  %s\n\n", nodeInfoToString(*globalAst->data));
