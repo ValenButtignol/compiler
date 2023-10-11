@@ -9,13 +9,5 @@
 #include "testingNodeInfoList.h"
 
 void evalAstExpectedNodesFactory(char* inputTestFileName, TestingNodeInfoList* expectedNodes);
-void evalAstExpectedNodesCreator1(TestingNodeInfoList* expectedNodes);
-//TAst* createCorrectAst3();
-//TAst* createCorrectAst4();
-//TAst* createCorrectAst5();
-//TAst* createCorrectAst6();
-//TAst* createCorrectAst7();
-//TAst* createCorrectAst8();
-//TAst* createCorrectAst9();
 
 #endif
