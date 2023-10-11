@@ -9,6 +9,7 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
         strcat(str, " ");
         
         if(node->label != RET){
+            // printf("ID: %s\n", node->second);
             if(strcmp(node->second->id, "") == 0){
                 strcat(str, valueToString(node->second));
             }

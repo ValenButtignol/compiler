@@ -18,6 +18,9 @@ void generateAssembly(ThreeAddressCodeList* list) {
         current = current->next;
     }
 
+    fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
+    fprintf(file, "    ret\n");
+
     fclose(file);
 }
 
@@ -138,8 +141,8 @@ void generateRet(FILE* file, char* firstValue) {
     generatePrint(file, firstValue);
 
     fprintf(file, "    movl    %s, %%eax\n", firstValue);
-    fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
-    fprintf(file, "    ret\n");
+    // fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
+    // fprintf(file, "    ret\n");
     fprintf(file, "\n");
 
 }

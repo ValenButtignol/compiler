@@ -57,8 +57,10 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
                     createThreeAddressCodeList(ast->rs, list, offset);
                     createTemporalNodeInfo(createTemportalID(*offset), EXPR_OP, ast->data, *offset);
                     node = threeAddressCodeNodeFactory(
-                        getLabelFromOperator(ast->data->operator, ast->data->type), ast->data, getFirst(getFromTAC(list, list->size - 2)),
-                        getFirst(getFromTAC(list, list->size-1)));
+                        getLabelFromOperator(ast->data->operator, ast->data->type), ast->data, 
+                                                getFirst(getFromTAC(list, list->size - 1)),
+                                                getFirst(getFromTAC(list, list->size-0))
+                                            );
                 }
             }
             addToTAC(list, node);
@@ -100,6 +102,7 @@ char* threeAddressListToString(ThreeAddressCodeList *list){
     char *str = malloc(list->size*100);
     while(h != NULL)
     {   
+        // printf("LABL = %s\n", labelToString(h->label));
         strcat(str, threeAddressCodeNodeToString(h));
         strcat(str, "\n");
         h = h->next;
