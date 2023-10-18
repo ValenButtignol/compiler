@@ -2,11 +2,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "../include/ast.h"
-#include "../include/nodeInfo.h"
-#include "../include/enums.h"
-#include "../include/symbolTable.h"
-#include "../include/threeAddressCodeList.h"
+
+#include "../include/dataStructures/ast.h"
+#include "../include/dataStructures/nodeInfo.h"
+#include "../include/dataStructures/symbolTable.h"
+#include "../include/dataStructures/threeAddressCodeList.h"
+#include "../include/utils/enums.h"
 
 extern int yylineno;
 extern int yytypeCorrect;
@@ -19,7 +20,7 @@ char* currentMethodName;
 
  
 %union {
-    TAst* ast;
+    struct TAst* ast;
     enum TType* type;
     char* string;
     int integer;

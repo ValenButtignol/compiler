@@ -25,5 +25,6 @@ char* astToStringRecursive(TAst* ast);
 
 int isEmptyAst(TAst ast);
 
-int isLeaf(TAst *ast);//tener en cuenta que si los dos hijos son arboles vacios o null entonces es una hoja
+int isLeaf(TAst *ast);
+
 #endif
