@@ -40,8 +40,8 @@ void popLevelSymbolTable(SymbolTable** table) {
     *table = (*table)->prevLevel;
 }
 
-NodeInfo* searchLocalLevelSymbolTable(SymbolTable** table, char* key) {
-    DeclNode* currentDecls = (*table)->decls;
+NodeInfo* searchLocalLevelSymbolTable(SymbolTable* table, char* key) {
+    DeclNode* currentDecls = table->decls;
     while (currentDecls != NULL) {
         if (strcmp(currentDecls->data->id, key) == 0) {
             return currentDecls->data;
@@ -51,10 +51,10 @@ NodeInfo* searchLocalLevelSymbolTable(SymbolTable** table, char* key) {
     return NULL;
 }
 
-NodeInfo* searchGlobalLevelSymbolTable(SymbolTable** table, char* key) {
-    SymbolTable* currentLevel = *table;
+NodeInfo* searchGlobalLevelSymbolTable(SymbolTable* table, char* key) {
+    SymbolTable* currentLevel = table;
     while (currentLevel != NULL) {
-        NodeInfo* result = searchLocalLevelSymbolTable(&currentLevel, key);
+        NodeInfo* result = searchLocalLevelSymbolTable(currentLevel, key);
         if (result != NULL) {
             return result;
         }

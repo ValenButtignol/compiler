@@ -29,7 +29,7 @@ NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int line
 
 NodeInfo* newEmptyNodeInfo();
 
-void* setValue(NodeInfo** node, void* value, enum TType type);
+void setValue(NodeInfo** node, void* value);
 
 void freeNodeInfo(NodeInfo* node);
 
@@ -42,5 +42,17 @@ int equalsNodeInfo(NodeInfo node1, NodeInfo node2);
 int isEmptyNode(NodeInfo node);
 
 void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset);
+
+void setParamsNodeInfo(NodeInfo** node, TAst* ast);
+
+/****************************** new constructors ********************************/
+
+NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber);
+
+NodeInfo* newNodeInfoType(enum TType type, enum TTag tag, int lineNumber);
+
+NodeInfo* newNodeInfoDeclaration(char* id, enum TType type, enum TTag tag, int lineNumber, int offset);
+
+NodeInfo* newNodeInfoLiteral(void* value, enum TType type, enum TTag tag, int lineNumber);
 
 #endif

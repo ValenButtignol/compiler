@@ -55,7 +55,7 @@ NodeInfo *newEmptyNodeInfo() {
     return result;
 }
 
-void* setValue(NodeInfo** node, void* value, enum TType type) {
+void setValue(NodeInfo** node, void* value) {
     (*node)->value = malloc(sizeof(void*));
     (*node)->value = value;
 }
@@ -163,4 +163,41 @@ void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset)
 
 void setParamsNodeInfo(NodeInfo** node, TAst* ast){
     return ;
+}
+
+
+/****************************** new constructors ********************************/
+
+NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber) {
+    NodeInfo *result = malloc(sizeof(NodeInfo*));    
+
+    result->value = NULL;
+    result->type = NONETYPE;
+    result->id = ""; 
+    result->operatorVar = NONOPERATOR;
+    result->tag = tag;
+    result->lineNumber = lineNumber;
+    result->offset = 0;
+    return result;
+}
+
+NodeInfo* newNodeInfoType(enum TType type, enum TTag tag, int lineNumber) {
+    NodeInfo* result = newNodeInfoSimple(tag, lineNumber);
+    result->type = type;
+    return result;
+}
+
+NodeInfo* newNodeInfoDeclaration(char* id, enum TType type, enum TTag tag, int lineNumber, int offset) {
+    NodeInfo* result = newNodeInfoSimple(tag, lineNumber);
+    result->type = type;
+    result->id = strdup(id);
+    result->offset = offset; 
+    return result;
+}
+
+NodeInfo* newNodeInfoLiteral(void* value, enum TType type, enum TTag tag, int lineNumber) {
+    NodeInfo* result = newNodeInfoSimple(tag, lineNumber);
+    result->type = type;
+    setValue(&result, value);
+    return result;
 }
