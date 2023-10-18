@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "enums.h"
+#include "../utils/enums.h"
+#include "ast.h"
 
 typedef struct{
 	void* value;
@@ -13,7 +14,7 @@ typedef struct{
 	enum TTag tag;
 	int lineNumber;
 	int offset;
-	enum TOperator operator;
+	enum TOperator operatorVar;
 }NodeInfo;
 
 NodeInfo* newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int lineNumber);
@@ -24,7 +25,7 @@ NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag, int 
 
 NodeInfo* newNodeInfoWithoutValueWithOffset(enum TType type, char* id, enum TTag tag, int lineNumber, int offset);
 
-NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int lineNumber, enum TOperator operator);
+NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int lineNumber, enum TOperator operatorVar);
 
 NodeInfo* newEmptyNodeInfo();
 
@@ -41,4 +42,5 @@ int equalsNodeInfo(NodeInfo node1, NodeInfo node2);
 int isEmptyNode(NodeInfo node);
 
 void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset);
+
 #endif

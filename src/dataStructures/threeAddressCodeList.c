@@ -32,24 +32,24 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
             ThreeAddressCodeNode *node;
 
             if(isLeaf(ast->ls) && isLeaf(ast->rs)){
-                // printf("ENTRE A ESTE CASO %s\n\n", operatorToString(ast->data->operator));
+                // printf("ENTRE A ESTE CASO %s\n\n", operatorToString(ast->data->operatorVar));
                     createTemporalNodeInfo(createTemportalID(*offset), EXPR_OP, ast->data, *offset);
                 node = threeAddressCodeNodeFactory(
-                    getLabelFromOperator(ast->data->operator, ast->data->type), ast->data, ast->ls->data, ast->rs->data);
+                    getLabelFromOperator(ast->data->operatorVar, ast->data->type), ast->data, ast->ls->data, ast->rs->data);
             }else{    
                 if(isLeaf(ast->ls) && !isLeaf(ast->rs)){
-                    // printf("ENTRE A ESTE CASO %s\n\n", operatorToString(ast->data->operator));
+                    // printf("ENTRE A ESTE CASO %s\n\n", operatorToString(ast->data->operatorVar));
                     createThreeAddressCodeList(ast->rs, list, offset);
                     createTemporalNodeInfo(createTemportalID(*offset), EXPR_OP, ast->data, *offset);
                     node = threeAddressCodeNodeFactory(
-                        getLabelFromOperator(ast->data->operator, ast->data->type), ast->data, ast->ls->data, 
+                        getLabelFromOperator(ast->data->operatorVar, ast->data->type), ast->data, ast->ls->data, 
                         getFirst(getFromTAC(list, list->size)));
                
                 }else if(!isLeaf(ast->ls) && isLeaf(ast->rs)){
                     createThreeAddressCodeList(ast->ls, list, offset);
                     createTemporalNodeInfo(createTemportalID(*offset), EXPR_OP, ast->data, *offset);
                     node = threeAddressCodeNodeFactory(
-                        getLabelFromOperator(ast->data->operator, ast->data->type), ast->data, getFirst(getFromTAC(list, list->size)),
+                        getLabelFromOperator(ast->data->operatorVar, ast->data->type), ast->data, getFirst(getFromTAC(list, list->size)),
                             ast->rs->data);
                
                 }else if(!isLeaf(ast->ls) && !isLeaf(ast->rs)){
@@ -57,7 +57,7 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
                     createThreeAddressCodeList(ast->rs, list, offset);
                     createTemporalNodeInfo(createTemportalID(*offset), EXPR_OP, ast->data, *offset);
                     node = threeAddressCodeNodeFactory(
-                        getLabelFromOperator(ast->data->operator, ast->data->type), ast->data, 
+                        getLabelFromOperator(ast->data->operatorVar, ast->data->type), ast->data, 
                                                 getFirst(getFromTAC(list, list->size - 1)),
                                                 getFirst(getFromTAC(list, list->size-0))
                                             );

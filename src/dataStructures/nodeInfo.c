@@ -7,7 +7,7 @@ NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int
     result->type = type;
     result->id = strdup(id);     // Remember to free this later.
     result->tag = tag;
-    result->operator = NONOPERATOR;
+    result->operatorVar = NONOPERATOR;
     result->lineNumber = lineNumber;
     return result;
 }
@@ -26,7 +26,7 @@ NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag, int 
     result->type = type;
     result->id = strdup(id); 
     result->tag = tag;
-    result->operator = NONOPERATOR;
+    result->operatorVar = NONOPERATOR;
     result->lineNumber = lineNumber;
     return result;
 }
@@ -39,7 +39,7 @@ NodeInfo* newNodeInfoWithoutValueWithOffset(enum TType type, char* id, enum TTag
 
 NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int lineNumber, enum TOperator operator){
     NodeInfo* node = newNodeInfoWithoutValue(type, id, tag, lineNumber);
-    node->operator = operator;
+    node->operatorVar = operator;
     return node;    
 }
 
@@ -102,7 +102,7 @@ char* nodeInfoToString(NodeInfo node) {
         break;
     
     case 8: // EXPR_OP
-        strcpy(string, operatorToString(node.operator));
+        strcpy(string, operatorToString(node.operatorVar));
         break;
     
     case 9: // CONST_VALUE
