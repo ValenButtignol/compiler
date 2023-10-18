@@ -15,7 +15,7 @@ void setTypesInAst(TAst* ast, ErrorNode** errors) {
         return;
     }
 
-    if (isTypeableTag(*ast) && (ast->data)->type == NONETYPE) {
+    if (isTypeableTag(ast->data->tag) && (ast->data)->type == NONETYPE) {
         if ((ast->data)->tag == RETURN) {
             (ast->data)->type = getAstType(ast->rs);
             return;
