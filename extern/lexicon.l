@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "../include/ast.h"
-#include "../include/nodeInfo.h"
+#include "../include/dataStructures/ast.h"
+#include "../include/dataStructures/nodeInfo.h"
 #include "syntax.tab.h"
 
 %}

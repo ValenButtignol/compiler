@@ -2,11 +2,11 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "../include/ast.h"
-#include "../include/nodeInfo.h"
-#include "../include/enums.h"
+#include "../include/dataStructures/ast.h"
+#include "../include/dataStructures/nodeInfo.h"
+#include "../include/utils/enums.h"
 #include "../include/symbolTable.h"
-#include "../include/threeAddressCodeList.h"
+#include "../include/dataStructures/threeAddressCodeList.h"
 
 extern int yylineno;
 extern int yytypeCorrect;
