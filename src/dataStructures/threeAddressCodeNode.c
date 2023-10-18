@@ -1,4 +1,4 @@
-#include "../include/threeAddressCodeNode.h"
+#include "../../include/dataStructures/threeAddressCodeNode.h"
 
 char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
     if(node->first != NULL){

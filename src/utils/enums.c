@@ -1,4 +1,4 @@
-#include "../include/enums.h"
+#include "../../include/utils/enums.h"
 
 enum TBoolean getBooleanFromText(char* boolean) {
     if (strcmp(boolean, "true")) {
@@ -126,4 +126,9 @@ char *operatorToString(enum TOperator op) {
         return "NO OPERATOR";
         break;
     }
+}
+
+int isTypeableTag(enum TTag tag){
+    return tag == EXPR_OP || tag == VAR_DECL || tag == DECL 
+              || tag == CONST_DECL || tag == ASSIGNMENT_OP || tag == RETURN;
 }

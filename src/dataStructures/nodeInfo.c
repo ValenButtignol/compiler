@@ -1,4 +1,4 @@
-#include "../include/nodeInfo.h"
+#include "../../include/dataStructures/nodeInfo.h"
 
 NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int lineNumber) {
     NodeInfo *result = malloc(sizeof(NodeInfo*));  

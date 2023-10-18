@@ -7,21 +7,24 @@ SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = output
 
-SRCS = $(wildcard $(SRC_DIR)/*.c) ./main.c
+SRCS := $(wildcard $(SRC_DIR)/**/*.c) ./main.c
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))  
 
 TARGET = $(BIN_DIR)/my_program
 
 .PHONY: all clean
 
-src: $(TARGET) parse
+src: $(TARGET)
+
+$(OBJ_DIR)/main.o: main.c  # Rule for compiling main.c
+	$(CC) -c $< -o $@
 
 $(TARGET): $(OBJS) $(OBJ_DIR)/syntax.tab.o $(OBJ_DIR)/lex.yy.o
 	@mkdir -p $(BIN_DIR)
 	$(CC) $^ -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(@D)
 	$(CC) -c $< -o $@
 
 clean:

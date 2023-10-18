@@ -1,4 +1,4 @@
-#include "../include/threeAddressCodeList.h"
+#include "../../include/dataStructures/threeAddressCodeList.h"
 
 extern int getOffset(void);
 

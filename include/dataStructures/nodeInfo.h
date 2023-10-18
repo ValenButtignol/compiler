@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "enums.h"
-#include "ast.h"
-
 
 typedef struct{
 	void* value;
@@ -43,6 +41,4 @@ int equalsNodeInfo(NodeInfo node1, NodeInfo node2);
 int isEmptyNode(NodeInfo node);
 
 void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset);
-
-void setParamsNodeInfo(NodeInfo** node, TAst ast);
 #endif

@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "threeAddressCodeList.h"
-#include "nodeInfo.h"
+#include "../dataStructures/threeAddressCodeList.h"
+#include "../dataStructures/nodeInfo.h"
 
 void generateAssembly(ThreeAddressCodeList* list);
 void generatePrologue(FILE* file, ThreeAddressCodeList* list);
