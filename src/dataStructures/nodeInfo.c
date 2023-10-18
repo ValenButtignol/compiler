@@ -3,7 +3,7 @@
 NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int lineNumber) {
     NodeInfo *result = malloc(sizeof(NodeInfo*));  
 
-    setValue(&result, value, type);
+    setValue(&result, value);
     result->type = type;
     result->id = strdup(id);     // Remember to free this later.
     result->tag = tag;

@@ -56,7 +56,6 @@ digit [0-9]
         printf("%s\n",yytext);
         yylval.type = malloc(sizeof(enum TType*));
         *yylval.type = getTypeFromText(yytext);
-
         return TType;
     }
 
