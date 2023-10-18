@@ -4,33 +4,26 @@
 #include <stdio.h>
 #include "nodeInfo.h"
 
-typedef struct SymbolTableNode{
-    int level;
+typedef struct DeclNode {
     NodeInfo* data;
-    struct SymbolTableNode* nextBlock;
-    struct SymbolTableNode* nextLevel;
+    struct DeclNode* nextNode;
+}DeclNode;
 
-}SymbolTableNode;
-
-typedef struct {
-    SymbolTableNode* head;
-    int size;
+typedef struct SymbolTable {
+    DeclNode* decls;
+    struct SymbolTable* prevLevel;
 }SymbolTable;
-
-SymbolTableNode* createSymbolNode(void* value, enum TType type, char* id, enum TTag tag);
 
 void initializeSymbolTable(SymbolTable** table);
 
-void addBlockToLevel(SymbolTableNode **level, void* value, enum TType type, char* id, enum TTag tag);
+void addNodeToSymbolTable(SymbolTable** table, NodeInfo* node);
 
-void addNodeInfoToBlock(SymbolTableNode **level, NodeInfo* node);
+void addLevelToSymbolTable(SymbolTable** table);
 
-void addLevelToBlock(SymbolTableNode **block, void* value, enum TType type, char* id, enum TTag tag);
+void popLevelSymbolTable(SymbolTable** table);
 
-void deleteBlock(SymbolTableNode** block);
+NodeInfo* searchLocalLevelSymbolTable(SymbolTable** table, char* key);
 
-void deleteLevelsFromBlock(SymbolTableNode** block);
-
-NodeInfo* searchKey(SymbolTable* block, char* key);
+NodeInfo* searchGlobalLevelSymbolTable(SymbolTable** table, char* key);
 
 #endif
