@@ -1,7 +1,5 @@
-#include "../include/symbolTable.h"
-#include "../include/nodeInfo.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "../../include/dataStructures/symbolTable.h"
+
 
 void initializeSymbolTable(SymbolTable** table) {
     *table = malloc(sizeof(SymbolTable));

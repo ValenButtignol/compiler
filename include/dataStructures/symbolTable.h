@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "nodeInfo.h"
+#include <stdlib.h>
 
 typedef struct DeclNode {
     NodeInfo* data;
