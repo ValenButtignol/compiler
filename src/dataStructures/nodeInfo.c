@@ -3,11 +3,11 @@
 NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int lineNumber) {
     NodeInfo *result = malloc(sizeof(NodeInfo*));  
 
-    setValue(&result, value, type);
+    setValue(&result, value);
     result->type = type;
     result->id = strdup(id);     // Remember to free this later.
     result->tag = tag;
-    result->operator = NONOPERATOR;
+    result->operatorVar = NONOPERATOR;
     result->lineNumber = lineNumber;
     return result;
 }
@@ -26,7 +26,7 @@ NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag, int 
     result->type = type;
     result->id = strdup(id); 
     result->tag = tag;
-    result->operator = NONOPERATOR;
+    result->operatorVar = NONOPERATOR;
     result->lineNumber = lineNumber;
     return result;
 }
@@ -39,7 +39,7 @@ NodeInfo* newNodeInfoWithoutValueWithOffset(enum TType type, char* id, enum TTag
 
 NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int lineNumber, enum TOperator operator){
     NodeInfo* node = newNodeInfoWithoutValue(type, id, tag, lineNumber);
-    node->operator = operator;
+    node->operatorVar = operator;
     return node;    
 }
 
@@ -55,7 +55,7 @@ NodeInfo *newEmptyNodeInfo() {
     return result;
 }
 
-void* setValue(NodeInfo** node, void* value, enum TType type) {
+void setValue(NodeInfo** node, void* value) {
     (*node)->value = malloc(sizeof(void*));
     (*node)->value = value;
 }
@@ -102,7 +102,7 @@ char* nodeInfoToString(NodeInfo node) {
         break;
     
     case 8: // EXPR_OP
-        strcpy(string, operatorToString(node.operator));
+        strcpy(string, operatorToString(node.operatorVar));
         break;
     
     case 9: // CONST_VALUE
@@ -159,4 +159,45 @@ void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset)
     strcpy(temp->id, id);
     temp->tag = tag;
     temp->offset = offset;
+}
+
+void setParamsNodeInfo(NodeInfo** node, TAst* ast){
+    return ;
+}
+
+
+/****************************** new constructors ********************************/
+
+NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber) {
+    NodeInfo *result = malloc(sizeof(NodeInfo*));    
+
+    result->value = NULL;
+    result->type = NONETYPE;
+    result->id = ""; 
+    result->operatorVar = NONOPERATOR;
+    result->tag = tag;
+    result->lineNumber = lineNumber;
+    result->offset = 0;
+    return result;
+}
+
+NodeInfo* newNodeInfoType(enum TType type, enum TTag tag, int lineNumber) {
+    NodeInfo* result = newNodeInfoSimple(tag, lineNumber);
+    result->type = type;
+    return result;
+}
+
+NodeInfo* newNodeInfoDeclaration(char* id, enum TType type, enum TTag tag, int lineNumber, int offset) {
+    NodeInfo* result = newNodeInfoSimple(tag, lineNumber);
+    result->type = type;
+    result->id = strdup(id);
+    result->offset = offset; 
+    return result;
+}
+
+NodeInfo* newNodeInfoLiteral(void* value, enum TType type, enum TTag tag, int lineNumber) {
+    NodeInfo* result = newNodeInfoSimple(tag, lineNumber);
+    result->type = type;
+    setValue(&result, value);
+    return result;
 }

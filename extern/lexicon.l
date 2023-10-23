@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "syntax.tab.h"
+#include "../include/utils/enums.h"
 
 %}
 
@@ -53,11 +54,15 @@ digit [0-9]
 
 "integer"|"bool" {
         printf("%s\n",yytext);
+        yylval.type = malloc(sizeof(enum TType*));
+        *yylval.type = getTypeFromText(yytext);
         return TType;
     }
 
 "void" {
         printf("%s\n",yytext);
+        yylval.type = malloc(sizeof(enum TType*));
+        *yylval.type = getTypeFromText(yytext);
         return TVoid;
     }
 
@@ -153,16 +158,27 @@ digit [0-9]
 
 "true"|"false" {
         printf("%s\n",yytext);
+        void* boolean = malloc(sizeof(enum TBoolean));
+        *((int*) boolean) = getBooleanFromText(yytext);
+        yylval.boolean = boolean;
         return TBooleanLiteral;
     }
 
 {digit}+ {
         printf("%s\n",yytext);
+        
+        //void* number = malloc(sizeof(int));
+        //*((int*)number) = atoi(yytext);
+        
+        int number = atoi(yytext);
+        yylval.integer = number;
         return TIntegerLiteral;
     }
 
 {letter}({letter}|{digit}|"_")* {
         printf("%s\n",yytext);
+        yylval.string=(char *) malloc(sizeof(yytext)*yyleng);
+        strcpy(yylval.string,yytext);
         return TId;
     }
 

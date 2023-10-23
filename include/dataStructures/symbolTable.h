@@ -23,8 +23,8 @@ void addLevelToSymbolTable(SymbolTable** table);
 
 void popLevelSymbolTable(SymbolTable** table);
 
-NodeInfo* searchLocalLevelSymbolTable(SymbolTable** table, char* key);
+NodeInfo* searchLocalLevelSymbolTable(SymbolTable* table, char* key);
 
-NodeInfo* searchGlobalLevelSymbolTable(SymbolTable** table, char* key);
+NodeInfo* searchGlobalLevelSymbolTable(SymbolTable* table, char* key);
 
 #endif

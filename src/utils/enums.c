@@ -2,9 +2,8 @@
 
 enum TBoolean getBooleanFromText(char* boolean) {
     if (strcmp(boolean, "true")) {
-
         return TRUE;
-    } else if(strcmp(boolean, "false")) {
+    } else if (strcmp(boolean, "false")) {
         return FALSE;
     }
 }
@@ -15,10 +14,12 @@ char *boolToString(enum TBoolean boolean) {
 }
 
 enum TType getTypeFromText(char* type) {
-    if (strcmp(type, "int") == 0) {
+    if (strcmp(type, "integer") == 0) {
         return INTEGER;
     } else if (strcmp(type, "boolean") == 0) {
         return BOOLEAN;
+    } else if (strcmp(type, "void") == 0) {
+        return VOID;
     }
 }
 

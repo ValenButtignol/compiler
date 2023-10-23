@@ -10,7 +10,6 @@ enum TBoolean {TRUE, FALSE};
 enum TBoolean getBooleanFromText(char* boolean);
 char *boolToString(enum TBoolean boolean);
 
-
 enum TType {INTEGER, BOOLEAN, NONETYPE, ERROR};
 enum TType getTypeFromText(char* type);
 char *typeToString(enum TType type);
