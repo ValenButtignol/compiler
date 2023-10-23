@@ -3,9 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "../include/ast.h"
-#include "../include/nodeInfo.h"
 #include "syntax.tab.h"
+#include "../include/utils/enums.h"
 
 %}
 
@@ -15,102 +14,176 @@
 letter [a-zA-Z]      
 digit [0-9]
 
-
 %%
 
-"boolean"|"int" {
-        yylval.type = malloc(sizeof(enum TType*));
-        *yylval.type = getTypeFromText(yytext);
-        // printf("TType: %s\n", typeToString(*yylval.type));
-        return TType;
+"Program" {
+        printf("%s\n",yytext);
+
+        return TProgram;
     }
 
-"const" {
-        yylval.tag = malloc(sizeof(enum TType*));
-        *yylval.tag = getTagFromText(yytext);
-        // printf("TTag: %s\n", tagToString(*yylval.type));
-        return TConst;
+"{" {
+        printf("%s\n",yytext);
+        return TOpenCurlyBracket;
     }
 
-";" {  
-        // printf("TSemiColon: %s\n",yytext);
-        return TSemiColon;
+"}" {
+        printf("%s\n",yytext);
+        return TCloseCurlyBracket;
     }
 
-"return" {
-        yylval.tag = malloc(sizeof(enum TTag*));
-        *yylval.tag = getTagFromText(yytext);
-        // printf("TTag: %s\n", tagToString(*yylval.tag));
-        return TReturn;
-    }
-
-"=" {  
-        yylval.operator = malloc(sizeof(enum TOperator*));
-        *yylval.operator = getOperatorFromText(yytext);
-        // printf("\n\noperator: %d %s\n", *yylval.operator, yytext);
-        // printf("TOperator: %s\n", operatorToString(*yylval.type));
-        return TAssign;
-    }
-
-"+" {  
-        yylval.operator = malloc(sizeof(enum TOperator*));
-        *yylval.operator = getOperatorFromText(yytext);
-        // printf("TOperator: %s\n", operatorToString(*yylval.type));
-        return TPlus;
-    }
-
-"-" {  
-        yylval.operator = malloc(sizeof(enum TOperator*));
-        *yylval.operator = getOperatorFromText(yytext);
-        // printf("TOperator: %s\n", operatorToString(*yylval.type));
-        return TMinus;
-    }    
-
-"*" {  
-        yylval.operator = malloc(sizeof(enum TOperator*));
-        *yylval.operator = getOperatorFromText(yytext);
-        // printf("TOperator: %s\n", operatorToString(*yylval.type));
-        return TMultiply;
-    }
-
-"/" {  
-        yylval.operator = malloc(sizeof(enum TOperator*));
-        *yylval.operator = getOperatorFromText(yytext);
-        // printf("TOperator: %s\n", operatorToString(*yylval.type));
-        return TDivide;
-    }
-
-"(" {  
-        // printf("TOpenParenthesis: %s\n",yytext);
+"(" {
+        printf("%s\n",yytext);
         return TOpenParenthesis;
     }
 
-")" {  
-        // printf("TCloseParenthesis: %s\n",yytext);
+")" {
+        printf("%s\n",yytext);
         return TCloseParenthesis;
     }
 
-{digit}+ { 
-        void* number = malloc(sizeof(int));
-        *((int*)number) = atoi(yytext);
-        yylval.value = number; // Assuming yylval has a field named 'value'
-        return TInteger;
+";" {
+        printf("%s\n",yytext);
+        return TSemiColon;
     }
 
-"false"|"true" {
-        void* boolean = malloc(sizeof(TBool));
+"," {
+        printf("%s\n",yytext);
+        return TComma;
+    }
+
+"integer"|"bool" {
+        printf("%s\n",yytext);
+        yylval.type = malloc(sizeof(enum TType*));
+        *yylval.type = getTypeFromText(yytext);
+        return TType;
+    }
+
+"void" {
+        printf("%s\n",yytext);
+        yylval.type = malloc(sizeof(enum TType*));
+        *yylval.type = getTypeFromText(yytext);
+        return TVoid;
+    }
+
+"if" {
+        printf("%s\n",yytext);
+        return TIf;
+    }
+
+"then" {
+        printf("%s\n",yytext);
+        return TThen;
+    }
+
+"else" {
+        printf("%s\n",yytext);
+        return TElse;
+    }
+
+"while" {
+        printf("%s\n",yytext);
+        return TWhile;
+    }
+
+"return" {
+        printf("%s\n",yytext);
+        return TReturn;
+    }
+
+"extern" {
+        printf("%s\n",yytext);
+        return TExtern;
+    }
+
+"=" {
+        printf("%s\n",yytext);
+        return TAssign;
+    }
+
+"!" {
+        printf("%s\n",yytext);
+        return TNot;
+    }
+
+"+" {
+        printf("%s\n",yytext);
+        return TAdd;
+    }
+
+"-" {
+        printf("%s\n",yytext);
+        return TSub;
+    }
+
+"*" {
+        printf("%s\n",yytext);
+        return TMul;
+    }
+
+"/" {
+        printf("%s\n",yytext);
+        return TDiv;
+    }
+
+"%" {
+        printf("%s\n",yytext);
+        return TMod;
+    }
+
+"<" {
+        printf("%s\n",yytext);
+        return TLessThan;
+    }   
+
+">" {
+        printf("%s\n",yytext);
+        return TGreaterThan;
+    }
+
+"==" {
+        printf("%s\n",yytext);
+        return TEquals;
+    }
+
+"&&" {
+        printf("%s\n",yytext);
+        return TAnd;
+    }
+
+"||" {
+        printf("%s\n",yytext);
+        return TOr;
+    }
+
+"true"|"false" {
+        printf("%s\n",yytext);
+        void* boolean = malloc(sizeof(enum TBoolean));
         *((int*) boolean) = getBooleanFromText(yytext);
-        yylval.value = boolean;
-        return TBool;
+        yylval.literal = boolean;
+        return TBooleanLiteral;
     }
 
-{letter}({letter}|{digit})* { 
+{digit}+ {
+        printf("%s\n",yytext);
+        void* num = malloc(sizeof(int));
+        *((int*)num) = atoi(yytext);
+        yylval.literal = num;
+        return TIntegerLiteral;
+    }
+
+{letter}({letter}|{digit}|"_")* {
+        printf("%s\n",yytext);
         yylval.string=(char *) malloc(sizeof(yytext)*yyleng);
         strcpy(yylval.string,yytext);
         return TId;
     }
 
-.|\n ; /* ignore all the rest */
+"//"(.)*\n ;
+
+.|\n ;
+
+
 
 %%
 

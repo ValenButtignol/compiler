@@ -2,13 +2,11 @@
 #define THREE_ADDRES_CODE_NODE_H
 #include <stdio.h>
 #include "nodeInfo.h"
-
-
-enum TLabel{SUM, SUB, MUL, DIV, AND, OR, MOV, RET};
+#include "../utils/enums.h"
 
 typedef struct ThreeAddressCodeNode{
     struct ThreeAddressCodeNode *next;
-    enum TLabel label;
+    enum TTag label;
     NodeInfo *first;
     NodeInfo *second;
     NodeInfo *third;
@@ -16,12 +14,19 @@ typedef struct ThreeAddressCodeNode{
 
 char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node);
 ThreeAddressCodeNode *threeAddressCodeNodeFactory(
-    enum TLabel label, NodeInfo *first, NodeInfo *second, NodeInfo *third);
+    enum TTag label, NodeInfo *first, NodeInfo *second, NodeInfo *third);
+
 ThreeAddressCodeNode *createThreeAddressCodeNode(
-    enum TLabel label, NodeInfo *first, NodeInfo *second, NodeInfo *third);
-enum TLabel getLabelFromOperator(enum TOperator op, enum TType type);
+    enum TTag label, NodeInfo *first, NodeInfo *second, NodeInfo *third);
+
+enum TTag geTTagFromOperator(enum TOperator op, enum TType type);
+
 NodeInfo *getFirst(ThreeAddressCodeNode *node);
+
 ThreeAddressCodeNode *newEmtyNodeTAC();
+
 char *valueToString(NodeInfo *node);
-char *labelToString(enum TLabel label);
+
+char *labelToString(enum TTag label);
+
 #endif

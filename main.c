@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "include/ast.h"
-#include "include/threeAddressCodeList.h"
-#include "include/assemblyCodeGenerator.h"
+#include "include/dataStructures/ast.h"
+#include "include/dataStructures/threeAddressCodeList.h"
+#include "include/algorithms/assemblyCodeGenerator.h"
+#include "include/algorithms/checktypes.h"
 
 extern FILE *yyin;
 extern FILE *yyout;
@@ -29,7 +30,8 @@ int main(int argc,char *argv[]) {
     int offset = getOffset();
 
     createThreeAddressCodeList(globalAst, list, &offset);
-    printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
+
+    // printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
     
     generateAssembly(list);
 

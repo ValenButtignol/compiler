@@ -1,4 +1,4 @@
-#include "../include/assemblyCodeGenerator.h"
+#include "../../include/algorithms/assemblyCodeGenerator.h"
 #include <stdint.h>
 
 void generateAssembly(ThreeAddressCodeList* list) {

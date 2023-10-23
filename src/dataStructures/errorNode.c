@@ -1,4 +1,4 @@
-#include "../include/errorNode.h"
+#include "../../include/dataStructures/errorNode.h"
 
 ErrorNode* createErrorNode(const char* data) {
     ErrorNode* newNode = (ErrorNode*)malloc(sizeof(ErrorNode));

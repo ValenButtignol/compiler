@@ -1,10 +1,9 @@
-#include "../include/enums.h"
+#include "../../include/utils/enums.h"
 
 enum TBoolean getBooleanFromText(char* boolean) {
     if (strcmp(boolean, "true")) {
-
         return TRUE;
-    } else if(strcmp(boolean, "false")) {
+    } else if (strcmp(boolean, "false")) {
         return FALSE;
     }
 }
@@ -15,10 +14,12 @@ char *boolToString(enum TBoolean boolean) {
 }
 
 enum TType getTypeFromText(char* type) {
-    if (strcmp(type, "int") == 0) {
+    if (strcmp(type, "integer") == 0) {
         return INTEGER;
     } else if (strcmp(type, "boolean") == 0) {
         return BOOLEAN;
+    } else if (strcmp(type, "void") == 0) {
+        return VOID;
     }
 }
 
@@ -44,7 +45,7 @@ char *typeToString(enum TType type) {
 
 enum TTag getTagFromText(char* tag) {
     if (strcmp(tag, "const") == 0) {
-        return CONST_DECL;
+        return CONST_VALUE;
     } else if (strcmp(tag, "return") == 0) {
         return RETURN;
     }
@@ -126,4 +127,8 @@ char *operatorToString(enum TOperator op) {
         return "NO OPERATOR";
         break;
     }
+}
+
+int isTypeableTag(enum TTag tag){
+    return ;
 }
