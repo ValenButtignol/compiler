@@ -332,7 +332,7 @@ ASSIGNMENT: TId TAssign EXPR {
                 printf("\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", yylineno,$1);
                 exit(1);
             }
-            NodeInfo* assignNode = newNodeInfo(NONETYPE, ASSIGN, yylineno);
+            NodeInfo* assignNode = newNodeInfo(NONETYPE, ASSIGNMENT, yylineno);
             $$ = newAst(assignNode, newLeaf(&var), $3);
         }
     ;
