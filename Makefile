@@ -14,18 +14,21 @@ TARGET = $(BIN_DIR)/my_program
 
 .PHONY: all clean
 
-src: $(TARGET)
+src:
 
-$(OBJ_DIR)/main.o: main.c  # Rule for compiling main.c
-	$(CC) -c $< -o $@
+	gcc -o $(wildcard output/my_program) $(wildcard extern/*.c) $(wildcard src/algorithms/*.c) $(wildcard src/dataStructures/*.c) $(wildcard utils/*.c) main2.c
 
-$(TARGET): $(OBJS) $(OBJ_DIR)/syntax.tab.o $(OBJ_DIR)/lex.yy.o
-	@mkdir -p $(BIN_DIR)
-	$(CC) $^ -o $@
+# $(OBJ_DIR)/main.o: main.c  # Rule for compiling main.c
+# 	$(CC) -c $< -o $@
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(@D)
-	$(CC) -c $< -o $@
+# $(TARGET): $(OBJS) $(OBJ_DIR)/syntax.tab.o $(OBJ_DIR)/lex.yy.o
+# 	@mkdir -p $(BIN_DIR)
+# 	$(CC) $^ -o $@
+
+# $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+# 	@mkdir -p $(@D)
+# 	$(CC) -c $< -o $@
+	
 
 clean:
 	@rm -rf $(OBJ_DIR) $(BIN_DIR)
