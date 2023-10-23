@@ -166,10 +166,6 @@ digit [0-9]
 
 {digit}+ {
         printf("%s\n",yytext);
-        
-        //void* number = malloc(sizeof(int));
-        //*((int*)number) = atoi(yytext);
-        
         int number = atoi(yytext);
         yylval.integer = number;
         return TIntegerLiteral;
