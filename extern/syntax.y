@@ -8,6 +8,7 @@
 #include "../include/dataStructures/symbolTable.h"
 #include "../include/dataStructures/threeAddressCodeList.h"
 #include "../include/utils/enums.h"
+#include "../include/utils/utils.h"
 
 extern int yylineno;
 extern int yytypeCorrect;
@@ -436,10 +437,12 @@ EXPR: EXPR TAdd EXPR {
     ;
 
 LITERAL: TIntegerLiteral {
-            $$ = newLeaf(newNodeInfoLiteral($1, INTEGER, CONST_VALUE, yylineno));         // Node without value and ID.
+            NodeInfo* literalNode = newNodeInfoLiteral($1, INTEGER, CONST_VALUE, yylineno);
+            $$ = newLeaf(&literalNode);         // Node without value and ID.
         }
     | TBooleanLiteral {
-            $$ = newLeaf(newNodeInfoLiteral($1, BOOLEAN, CONST_VALUE, yylineno));  // Node without value and ID.
+            NodeInfo* literalNode = newNodeInfoLiteral($1, INTEGER, CONST_VALUE, yylineno);
+            $$ = newLeaf(&literalNode);  // Node without value and ID.
         }
     ;
 
