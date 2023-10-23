@@ -161,11 +161,6 @@ void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset)
     temp->offset = offset;
 }
 
-void setParamsNodeInfo(NodeInfo** node, TAst* ast){
-    return ;
-}
-
-
 /****************************** new constructors ********************************/
 
 NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber) {
