@@ -1,8 +1,8 @@
 #ifndef UTILS_NODEINFO_LIST_H
 #define UTILS_NODEINFO_LIST_H
 
-#include "../../../include/ast.h"
-#include "../../../include/nodeInfo.h"
+#include "../../../include/dataStructures/ast.h"
+#include "../../../include/dataStructures/nodeInfo.h"
 
 // Define the Node structure for the linked list
 typedef struct TestingNode {

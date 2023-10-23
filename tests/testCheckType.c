@@ -1,5 +1,5 @@
-#include "../include/ast.h"
-#include "../include/errorNode.h"
+#include "../include/dataStructures/ast.h"
+#include "../include/dataStructures/errorNode.h"
 #include "utils/include/testerMethods.h"
 #include "utils/include/suiteMessages.h"
 #include "utils/include/checkTypesInputs.h"

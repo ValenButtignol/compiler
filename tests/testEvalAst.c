@@ -4,7 +4,7 @@
 #include "utils/include/evalAstInputs.h"
 #include "utils/include/testerMethods.h"
 #include "utils/include/testingNodeInfoList.h"
-#include "../include/ast.h"
+#include "../include/dataStructures/ast.h"
 
 static void evalAstTestSuite(char* inputTestFileName, TAst* globalAst) {
 

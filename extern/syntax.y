@@ -314,9 +314,8 @@ METHOD_CALL: TId TOpenParenthesis PARAMS_CALL TCloseParenthesis {
                 exit(1);
             }
             TAst* methodTree = newLeaf(&method);
-            NodeInfo* methodNode = newNodeInfoSimple(METHOD_CALL, yylineno);
 
-            $$ = newAst(methodNode, methodTree, $3);
+            $$ = newAst(method, methodTree, $3);
         }
     ;
 

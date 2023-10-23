@@ -4,10 +4,10 @@
 #define MAXOUTPUTS 100
 
 #include <string.h>
-#include "../../../include/ast.h"
-#include "../../../include/nodeInfo.h"
-#include "../../../include/enums.h"
-#include "../../../include/symbolTable.h"
+#include "../../../include/dataStructures/ast.h"
+#include "../../../include/dataStructures/nodeInfo.h"
+#include "../../../include/utils/enums.h"
+#include "../../../include/dataStructures/symbolTable.h"
 #include "testingNodeInfoList.h"
 
 void assembleExpectedOutputsFactory(char* inputTestFileName, int expectedNodes[MAXOUTPUTS]);
