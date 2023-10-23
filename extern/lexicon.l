@@ -160,14 +160,15 @@ digit [0-9]
         printf("%s\n",yytext);
         void* boolean = malloc(sizeof(enum TBoolean));
         *((int*) boolean) = getBooleanFromText(yytext);
-        yylval.boolean = boolean;
+        yylval.literal = boolean;
         return TBooleanLiteral;
     }
 
 {digit}+ {
         printf("%s\n",yytext);
-        int number = atoi(yytext);
-        yylval.integer = number;
+        void* num = malloc(sizeof(int));
+        *((int*)num) = atoi(yytext);
+        yylval.literal = num;
         return TIntegerLiteral;
     }
 

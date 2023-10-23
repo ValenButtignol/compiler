@@ -23,8 +23,7 @@ char* currentMethodName;
     struct TAst* ast;
     enum TType* type;
     char* string;
-    int integer;
-    enum TBoolean* boolean;
+    void* literal;
     enum TTag* tag;
     enum TOperator* operator;
 }
@@ -56,8 +55,8 @@ char* currentMethodName;
 %token<operator> TEquals
 %token<operator> TAnd
 %token<operator> TOr
-%token<boolean> TBooleanLiteral
-%token<integer> TIntegerLiteral
+%token<literal> TBooleanLiteral
+%token<literal> TIntegerLiteral
 %token<string> TId
 
 %type<ast> PROGRAM
@@ -440,7 +439,7 @@ LITERAL: TIntegerLiteral {
             $$ = newLeaf(newNodeInfoLiteral($1, INTEGER, CONST_VALUE, yylineno));         // Node without value and ID.
         }
     | TBooleanLiteral {
-            $$ = newLeaf(newNodeInfoLiteral((void)*$1, BOOLEAN, CONST_VALUE, yylineno));  // Node without value and ID.
+            $$ = newLeaf(newNodeInfoLiteral($1, BOOLEAN, CONST_VALUE, yylineno));  // Node without value and ID.
         }
     ;
 
