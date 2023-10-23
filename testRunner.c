@@ -1,9 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "include/ast.h"
-#include "include/threeAddressCodeList.h"
-#include "tests/testEvalAst.c"
+#include "include/dataStructures/ast.h"
+#include "include/dataStructures/threeAddressCodeList.h"
 #include "tests/testCheckType.c"
 #include "tests/assemblyTestSuite.c"
 
@@ -39,25 +38,15 @@ int main(int argc,char *argv[]) {
     char* fileName = getFileName(argv[0]);
     char* testType = argv[1];
     
-    ErrorNode* errors = NULL;
+    ErrorNode* errors = NULL;   // errors = getErrorsList();
 
-    if(strcmp(testType, "type") == 0){
-        // if (checkTypes(globalAst, &errors)) {
-        //     printf("Chequeo de tipos = OK\n");
-        // } else {
-        //     printf("Chequeo de tipos = ERROR\n");
-        //     printErrors(errors);
-        // }
+    if (strcmp(testType, "syntax") == 0) {
+        generateAstTestSuite(fileName, globalAst, errors);
+
+    } else if (strcmp(testType, "type") == 0) {
+        // if errors != NULL, then there are syntax errors
         checkTypes(globalAst, &errors);
         checkTypeTestSuite(fileName, globalAst, &errors);
-    }
-    else if(strcmp(testType, "eval") == 0){
-        if (checkTypes(globalAst, &errors)) {
-            evaluateAst(globalAst);
-            evalAstTestSuite(fileName, globalAst);
-        } else {
-            printTestFailedMessage("Can't evaluate, check type FAIL", fileName);
-        }
     }else if(strcmp(testType, "assemble") == 0){
         if (checkTypes(globalAst, &errors)) {
             assemblyTestSuite(fileName);

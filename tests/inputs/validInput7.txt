@@ -1,3 +1,0 @@
-boolean a = false + false;
-a = a + true;
-return a;
