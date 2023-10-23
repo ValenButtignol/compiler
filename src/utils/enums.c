@@ -45,7 +45,7 @@ char *typeToString(enum TType type) {
 
 enum TTag getTagFromText(char* tag) {
     if (strcmp(tag, "const") == 0) {
-        return CONST_DECL;
+        return CONST_VALUE;
     } else if (strcmp(tag, "return") == 0) {
         return RETURN;
     }
@@ -130,6 +130,5 @@ char *operatorToString(enum TOperator op) {
 }
 
 int isTypeableTag(enum TTag tag){
-    return tag == EXPR_OP || tag == VAR_DECL || tag == DECL 
-              || tag == CONST_DECL || tag == ASSIGNMENT_OP || tag == RETURN;
+    return ;
 }

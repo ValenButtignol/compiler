@@ -134,7 +134,7 @@ VAR_DECL: TType TId TAssign EXPR TSemiColon {
             }
 
             offset++;
-            NodeInfo* varNode = newNodeInfoDeclaration($2, $1, VAR, yylineno, offset);      // Create VAR node.
+            NodeInfo* varNode = newNodeInfoDeclaration($2, *$1, VAR, yylineno, offset);      // Create VAR node.
             addNodeToSymbolTable(&symbolTable, varNode);
             TAst* declaredVariable = newLeaf(&varNode);
 
@@ -161,7 +161,7 @@ METHOD_DECL: TType TId TOpenParenthesis {
                 }
 
                 offset++;
-                NodeInfo* methodNode = newNodeInfoDeclaration($2, $1, METHOD, yylineno, offset);    
+                NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD, yylineno, offset);    
                 addNodeToSymbolTable(&symbolTable, methodNode);                                     // Add the method to the symbol table.
                 
                 currentMethodName = malloc(strlen($2) + 1);                                             
@@ -181,7 +181,7 @@ METHOD_DECL: TType TId TOpenParenthesis {
                 }
 
                 offset++;
-                NodeInfo* methodNode = newNodeInfoDeclaration($2, $1, METHOD, yylineno, offset);
+                NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD, yylineno, offset);
                 addNodeToSymbolTable(&symbolTable, methodNode);
                 
                 currentMethodName = malloc(strlen($2) + 1);                                             
@@ -228,7 +228,7 @@ PARAMS_LIST_DECL: TType TId TComma PARAMS_LIST_DECL {
                 }
 
             offset++;
-            NodeInfo* paramNode = newNodeInfoDeclaration($2, $1, PARAM, yylineno, offset);    // Don't know if offset is needed.
+            NodeInfo* paramNode = newNodeInfoDeclaration($2, *$1, PARAM, yylineno, offset);    // Don't know if offset is needed.
             $$ = newAst(paramNode, $4, newEmptyAst());
         }
     | TType TId {
@@ -238,7 +238,7 @@ PARAMS_LIST_DECL: TType TId TComma PARAMS_LIST_DECL {
                     exit(1);
                 }
             offset++;
-            NodeInfo* paramNode = newNodeInfoDeclaration($2, $1, PARAM, yylineno, offset);
+            NodeInfo* paramNode = newNodeInfoDeclaration($2, *$1, PARAM, yylineno, offset);
             $$ = newLeaf(&paramNode);
         }
     ;
