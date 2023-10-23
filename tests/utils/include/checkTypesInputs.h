@@ -2,11 +2,11 @@
 #define UTILS_CHECKTYPES_INPUTS_H
 
 #include <string.h>
-#include "../../../include/ast.h"
-#include "../../../include/errorNode.h"
-#include "../../../include/nodeInfo.h"
-#include "../../../include/enums.h"
-#include "../../../include/symbolTable.h"
+#include "../../../include/dataStructures/ast.h"
+#include "../../../include/dataStructures/errorNode.h"
+#include "../../../include/dataStructures/nodeInfo.h"
+#include "../../../include/dataStructures/symbolTable.h"
+#include "../../../include/utils/enums.h"
 #include "testingNodeInfoList.h"
 
 void checkTypesFactory(char* inputTestFileName, TestingNodeInfoList* expectedNodes, ErrorNode** errors);
