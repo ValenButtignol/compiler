@@ -161,7 +161,7 @@ METHOD_DECL: TType TId TOpenParenthesis {
                 }
 
                 offset++;
-                NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD, yylineno, offset);    
+                NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD_DECL, yylineno, offset);    
                 addNodeToSymbolTable(&symbolTable, methodNode);                                     // Add the method to the symbol table.
                 
                 currentMethodName = malloc(strlen($2) + 1);                                             
@@ -181,7 +181,7 @@ METHOD_DECL: TType TId TOpenParenthesis {
                 }
 
                 offset++;
-                NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD, yylineno, offset);
+                NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD_DECL, yylineno, offset);
                 addNodeToSymbolTable(&symbolTable, methodNode);
                 
                 currentMethodName = malloc(strlen($2) + 1);                                             
@@ -314,6 +314,7 @@ METHOD_CALL: TId TOpenParenthesis PARAMS_CALL TCloseParenthesis {
                 exit(1);
             }
             TAst* methodTree = newLeaf(&method);
+            NodeInfo* methodNode = newNodeInfoSimple(METHOD_CALL, yylineno);
 
             $$ = newAst(methodNode, methodTree, $3);
         }
