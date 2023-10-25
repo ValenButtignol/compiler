@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../utils/enums.h"
-#include "ast.h"
 
 typedef struct{
 	void* value;
