@@ -4,7 +4,6 @@
 #include "../../../include/dataStructures/ast.h"
 #include "../../../include/dataStructures/errorNode.h"
 #include "../../../include/dataStructures/nodeInfo.h"
-#include "../../../include/dataStructures/symbolTable.h"
 #include "../../../include/utils/enums.h"
 #include "testingNodeInfoList.h"
 

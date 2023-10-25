@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gcc -w testRunner.c src/*.c extern/*.c tests/utils/src/*.c -o output/tests.out
+gcc -w testRunner.c src/*/*.c extern/*.c tests/utils/src/*.c -o output/tests.out
 
 if [ ! -f "./output/tests.out" ]; then
     echo "Error: Failing compile."

@@ -52,13 +52,13 @@ SCRIPT_DIR = scripts
 TEST_DIR = tests
 
 test_syntax:
-	$(SCRIPT_DIR)/test_syntax.sh
+	sh $(SCRIPT_DIR)/test_syntax.sh
 
 test_checktypes:
-	$(SCRIPT_DIR)/test_checktypes.sh
+	sh $(SCRIPT_DIR)/test_checktypes.sh
 
 test_assembly:
-	$(SCRIPT_DIR)/test_assembly.sh
+	sh $(SCRIPT_DIR)/test_assembly.sh
 
 test_all: test_syntax test_checktypes test_assembly
 
