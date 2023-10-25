@@ -14,15 +14,7 @@ TARGET = $(BIN_DIR)/my_program
 
 .PHONY: all clean
 
-all: $(TARGET)
-
-$(TARGET): $(OBJS)
-	@mkdir -p $(BIN_DIR)
-	$(CC) $^ -o $@
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(@D)
-	$(CC) -c $< -o $@
+all: parse src
 
 clean:
 	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/*
