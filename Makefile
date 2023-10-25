@@ -7,32 +7,37 @@ SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = output
 
-SRCS := $(wildcard $(SRC_DIR)/**/*.c) ./main.c
+SRCS := $(wildcard $(SRC_DIR)/**/*.c) ./main2.c
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))  
 
 TARGET = $(BIN_DIR)/my_program
 
 .PHONY: all clean
 
-src:
+all: $(TARGET)
 
-	gcc -o $(wildcard output/my_program) $(wildcard extern/*.c) $(wildcard src/algorithms/*.c) $(wildcard src/dataStructures/*.c) $(wildcard utils/*.c) main2.c
+$(TARGET): $(OBJS)
+	@mkdir -p $(BIN_DIR)
+	$(CC) $^ -o $@
 
-# $(OBJ_DIR)/main.o: main.c  # Rule for compiling main.c
-# 	$(CC) -c $< -o $@
-
-# $(TARGET): $(OBJS) $(OBJ_DIR)/syntax.tab.o $(OBJ_DIR)/lex.yy.o
-# 	@mkdir -p $(BIN_DIR)
-# 	$(CC) $^ -o $@
-
-# $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-# 	@mkdir -p $(@D)
-# 	$(CC) -c $< -o $@
-	
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) -c $< -o $@
 
 clean:
-	@rm -rf $(OBJ_DIR) $(BIN_DIR)
+	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/*
 
+src: $(TARGET) parse
+
+$(TARGET): $(OBJS) $(OBJ_DIR)/syntax.tab.o $(OBJ_DIR)/lex.yy.o
+	@mkdir -p $(BIN_DIR)
+	$(CC) $^ -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)/utils
+	@mkdir -p $(OBJ_DIR)/dataStructures
+	@mkdir -p $(OBJ_DIR)/algorithms
+	$(CC) -c $< -o $@
 
 FLEX = flex
 BISON = bison
@@ -49,7 +54,7 @@ parse:
 	$(CC) -c $(EXT_DIR)/syntax.tab.c -o $(OBJ_DIR)/syntax.tab.o
 
 
-all: parse src
+# all: parse src
 
 SCRIPT_DIR = scripts
 TEST_DIR = tests
@@ -66,7 +71,7 @@ test_file:
 IN_FILE ?= input/input.txt
 
 run:
-	$(TARGET) ./$(IN_FILE) 
+	./$(TARGET) $(IN_FILE) 
 
 ASSEMBLY_FILE = assembly.s
 ASSMBLE_EXE = executable
