@@ -2,24 +2,31 @@
 #include "../include/dataStructures/errorNode.h"
 #include "utils/include/testerMethods.h"
 #include "utils/include/suiteMessages.h"
-#include "utils/include/checkTypesInputs.h"
+#include "utils/include/generateAstInputs.h"
 #include <assert.h>
 
-static void evalAstTestSuite(char* inputTestFileName, TAst* globalAst) {
+static void generateAstTestSuite(char* inputTestFileName, TAst* globalAst, ErrorNode* errors) {
 
     TestingNodeInfoList* expectedNodes = newTestingNodeInfoList(); 
     TestingNodeInfoList* nodesToFreeLater = expectedNodes;
-    generateAstExpectedNodesFactory(inputTestFileName, expectedNodes);  //TODO: Implement
+    ErrorNode* expectedErrors = NULL;
+    generateAstFactory(inputTestFileName, expectedNodes, &expectedErrors);  //TODO: Implement
     
-    if (expectedNodes->head == NULL) {
+    if (expectedNodes->head == NULL && errors == NULL) {
         printNoTestSuiteMessage(inputTestFileName);
         return ;
     }
     
     if ((testerDfs(globalAst, expectedNodes))) {
-        printTestSuccessMessage("EvalAst", inputTestFileName);
+        printTestSuccessMessage("Generate AST", inputTestFileName);
+        freeTestingNodeInfoList(nodesToFreeLater);
+
+    } else if (errors != NULL) {
+        if (testErrors(errors, expectedErrors)) 
+            printTestSuccessMessage("Generate AST", inputTestFileName);
+            freeErrorsList(expectedErrors);
     } else {
-        printTestFailedMessage("EvalAst", inputTestFileName);
+        printTestFailedMessage("Generate AST", inputTestFileName);
     }
 
     freeTestingNodeInfoList(nodesToFreeLater);
