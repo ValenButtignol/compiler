@@ -168,7 +168,7 @@ NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber) {
 
     result->value = NULL;
     result->type = NONETYPE;
-    result->id = ""; 
+    result->id = malloc(50); 
     result->operatorVar = NONOPERATOR;
     result->tag = tag;
     result->lineNumber = lineNumber;
@@ -185,7 +185,7 @@ NodeInfo* newNodeInfoType(enum TType type, enum TTag tag, int lineNumber) {
 NodeInfo* newNodeInfoDeclaration(char* id, enum TType type, enum TTag tag, int lineNumber, int offset) {
     NodeInfo* result = newNodeInfoSimple(tag, lineNumber);
     result->type = type;
-    result->id = strdup(id);
+    strcpy(result->id, id);
     result->offset = offset; 
     return result;
 }

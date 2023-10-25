@@ -130,5 +130,8 @@ char *operatorToString(enum TOperator op) {
 }
 
 int isTypeableTag(enum TTag tag){
-    return ;
+    return tag == VAR || tag == METHOD_DECL || tag ==  METHOD_CALL || tag == PARAM || tag == ASSIGNMENT
+            || tag == RETURN || tag ==  ADD || tag == SUB || tag ==  MUL || tag == DIV || tag ==  MOD
+            || tag ==  GREATER_THAN || tag ==  LESS_THAN || tag ==  EQUALS || tag ==  AND || tag == OR
+            || tag ==  NEGATIVE || tag ==  NOT || tag ==  CONST_VALUE;
 }
