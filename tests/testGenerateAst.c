@@ -24,11 +24,11 @@ static void generateAstTestSuite(char* inputTestFileName, TAst* globalAst, Error
     } else if (errors != NULL) {
         if (testErrors(errors, expectedErrors)) 
             printTestSuccessMessage("Generate AST", inputTestFileName);
-            freeErrorsList(expectedErrors);
+        
+        freeErrorsList(expectedErrors);
     } else {
         printTestFailedMessage("Generate AST", inputTestFileName);
     }
 
     freeTestingNodeInfoList(nodesToFreeLater);
-    return ;
 }
