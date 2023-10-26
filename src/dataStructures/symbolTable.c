@@ -14,7 +14,8 @@ void initializeSymbolTable(SymbolTable** table) {
 void addNodeToSymbolTable(SymbolTable** table, NodeInfo* node) {
     DeclNode* currentDecls = (*table)->decls;
     
-    DeclNode* newDecl = malloc(sizeof(DeclNode));
+    printf("MALLOC %s\n", node->id);
+    DeclNode* newDecl = malloc(sizeof(DeclNode*));
     if (newDecl == NULL) {
         fprintf(stderr, "Failed to allocate memory for symbolTable\n");
         exit(1);
