@@ -120,6 +120,7 @@ NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber) {
     result->tag = tag;
     result->lineNumber = lineNumber;
     result->offset = 0;
+    result->nextParams = NULL;
     return result;
 }
 

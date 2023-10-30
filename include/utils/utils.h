@@ -4,6 +4,6 @@
 #include "../dataStructures/ast.h"
 #include "../dataStructures/nodeInfo.h"
 
-void setParamsNodeInfo(NodeInfo** node, TAst* ast);
+void setParamsToNodeInfo(NodeInfo** node, TAst* ast);
 
 #endif

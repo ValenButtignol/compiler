@@ -200,14 +200,14 @@ METHOD_DECL: TType TId TOpenParenthesis {
 
 METHOD_ENDING: PARAMS_DECL TCloseParenthesis BLOCK {                                                      // The block itself creates and closes its own level
                 NodeInfo* methodNode = searchGlobalLevelSymbolTable(symbolTable, currentMethodName);     
-                setParamsNodeInfo(&methodNode, $1);                                                       // Link the Method node with the params as a list.
+                setParamsToNodeInfo(&methodNode, $1);        
                 $$ = newAst(methodNode, $1, $3);                                                          // After the data is linked, and the block is created, we return the method node.
                 popLevelSymbolTable(&symbolTable);                                                        // Pop the level created for params.
                 free(currentMethodName);
             }
     | PARAMS_DECL TCloseParenthesis TExtern TSemiColon {
                 NodeInfo* methodNode = searchGlobalLevelSymbolTable(symbolTable, currentMethodName); 
-                setParamsNodeInfo(&methodNode, $1);
+                setParamsToNodeInfo(&methodNode, $1);
                 $$ = newLeaf(&methodNode);
                 popLevelSymbolTable(&symbolTable);
                 free(currentMethodName);
