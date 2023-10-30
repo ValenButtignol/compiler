@@ -53,7 +53,6 @@ enum TTag getTagFromText(char* tag) {
 
         
 char *tagToString(enum TTag tag) {
-    printf("AAAAAAAAAAAAAAAAAAAAAAA\n");
     switch (tag)
     {
     case 0:
@@ -88,47 +87,47 @@ char *tagToString(enum TTag tag) {
 
     case 10:
         return "ASSIGNMENT";
-    case 12:
+    case 11:
         return "IF";
-    case 13:
-        return "IF_ELSE";
-    case 14:
-        return "IF_BLOCKS";
-    case 15:
-        return "WHILE";
-    case 16:
-        return "RETURN";
-    case 17:
-        return "ADD";
-    case 18:
-        return "SUB";
-    case 19:
-        return "MUL";
-    case 20:
-        return "DIV";
-    case 21:
-        return "MOD";
-    case 22:
-        return "GREATER_THAN";
-    case 23:
-        return "LESS_THAN";
-    case 24:
-        return "EQUALS";
-    case 25:
-        return "AND";
-    case 26:
-        return "OR";
-    case 27:
-        return "NEGATIVE";
-    case 28:
-        return "NOT";
-    case 29:
-        return "CONST_VALUE";
-    case 30:
-        return "NONETAG";
 
+    case 12:
+        return "IF_ELSE";
+    case 13:
+        return "IF_BLOCKS";
+    case 14:
+        return "WHILE";
+    case 15:
+        return "RETURN";
+    case 16:
+        return "ADD";
+    case 17:
+        return "SUB";
+    case 18:
+        return "MUL";
+    case 19:
+        return "DIV";
+    case 20:
+        return "MOD";
+    case 21:
+        return "GREATER_THAN";
+    case 22:
+        return "LESS_THAN";
+    case 23:
+        return "EQUALS";
+    case 24:
+        return "AND";
+    case 25:
+        return "OR";
+    case 26:
+        return "NEGATIVE";
+    case 27:
+        return "NOT";
+    case 28:
+        return "CONST_VALUE";
+    case 29:
+        return "NONETAG";
     default:
-        break;
+        return "NULL";
     }
 }
 
