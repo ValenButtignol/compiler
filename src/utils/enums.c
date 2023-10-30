@@ -53,39 +53,28 @@ enum TTag getTagFromText(char* tag) {
 
         
 char *tagToString(enum TTag tag) {
-    printf("AAAAAAAAAAAAAAAAAAAAAAA\n");
     switch (tag)
     {
     case 0:
         return "PROGRAM";
-    
     case 1:
         return "VAR_DECL_BLOCK";
-    
     case 2:
         return "VAR_DECL";
-    
     case 3:
         return "VAR";
-    
     case 4:
         return "METHOD_DECL_BLOCK";
-    
     case 5:
         return "METHOD_DECL";
-    
     case 6:
         return "METHOD_CALL";
-
     case 7:
         return "PARAM";
-
     case 8:
         return "BLOCK";
-    
     case 9:
         return "STMT_BLOCK";
-
     case 10:
         return "ASSIGNMENT";
     case 12:
@@ -126,7 +115,6 @@ char *tagToString(enum TTag tag) {
         return "CONST_VALUE";
     case 30:
         return "NONETAG";
-
     default:
         break;
     }
