@@ -63,59 +63,7 @@ void setValue(NodeInfo** node, void* value) {
 char* nodeInfoToString(NodeInfo node) {
     char* string;
     string = malloc(sizeof(char*));
-    switch (node.tag) 
-    {
-    case 0: // PROGRAM 
-        strcpy(string, "");
-        break;
-
-    case 1: // DECL_BLOCK 
-        strcpy(string, "");
-        break;
-    
-    case 2: // DECL
-        strcpy(string, "");
-        break;
-    
-    case 3: // VAR_DECL
-        char* t = malloc(sizeof(char*)); 
-        t = typeToString(node.type);
-        size_t totalLength = strlen(t) + strlen(node.id) + 5; // +5 for formatting characters
-        string = malloc(totalLength*sizeof(char));
-        snprintf(string, totalLength, "%s %s", t, node.id);
-        break;
-    
-    case 4: // CONST_DECL
-        strcpy(string, "const");    
-        break;
-
-    case 5: // STMT_BLOCK
-        strcpy(string, "");
-        break;
-    
-    case 6: // ASSIGNMENT_OP
-        strcpy(string, "=");
-        break;
-    
-    case 7: // RETURN
-        strcpy(string, "return");
-        break;
-    
-    case 8: // EXPR_OP
-        strcpy(string, operatorToString(node.operatorVar));
-        break;
-    
-    case 9: // CONST_VALUE
-        strcpy(string, constExprToString(node));
-        break;
-    
-    case 10: // NONETAG
-        strcpy(string, "");
-        break;
-    
-    default:
-        return "DEFAULT";
-    }
+    strcpy(string, tagToString(node.tag));
     return string;
 }
 
