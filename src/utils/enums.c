@@ -26,16 +26,18 @@ enum TType getTypeFromText(char* type) {
 char *typeToString(enum TType type) {
     switch (type)
     {
-    case 0:
+    case INTEGER:
         return "int";
 
-    case 1:
+    case BOOLEAN:
         return "boolean";
     
-    case 2:
-        return "NOTYPE";
+    case VOID:
+        return "VOID";
     
-    case 3:
+    case NONETYPE:
+        return "NONETYPE";
+    case ERROR:
         return "ERROR";
     default:
         return "MAYBE NULL :/";
@@ -158,7 +160,7 @@ char *operatorToString(enum TOperator op) {
 }
 
 int isTypeableTag(enum TTag tag){
-    return tag == VAR || tag == METHOD_DECL || tag ==  METHOD_CALL || tag == PARAM || tag == ASSIGNMENT
+    return tag == VAR || tag ==  METHOD_CALL || tag == ASSIGNMENT
             || tag == RETURN || tag ==  ADD || tag == SUB || tag ==  MUL || tag == DIV || tag ==  MOD
             || tag ==  GREATER_THAN || tag ==  LESS_THAN || tag ==  EQUALS || tag ==  AND || tag == OR
             || tag ==  NEGATIVE || tag ==  NOT || tag ==  CONST_VALUE;
