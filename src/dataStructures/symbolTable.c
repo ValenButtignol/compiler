@@ -14,8 +14,7 @@ void initializeSymbolTable(SymbolTable** table) {
 void addNodeToSymbolTable(SymbolTable** table, NodeInfo* node) {
     DeclNode* currentDecls = (*table)->decls;
     
-    printf("MALLOC %s\n", node->id);
-    DeclNode* newDecl = malloc(sizeof(DeclNode*));
+    DeclNode* newDecl = malloc(sizeof(DeclNode));
     if (newDecl == NULL) {
         fprintf(stderr, "Failed to allocate memory for symbolTable\n");
         exit(1);
@@ -62,4 +61,23 @@ NodeInfo* searchGlobalLevelSymbolTable(SymbolTable* table, char* key) {
         currentLevel = currentLevel->prevLevel;
     }
     return NULL;
+}
+
+void printSymbolTable(SymbolTable* table) {
+    SymbolTable* currentLevel = table;
+    int i = 0;
+    printf("TOP -> ");
+    while (currentLevel != NULL) {
+        DeclNode* currentDecls = currentLevel->decls;
+        (i == 0) ?  : printf("[] ->") ;
+        while (currentDecls != NULL) {
+            printf(" %s ->", currentDecls->data->id);
+            currentDecls = currentDecls->nextNode;
+        }
+        printf(" NIL\n");
+        i++;
+        currentLevel = currentLevel->prevLevel;
+    }    
+    printf("\n");
+    
 }

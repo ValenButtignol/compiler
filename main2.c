@@ -18,7 +18,7 @@ int main(int argc,char *argv[]) {
     ErrorNode* errors = NULL;
     printf("PARSE COMPLETE %d\n", globalAst==NULL);
     printf("\n---------------------------------------------- \n");
-    printf("AST %s\n", astToString(globalAst));
-    checkTypes(globalAst, &errors);
+    printAst(globalAst);
+    //checkTypes(globalAst, &errors);
     
 }

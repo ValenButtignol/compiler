@@ -62,7 +62,7 @@ void setValue(NodeInfo** node, void* value) {
 
 char* nodeInfoToString(NodeInfo node) {
     char* string;
-    string = malloc(sizeof(char*));
+    string = (char*)malloc(20);
     strcpy(string, tagToString(node.tag));
     return string;
 }
