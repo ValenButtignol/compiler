@@ -79,46 +79,47 @@ char *tagToString(enum TTag tag) {
         return "STMT_BLOCK";
     case 10:
         return "ASSIGNMENT";
-    case 12:
+    case 11:
         return "IF";
-    case 13:
+
+    case 12:
         return "IF_ELSE";
-    case 14:
+    case 13:
         return "IF_BLOCKS";
-    case 15:
+    case 14:
         return "WHILE";
-    case 16:
+    case 15:
         return "RETURN";
-    case 17:
+    case 16:
         return "ADD";
-    case 18:
+    case 17:
         return "SUB";
-    case 19:
+    case 18:
         return "MUL";
-    case 20:
+    case 19:
         return "DIV";
-    case 21:
+    case 20:
         return "MOD";
-    case 22:
+    case 21:
         return "GREATER_THAN";
-    case 23:
+    case 22:
         return "LESS_THAN";
-    case 24:
+    case 23:
         return "EQUALS";
-    case 25:
+    case 24:
         return "AND";
-    case 26:
+    case 25:
         return "OR";
-    case 27:
+    case 26:
         return "NEGATIVE";
-    case 28:
+    case 27:
         return "NOT";
-    case 29:
+    case 28:
         return "CONST_VALUE";
-    case 30:
+    case 29:
         return "NONETAG";
     default:
-        break;
+        return "NULL";
     }
 }
 
