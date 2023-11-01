@@ -46,6 +46,7 @@ int main(int argc,char *argv[]) {
         // if errors != NULL, then there are syntax errors
         checkTypes(globalAst, &errors);
         checkTypeTestSuite(fileName, globalAst, &errors);
+
     } else if (strcmp(testType, "assemble") == 0){
         if (checkTypes(globalAst, &errors)) {
             assemblyTestSuite(fileName);
@@ -56,6 +57,7 @@ int main(int argc,char *argv[]) {
     } else {
         printIncorrectTypeTestMessage(testType);
     }
+    
     freeErrorsList(errors);
     return 0;
 

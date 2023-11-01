@@ -9,8 +9,26 @@
 #include "testingNodeInfoList.h"
 
 void checkTypesFactory(char* inputTestFileName, TestingNodeInfoList* expectedNodes, ErrorNode** errors);
-//void checkTypesExpectedNodesCreator1(TestingNodeInfoList* expectedNodes);
-//void checkTypesExpectedNodesCreator2(TestingNodeInfoList* expectedNodes);
-//void checkTypesErrorListCreator1(ErrorNode** errors);
+void checkTypesListErrors1(ErrorNode** expectedErrors);
+void checkTypesListErrors2(ErrorNode** expectedErrors);
+void checkTypesListErrors3(ErrorNode** expectedErrors);
+void checkTypesListErrors4(ErrorNode** expectedErrors);
+void checkTypesListErrors5(ErrorNode** expectedErrors);
+void checkTypesListErrors6(ErrorNode** expectedErrors);
+void checkTypesListErrors7(ErrorNode** expectedErrors);
+void checkTypesListErrors8(ErrorNode** expectedErrors);
+void checkTypesListErrors9(ErrorNode** expectedErrors);
+void checkTypesListErrors10(ErrorNode** expectedErrors);
+void checkTypesListErrors11(ErrorNode** expectedErrors);
+void checkTypesListErrors12(ErrorNode** expectedErrors);
+void checkTypesListErrors13(ErrorNode** expectedErrors);
+void checkTypesListErrors14(ErrorNode** expectedErrors);
+void checkTypesListErrors15(ErrorNode** expectedErrors);
+void checkTypesExpectedNodesCreator1(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator2(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator3(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator4(TestingNodeInfoList* expectedNodes);
+void checkTypesExpectedNodesCreator5(TestingNodeInfoList* expectedNodes);
+
 
 #endif

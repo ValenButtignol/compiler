@@ -19,7 +19,6 @@ static void generateAstTestSuite(char* inputTestFileName, TAst* globalAst, Error
     
     if ((testerDfs(globalAst, expectedNodes))) {
         printTestSuccessMessage("Generate AST", inputTestFileName);
-        freeTestingNodeInfoList(nodesToFreeLater);
 
     } else if (errors != NULL) {
         if (testErrors(errors, expectedErrors)) 
