@@ -1,0 +1,20 @@
+Program {
+        
+    integer a = 1 + 2 + 3 + 4;
+    integer b = 1 + 2 + 3 + true;
+    integer c = 1 + 2 + true + 4;
+    integer d = 1 + true + 3 + 4;
+    integer e = true + 2 + 3 + 4;
+    integer f = 1 + 2 + true + true;
+    integer g = 1 + true + 3 + true;
+    integer h = true + 2 + 3 + true;
+    integer i = 1 + true + true + 4;
+    integer j = true + 2 + true + 4;
+    integer k = true + true + 3 + 4;
+    integer l = 1 + true + true + true;
+    integer m = true + 2 + true + true;
+    integer n = true + true + 3 + true;
+    integer o = true + true + true + 4;
+    integer p = true + true + true + true;
+
+}

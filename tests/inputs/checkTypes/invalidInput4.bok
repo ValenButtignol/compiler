@@ -1,0 +1,12 @@
+Program {
+
+    integer a = 1 + 2 + 3;
+    integer b = 1 + 2 + true;
+    integer c = 1 + true + 3;
+    integer d = true + 2 + 3;
+    integer e = 1 + true + true;
+    integer f = true + 2 + true;
+    integer g = true + true + 3;
+    integer h = true + true + true;    
+
+}
