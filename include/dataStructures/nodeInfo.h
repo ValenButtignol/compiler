@@ -6,7 +6,7 @@
 #include <string.h>
 #include "../utils/enums.h"
 
-typedef struct{
+typedef struct NodeInfo{
 	void* value;
 	char* id;
 	enum TType type;
