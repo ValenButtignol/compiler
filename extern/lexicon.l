@@ -147,7 +147,7 @@ digit [0-9]
         strcpy(yylval.string,yytext);
         return TId;
     }
-
+"/\*"(.*|.*\n|\n)*"\*/"     ; /* ignore comments */
 "//"(.)*\n ;
 
 .|\n ;
