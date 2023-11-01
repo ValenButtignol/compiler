@@ -27,7 +27,7 @@ char *typeToString(enum TType type) {
     switch (type)
     {
     case INTEGER:
-        return "int";
+        return "integer";
 
     case BOOLEAN:
         return "boolean";
@@ -161,8 +161,31 @@ char *operatorToString(enum TOperator op) {
 }
 
 int isTypeableTag(enum TTag tag){
-    return tag == VAR || tag ==  METHOD_CALL || tag == ASSIGNMENT
-            || tag == RETURN || tag ==  ADD || tag == SUB || tag ==  MUL || tag == DIV || tag ==  MOD
+    return  tag == ASSIGNMENT || tag ==  ADD || tag == SUB || tag ==  MUL || tag == DIV || tag ==  MOD
             || tag ==  GREATER_THAN || tag ==  LESS_THAN || tag ==  EQUALS || tag ==  AND || tag == OR
-            || tag ==  NEGATIVE || tag ==  NOT || tag ==  CONST_VALUE;
+            || tag ==  NEGATIVE || tag ==  NOT || tag == VAR_DECL;
+}
+
+int isAssignTag(enum TTag tag){
+    return  tag == ASSIGNMENT || tag == VAR_DECL;
+}
+
+int isArithmeticOperatorTag(enum TTag tag){
+    return  tag ==  ADD || tag == SUB || tag ==  MUL || tag == DIV || tag ==  MOD;
+}
+
+int isRelationalOperatorTag(enum TTag tag){
+    return tag ==  GREATER_THAN || tag ==  LESS_THAN;
+}
+
+int isComparatorTag(enum TTag tag){
+    return tag ==  EQUALS;
+}
+
+int isBooleanOperatorTag(enum TTag tag){
+    return tag ==  AND || tag == OR;
+}
+
+int isUnaryOperatorTag(enum TTag tag){
+    return tag ==  NEGATIVE || tag ==  NOT;
 }
