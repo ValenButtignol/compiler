@@ -17,7 +17,6 @@ digit [0-9]
 %%
 
 "Program" {
-
         return TProgram;
     }
 
@@ -148,7 +147,7 @@ digit [0-9]
         strcpy(yylval.string,yytext);
         return TId;
     }
-
+"/\*"(.*|.*\n|\n)*"\*/"     ; /* ignore comments */
 "//"(.)*\n ;
 
 .|\n ;
@@ -158,5 +157,6 @@ digit [0-9]
 %%
 
 void yyerror(){
+    printf("ERROR SINTACTICO %d\n", yylineno);
     exit(1);
 }

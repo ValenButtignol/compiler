@@ -6,7 +6,7 @@
 #include <string.h>
 #include "../utils/enums.h"
 
-typedef struct{
+typedef struct NodeInfo{
 	void* value;
 	char* id;
 	enum TType type;
@@ -36,8 +36,6 @@ void freeNodeInfo(NodeInfo* node);
 char* nodeInfoToString(NodeInfo node);
 
 char* constExprToString(NodeInfo node);
-
-int equalsNodeInfo(NodeInfo node1, NodeInfo node2);
 
 int isEmptyNode(NodeInfo node);
 
