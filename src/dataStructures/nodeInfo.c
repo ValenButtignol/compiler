@@ -94,13 +94,6 @@ int isEmptyNode(NodeInfo node) {
     return node.value == NULL && node.type == NONETYPE && node.id == "" && node.tag == NONETAG;
 }
 
-int equalsNodeInfo(NodeInfo node1, NodeInfo node2) {
-    // printf("value %d\n", (int*)node1.value!=NULL? *(int*)node1.value : -9999);
-    // printf("%d == %d\n", *(int*)node1.value, node2.value);
-    return (node1.type == node2.type && strcmp(node1.id, node2.id) == 0 && node1.tag == node2.tag && 
-    ((int*)node1.value!=NULL? *(int*)node1.value : NULL) == node2.value);
-}
-
 void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset){
     free(temp->id);
     temp->id = malloc(20);
