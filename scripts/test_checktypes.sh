@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gcc -w testRunner.c src/*.c extern/*.c tests/utils/src/*.c -o output/tests.out
+gcc -w testRunner.c src/*/*.c extern/*.c tests/utils/src/*.c -o output/tests.out
 
 if [ ! -f "./output/tests.out" ]; then
     echo "Error: Failing compile."
@@ -8,7 +8,7 @@ if [ ! -f "./output/tests.out" ]; then
 fi
 
 
-for input_file in tests/inputs/checkTypes*; do
+for input_file in tests/inputs/checkTypes/*; do
 	if [ -f "$input_file" ]; then
         # Get the base name of the input file
         echo "$input_file";	
