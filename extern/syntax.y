@@ -149,7 +149,7 @@ VAR_DECL: TType TId TAssign EXPR TSemiColon {
 
 METHOD_DECL_BLOCK: METHOD_DECL METHOD_DECL_BLOCK {
             NodeInfo* methodDeclBlock = newNodeInfoSimple(METHOD_DECL_BLOCK, yylineno);
-            $$ = newAst(methodDeclBlock, $2, $1);
+            $$ = newAst(methodDeclBlock, $1, $2);
         }
     | METHOD_DECL {
             $$ = $1;
