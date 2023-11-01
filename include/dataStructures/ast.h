@@ -19,9 +19,7 @@ TAst* newEmptyAst();
 
 TAst* newLeaf(NodeInfo **root);
 
-char* astToString(TAst* ast);
-
-char* astToStringRecursive(TAst* ast);
+void printAst(TAst* ast);
 
 int isEmptyAst(TAst ast);
 

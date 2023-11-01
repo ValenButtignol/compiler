@@ -14,6 +14,7 @@ typedef struct{
 	int lineNumber;
 	int offset;
 	enum TOperator operatorVar;
+	struct NodeInfo* nextParams;
 }NodeInfo;
 
 NodeInfo* newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int lineNumber);

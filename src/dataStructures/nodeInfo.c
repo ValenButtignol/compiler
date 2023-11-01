@@ -62,7 +62,7 @@ void setValue(NodeInfo** node, void* value) {
 
 char* nodeInfoToString(NodeInfo node) {
     char* string;
-    string = malloc(sizeof(char*));
+    string = (char*)malloc(20);
     strcpy(string, tagToString(node.tag));
     return string;
 }
@@ -120,6 +120,7 @@ NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber) {
     result->tag = tag;
     result->lineNumber = lineNumber;
     result->offset = 0;
+    result->nextParams = NULL;
     return result;
 }
 
