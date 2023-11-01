@@ -106,15 +106,14 @@ PROGRAM: TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurly
         }
     | TProgram TOpenCurlyBracket VAR_DECL_BLOCK TCloseCurlyBracket {
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);
-            $$ = newAst(programNode, $3, newEmptyAst());
+            $$ = newAst(programNode, $3, NULL);
             globalAst = $$;
             popLevelSymbolTable(&symbolTable);
         }
     | TProgram TOpenCurlyBracket METHOD_DECL_BLOCK TCloseCurlyBracket {
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);
-            $$ = newAst(programNode, newEmptyAst(), $3);
+            $$ = newAst(programNode, NULL, $3);
             globalAst = $$;
-
             popLevelSymbolTable(&symbolTable);
         }
     ;
@@ -140,14 +139,14 @@ VAR_DECL: TType TId TAssign EXPR TSemiColon {
             NodeInfo* varNode = newNodeInfoDeclaration($2, *$1, VAR, yylineno, offset);      // Create VAR node.
             addNodeToSymbolTable(&symbolTable, varNode);
             TAst* declaredVariable = newLeaf(&varNode);
-
-            NodeInfo* varDecl = newNodeInfoSimple(VAR_DECL, yylineno);                  // Create a VAR_DECL node to evaluate VAR after with the EXPR.
+            
+            NodeInfo* varDecl = newNodeInfoType(varNode->type, VAR_DECL, yylineno);                  // Create a VAR_DECL node to evaluate VAR after with the EXPR.
 
             $$ = newAst(varDecl, declaredVariable, $4);
         }
     ;
 
-METHOD_DECL_BLOCK: METHOD_DECL_BLOCK METHOD_DECL {
+METHOD_DECL_BLOCK: METHOD_DECL METHOD_DECL_BLOCK {
             NodeInfo* methodDeclBlock = newNodeInfoSimple(METHOD_DECL_BLOCK, yylineno);
             $$ = newAst(methodDeclBlock, $2, $1);
         }
@@ -186,10 +185,10 @@ METHOD_DECL: TType TId TOpenParenthesis {
 
                 offset++;
                 NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD_DECL, yylineno, offset);
-                addNodeToSymbolTable(&symbolTable, methodNode);
-                
+                addNodeToSymbolTable(&symbolTable, methodNode);                
                 currentMethodName = malloc(strlen($2) + 1);                                             
-                currentMethodName = $2;                                                                 // Save the current method name.
+                currentMethodName = $2;               
+                                                                  // Save the current method name.
                 addLevelToSymbolTable(&symbolTable);
 
             } METHOD_ENDING {
@@ -198,7 +197,7 @@ METHOD_DECL: TType TId TOpenParenthesis {
     ;  
 
 METHOD_ENDING: PARAMS_DECL TCloseParenthesis BLOCK {                                                      // The block itself creates and closes its own level
-                NodeInfo* methodNode = searchGlobalLevelSymbolTable(symbolTable, currentMethodName);               
+                NodeInfo* methodNode = searchGlobalLevelSymbolTable(symbolTable, currentMethodName);       
                 setParamsNodeInfo(&methodNode, $1);                                                       // Link the Method node with the params as a list.
                 $$ = newAst(methodNode, $1, $3);                                                          // After the data is linked, and the block is created, we return the method node.
                 popLevelSymbolTable(&symbolTable);                                                        // Pop the level created for params.
@@ -234,7 +233,8 @@ PARAMS_LIST_DECL: TType TId TComma PARAMS_LIST_DECL {
 
             offset++;
             NodeInfo* paramNode = newNodeInfoDeclaration($2, *$1, PARAM, yylineno, offset);    // Don't know if offset is needed.
-            $$ = newAst(paramNode, $4, newEmptyAst());
+            addNodeToSymbolTable(&symbolTable, paramNode);
+            $$ = newAst(paramNode, $4, NULL);
         }
     | TType TId {
             NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);
@@ -245,6 +245,7 @@ PARAMS_LIST_DECL: TType TId TComma PARAMS_LIST_DECL {
             }
             offset++;
             NodeInfo* paramNode = newNodeInfoDeclaration($2, *$1, PARAM, yylineno, offset);
+            addNodeToSymbolTable(&symbolTable, paramNode);
             $$ = newLeaf(&paramNode);
         }
     ;
@@ -262,7 +263,7 @@ BLOCK: TOpenCurlyBracket VAR_DECL_BLOCK STATEMENT_BLOCK TCloseCurlyBracket {
             addLevelToSymbolTable(&symbolTable);
 
             NodeInfo* blockNode = newNodeInfoSimple(BLOCK, yylineno);
-            $$ = newAst(blockNode, newEmptyAst(), $2);   
+            $$ = newAst(blockNode, NULL, $2);   
 
             popLevelSymbolTable(&symbolTable);
         }
@@ -309,7 +310,7 @@ ASSIGNMENT: TId TAssign EXPR {
                 sprintf(error, "\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", yylineno, $1);
                 insertErrorNode(&errors, error);
             }
-            NodeInfo* assignNode = newNodeInfoSimple(ASSIGNMENT, yylineno);
+            NodeInfo* assignNode = newNodeInfoType(var->type, ASSIGNMENT, yylineno);
             $$ = newAst(assignNode, newLeaf(&var), $3);
         }
     ;
@@ -342,7 +343,7 @@ PARAMS_LIST_CALL: EXPR TComma PARAMS_LIST_CALL {
         }
     | EXPR {
             NodeInfo* paramNode = newNodeInfoSimple(PARAM, yylineno);   // TODO: REMEMBER TO ASK IF YOU HAVE RS. 
-            $$ = newAst(paramNode, $1, newEmptyAst());
+            $$ = newAst(paramNode, $1, NULL);
         }
     ;
 
@@ -368,7 +369,7 @@ WHILE_STATEMENT: TWhile TOpenParenthesis EXPR TCloseParenthesis BLOCK {
 
 RETURN_STATEMENT: TReturn EXPR TSemiColon {
             NodeInfo* returnNode = newNodeInfoSimple(RETURN, yylineno);
-            $$ = newAst(returnNode, $2, newEmptyAst());
+            $$ = newAst(returnNode, $2, NULL);
         }   
     | TReturn TSemiColon {
             NodeInfo* emptyNode = newEmptyNodeInfo();
@@ -418,11 +419,11 @@ EXPR: EXPR TAdd EXPR {
         }
     | TSub EXPR %prec TNegative {
             NodeInfo* negativeNode = newNodeInfoType(INTEGER, NEGATIVE, yylineno); // UNARY OP
-            $$ = newAst(negativeNode, $2, newEmptyAst());
+            $$ = newAst(negativeNode, $2, NULL);
         }
     | TNot EXPR {
             NodeInfo* notNode = newNodeInfoType(BOOLEAN, NOT, yylineno);           // UNARY OP
-            $$ = newAst(notNode, $2, newEmptyAst());
+            $$ = newAst(notNode, $2, NULL);
         }
     | METHOD_CALL {
             $$ = $1;
