@@ -70,7 +70,7 @@ void checkTypesListErrors5(ErrorNode** expectedErrors) {
     insertErrorNode(expectedErrors, errorStr);   
 } 
 
-void checkTypesListError6(ErrorNode** expectedErrors) {
+void checkTypesListErrors6(ErrorNode** expectedErrors) {
     char* errorStr = "\033[1;31mLine: 1 Error:\033[0m Type mismatch\n";
     insertErrorNode(expectedErrors, errorStr);   
 } 
