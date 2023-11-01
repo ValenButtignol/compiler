@@ -99,7 +99,8 @@ char* currentMethodName;
 
 %%
 
-PROGRAM: TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurlyBracket {
+   
+PROGRAM:  TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurlyBracket {
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);       
             $$ = newAst(programNode, $3, $4);
             globalAst = $$;
@@ -321,13 +322,14 @@ ASSIGNMENT: TId TAssign EXPR {
 
 METHOD_CALL: TId TOpenParenthesis PARAMS_CALL TCloseParenthesis {
             NodeInfo* method = searchGlobalLevelSymbolTable(symbolTable, $1);
-            if (method == NULL) {   
+            if (method == NULL) {
                 char* error = (char*)malloc(80);
                 sprintf(error, "\033[1;31mLine: %d Error:\033[0m method %s not declared\n", yylineno, $1);
                 insertErrorNode(&errors, error);
-            }                                                           // TODO: maybe an else?
-
-            $$ = newAst(method, $3, newEmptyAst());
+            }
+            NodeInfo* callNode = newNodeInfoType(method->type, METHOD_CALL, yylineno);
+            setParamsToNodeInfo(&callNode, $3);                                                           // TODO: maybe an else?
+            $$ = newAst(callNode, $3, newLeaf(&method));
         }
     ;
 
@@ -341,12 +343,12 @@ PARAMS_CALL: PARAMS_LIST_CALL {
     ;
 
 PARAMS_LIST_CALL: EXPR TComma PARAMS_LIST_CALL {
-            NodeInfo* paramNode = newNodeInfoSimple(PARAM, yylineno);
-            $$ = newAst(paramNode, $1, $3);
+            NodeInfo* paramNode = newNodeInfoType($1->data->type, PARAM, yylineno);
+            $$ = newAst(paramNode, $3, $1);
         }
     | EXPR {
-            NodeInfo* paramNode = newNodeInfoSimple(PARAM, yylineno);   // TODO: REMEMBER TO ASK IF YOU HAVE RS. 
-            $$ = newAst(paramNode, $1, NULL);
+            NodeInfo* paramNode = newNodeInfoType($1->data->type, PARAM, yylineno);// TODO: REMEMBER TO ASK IF YOU HAVE RS. 
+            $$ = newAst(paramNode, NULL, $1);
         }
     ;
 
@@ -371,12 +373,14 @@ WHILE_STATEMENT: TWhile TOpenParenthesis EXPR TCloseParenthesis BLOCK {
     ;
 
 RETURN_STATEMENT: TReturn EXPR TSemiColon {
-            NodeInfo* returnNode = newNodeInfoSimple(RETURN, yylineno);
+            NodeInfo* method = searchGlobalLevelSymbolTable(symbolTable, currentMethodName);
+            NodeInfo* returnNode = newNodeInfoType(method->type, RETURN, yylineno);
             $$ = newAst(returnNode, $2, NULL);
         }   
     | TReturn TSemiColon {
-            NodeInfo* emptyNode = newEmptyNodeInfo();
+            NodeInfo* emptyNode = newNodeInfoType(VOID, RETURN, yylineno);
             $$ = newLeaf(&emptyNode);
+
         }
     ;
 
@@ -440,9 +444,6 @@ EXPR: EXPR TAdd EXPR {
                 char* error = (char*)malloc(80);
                 sprintf(error, "\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", yylineno, $1);
                 insertErrorNode(&errors, error);
-                printf("\033[1;31mLine: %d Error:\033[0m variable '%s' not declared\n", yylineno, $1);
-                printSymbolTable(symbolTable);
-                printf("AAAAAAAAAAERROR\n");
             }
             $$ = newLeaf(&var);
         }
@@ -456,7 +457,7 @@ LITERAL: TIntegerLiteral {
             $$ = newLeaf(&literalNode);         // Node without value and ID.
         }
     | TBooleanLiteral {
-            NodeInfo* literalNode = newNodeInfoLiteral($1, INTEGER, CONST_VALUE, yylineno);
+            NodeInfo* literalNode = newNodeInfoLiteral($1, BOOLEAN, CONST_VALUE, yylineno);
             $$ = newLeaf(&literalNode);  // Node without value and ID.
         }
     ;
