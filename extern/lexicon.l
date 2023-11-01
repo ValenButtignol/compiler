@@ -17,7 +17,6 @@ digit [0-9]
 %%
 
 "Program" {
-
         return TProgram;
     }
 
@@ -158,5 +157,6 @@ digit [0-9]
 %%
 
 void yyerror(){
+    printf("ERROR SINTACTICO %d\n", yylineno);
     exit(1);
 }
