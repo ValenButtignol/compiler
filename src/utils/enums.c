@@ -26,16 +26,18 @@ enum TType getTypeFromText(char* type) {
 char *typeToString(enum TType type) {
     switch (type)
     {
-    case 0:
+    case INTEGER:
         return "int";
 
-    case 1:
+    case BOOLEAN:
         return "boolean";
     
-    case 2:
-        return "NOTYPE";
+    case VOID:
+        return "VOID";
     
-    case 3:
+    case NONETYPE:
+        return "NONETYPE";
+    case ERROR:
         return "ERROR";
     default:
         return "MAYBE NULL :/";
@@ -51,44 +53,73 @@ enum TTag getTagFromText(char* tag) {
     }
 }
 
+        
 char *tagToString(enum TTag tag) {
     switch (tag)
     {
     case 0:
         return "PROGRAM";
-    
     case 1:
-        return "DECL_BLOCK";
-    
+        return "VAR_DECL_BLOCK";
     case 2:
-        return "DECL";
-    
-    case 3:
         return "VAR_DECL";
-    
+    case 3:
+        return "VAR";
     case 4:
-        return "CONST_DECL";
-    
+        return "METHOD_DECL_BLOCK";
     case 5:
-        return "STMT_BLOCK";
-    
+        return "METHOD_DECL";
     case 6:
-        return "ASSIGNMENT_OP";
-
+        return "METHOD_CALL";
     case 7:
-        return "RETURN";
-
+        return "PARAM";
     case 8:
-        return "EXPR_OP";
-    
+        return "BLOCK";
     case 9:
-        return "CONST_VALUE";
-
+        return "STMT_BLOCK";
     case 10:
+        return "ASSIGNMENT";
+    case 11:
+        return "IF";
+
+    case 12:
+        return "IF_ELSE";
+    case 13:
+        return "IF_BLOCKS";
+    case 14:
+        return "WHILE";
+    case 15:
+        return "RETURN";
+    case 16:
+        return "ADD";
+    case 17:
+        return "SUB";
+    case 18:
+        return "MUL";
+    case 19:
+        return "DIV";
+    case 20:
+        return "MOD";
+    case 21:
+        return "GREATER_THAN";
+    case 22:
+        return "LESS_THAN";
+    case 23:
+        return "EQUALS";
+    case 24:
+        return "AND";
+    case 25:
+        return "OR";
+    case 26:
+        return "NEGATIVE";
+    case 27:
+        return "NOT";
+    case 28:
+        return "CONST_VALUE";
+    case 29:
         return "NONETAG";
-    
     default:
-        break;
+        return "NULL";
     }
 }
 
@@ -130,7 +161,7 @@ char *operatorToString(enum TOperator op) {
 }
 
 int isTypeableTag(enum TTag tag){
-    return tag == VAR || tag == METHOD_DECL || tag ==  METHOD_CALL || tag == PARAM || tag == ASSIGNMENT
+    return tag == VAR || tag ==  METHOD_CALL || tag == ASSIGNMENT
             || tag == RETURN || tag ==  ADD || tag == SUB || tag ==  MUL || tag == DIV || tag ==  MOD
             || tag ==  GREATER_THAN || tag ==  LESS_THAN || tag ==  EQUALS || tag ==  AND || tag == OR
             || tag ==  NEGATIVE || tag ==  NOT || tag ==  CONST_VALUE;

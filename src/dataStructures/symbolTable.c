@@ -62,3 +62,22 @@ NodeInfo* searchGlobalLevelSymbolTable(SymbolTable* table, char* key) {
     }
     return NULL;
 }
+
+void printSymbolTable(SymbolTable* table) {
+    SymbolTable* currentLevel = table;
+    int i = 0;
+    printf("TOP -> ");
+    while (currentLevel != NULL) {
+        DeclNode* currentDecls = currentLevel->decls;
+        (i == 0) ?  : printf("[] ->") ;
+        while (currentDecls != NULL) {
+            printf(" %s ->", currentDecls->data->id);
+            currentDecls = currentDecls->nextNode;
+        }
+        printf(" NIL\n");
+        i++;
+        currentLevel = currentLevel->prevLevel;
+    }    
+    printf("\n");
+    
+}
