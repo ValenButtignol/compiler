@@ -3,6 +3,7 @@
 #include <string.h>
 #include "include/dataStructures/ast.h"
 #include "include/dataStructures/nodeInfo.h"
+#include "include/algorithms/checktypes.h"
 extern FILE *yyin;
 extern FILE *yyout;
 extern int yyparse(void);
@@ -19,6 +20,6 @@ int main(int argc,char *argv[]) {
     printf("PARSE COMPLETE %d\n", globalAst==NULL);
     printf("\n---------------------------------------------- \n");
     printAst(globalAst);
-    //checkTypes(globalAst, &errors);
+    checkTypes(globalAst, &errors);
     
 }
