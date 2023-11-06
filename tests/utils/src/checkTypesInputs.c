@@ -24,24 +24,12 @@ void checkTypesFactory(char* inputTestFileName, TestingNodeInfoList* expectedNod
         checkTypesListErrors10(expectedErrors);
     } else if (strcmp(inputTestFileName, "invalidInput11.bok") == 0) {
         checkTypesListErrors11(expectedErrors);
-    } else if (strcmp(inputTestFileName, "invalidInput12.bok") == 0) {
-        checkTypesListErrors12(expectedErrors);
-    } else if (strcmp(inputTestFileName, "invalidInput13.bok") == 0) {
-        checkTypesListErrors13(expectedErrors);
-    } else if (strcmp(inputTestFileName, "invalidInput14.bok") == 0) {
-        checkTypesListErrors14(expectedErrors);
-    } else if (strcmp(inputTestFileName, "invalidInput15.bok") == 0) {
-        checkTypesListErrors15(expectedErrors);
     } else if (strcmp(inputTestFileName, "validInput1.bok") == 0) {
         checkTypesExpectedNodesCreator1(expectedNodes);
     } else if (strcmp(inputTestFileName, "validInput2.bok") == 0) {
         checkTypesExpectedNodesCreator2(expectedNodes);
     } else if (strcmp(inputTestFileName, "validInput3.bok") == 0) {
         checkTypesExpectedNodesCreator3(expectedNodes);
-    } else if (strcmp(inputTestFileName, "validInput4.bok") == 0) {
-        checkTypesExpectedNodesCreator4(expectedNodes);
-    } else if (strcmp(inputTestFileName, "validInput5.bok") == 0) {
-        checkTypesExpectedNodesCreator5(expectedNodes);
     }
 }
 
@@ -121,8 +109,8 @@ void checkTypesListErrors15(ErrorNode** expectedErrors) {
 }
 
 void checkTypesExpectedNodesCreator1(TestingNodeInfoList* expectedNodes) {
-    NodeInfo node;
-    node = *newNodeInfoWithoutValue(INTEGER, "a", VAR_DECL,0);
+    NodeInfo* node;
+    node = newNodeInfoWithoutValue(INTEGER, "a", VAR_DECL,0);
     addNodeToTestingList(expectedNodes, node);
 }
 

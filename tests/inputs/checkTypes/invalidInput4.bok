@@ -9,4 +9,7 @@ Program {
     integer g = true + true + 3;
     integer h = true + true + true;    
 
+    void main () {
+        return ;   
+    }
 }

@@ -17,4 +17,7 @@ Program {
     bool o = true && true && true && 4;
     bool p = true && true && true && true;
 
+    void main () {
+        return ;   
+    }
 }

@@ -4,4 +4,8 @@ Program {
     
     bool x = 1;
     bool y = true;
+
+    void main () {
+        return ;   
+    }
 }

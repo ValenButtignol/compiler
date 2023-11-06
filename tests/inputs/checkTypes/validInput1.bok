@@ -8,10 +8,10 @@ Program {
                 return 1;
             }
         } else {
-            while (3 + 4 > true) {             //No Deberia ser error.
+            while (3 + 4 > true) {             //Deberia ser error.
                 a = true;
             }
-            return false;               //Error in return.
+            return 1;               //Error in return.
         }
     }
     void main () {

@@ -9,4 +9,7 @@ Program {
     bool g = true && true && 3;
     bool h = true && true && true;
 
+    void main () {
+        return ;   
+    }
 }
