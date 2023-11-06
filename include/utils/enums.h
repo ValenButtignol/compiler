@@ -16,13 +16,22 @@ char *typeToString(enum TType type);
 
 enum TTag {PROGRAM, VAR_DECL_BLOCK, VAR_DECL, VAR, METHOD_DECL_BLOCK, METHOD_DECL, METHOD_CALL, PARAM, BLOCK, 
                 STMT_BLOCK, ASSIGNMENT, IF, IF_ELSE, IF_BLOCKS, WHILE, RETURN, ADD, SUB, MUL, 
-                DIV, MOD, GREATER_THAN, LESS_THAN, EQUALS, AND, OR, NEGATIVE, NOT, CONST_VALUE, NONETAG};
+                DIV, MOD, GREATER_THAN, LESS_THAN, EQUALS, AND, OR, NEGATIVE, NOT, CONST_VALUE, NONETAG
+        };
 enum TTag getTagFromText(char* tag);
 char *tagToString(enum TTag tag);
 int isTypeableTag(enum TTag tag);
-
+int isArithmeticOperatorTag(enum TTag tag);
+int isRelationalOperatorTag(enum TTag tag);
+int isComparatorTag(enum TTag tag);
+int isBooleanOperatorTag(enum TTag tag);
+int isUnaryOperatorTag(enum TTag tag);
+int isAssignTag(enum TTag tag);
 enum TOperator {PLUS, MINUS, MULTIPLY, DIVIDE, ASSIGN, NONOPERATOR};
 enum TOperator getOperatorFromText(char* op);
-char *operatorToString(enum TOperator op);
+char *operatorToString(enum TTag tag);
+int isReturnTag(enum TTag tag);
+int isArithmeticOrBooleanTag(enum TTag tag);
+int isMethodCallTag(enum TTag tag);
 
 #endif

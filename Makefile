@@ -14,25 +14,22 @@ TARGET = $(BIN_DIR)/my_program
 
 .PHONY: all clean
 
-src:
-
-	gcc -o $(wildcard output/my_program) $(wildcard extern/*.c) $(wildcard src/algorithms/*.c) $(wildcard src/dataStructures/*.c) $(wildcard utils/*.c) main2.c
-
-# $(OBJ_DIR)/main.o: main.c  # Rule for compiling main.c
-# 	$(CC) -c $< -o $@
-
-# $(TARGET): $(OBJS) $(OBJ_DIR)/syntax.tab.o $(OBJ_DIR)/lex.yy.o
-# 	@mkdir -p $(BIN_DIR)
-# 	$(CC) $^ -o $@
-
-# $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-# 	@mkdir -p $(@D)
-# 	$(CC) -c $< -o $@
-	
+all: parse src
 
 clean:
-	@rm -rf $(OBJ_DIR) $(BIN_DIR)
+	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/*
 
+src: $(TARGET) parse
+
+$(TARGET): $(OBJS) $(OBJ_DIR)/syntax.tab.o $(OBJ_DIR)/lex.yy.o
+	@mkdir -p $(BIN_DIR)
+	$(CC) $^ -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)/utils
+	@mkdir -p $(OBJ_DIR)/dataStructures
+	@mkdir -p $(OBJ_DIR)/algorithms
+	$(CC) -c $< -o $@
 
 FLEX = flex
 BISON = bison
@@ -49,24 +46,33 @@ parse:
 	$(CC) -c $(EXT_DIR)/syntax.tab.c -o $(OBJ_DIR)/syntax.tab.o
 
 
-all: parse src
+# all: parse src
 
 SCRIPT_DIR = scripts
 TEST_DIR = tests
 
-test_suite:
-	$(SCRIPT_DIR)/test_suite.sh
+test_syntax:
+	sh $(SCRIPT_DIR)/test_syntax.sh
 
-IN_TEST ?= validInput1.txt
-TYPE ?=	eval
+test_checktypes:
+	sh $(SCRIPT_DIR)/test_checktypes.sh
 
-test_file:
-	$(SCRIPT_DIR)/test_file.sh $(TEST_DIR)/inputs/$(IN_TEST) $(TYPE)
+test_assembly:
+	sh $(SCRIPT_DIR)/test_assembly.sh
+
+test_all: test_syntax test_checktypes test_assembly
+
+
+#IN_TEST ?= validInput1.txt
+#TYPE ?=	eval
+#
+#test_file:
+#	$(SCRIPT_DIR)/test_file.sh $(TEST_DIR)/inputs/$(IN_TEST) $(TYPE)
 
 IN_FILE ?= input/input.txt
 
 run:
-	$(TARGET) ./$(IN_FILE) 
+	./$(TARGET) $(IN_FILE) 
 
 ASSEMBLY_FILE = assembly.s
 ASSMBLE_EXE = executable

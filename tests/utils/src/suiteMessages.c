@@ -30,12 +30,10 @@ void printNoTestSuiteMessage(char* inputFileName) {
     printf("\n");
 }
 
-void printIncorrectTypeTestMessage(char* invalidType) {
+void printIncorrectTypeTestMessage(char* testType) {
     printf("\n");
-    printf("\033[33m"); // Set text color to yellow
-    printf("******************************************************************\n");
-    printf("************ No tests implemented for %s ************\n", invalidType);
-    printf("******************************************************************\n");
+    printf("\033[31m"); // Set text color to red
+    printf("************ Test type '%s' not recognized ************\n", testType);
     printf("\033[0m"); // Reset text color to default
     printf("\n");
 }

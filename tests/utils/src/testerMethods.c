@@ -31,10 +31,10 @@ int testerDfs(TAst* globalAst, TestingNodeInfoList* expectedNodes) {
     // printf("tagAST: %s == %s\n", tagToString(globalAst->data->tag), tagToString(expectedNodes->head->data.tag));
     // printf("NODE:  %s\n\n", nodeInfoToString(*globalAst->data));
     if (globalAst->ls == NULL && globalAst->rs == NULL) {
-        return equalsNodeInfo(*globalAst->data, expectedNodes->head->data);
+        return equalsNodeInfo(globalAst->data, expectedNodes->head->data);
     }
 
-    if (!equalsNodeInfo(*globalAst->data, expectedNodes->head->data)) {
+    if (!equalsNodeInfo(globalAst->data, expectedNodes->head->data)) {
         return 0;
     }
 
@@ -62,6 +62,7 @@ int testErrors(ErrorNode* errors, ErrorNode* expectedErrors) {
     ErrorNode* currentExpectedError = expectedErrors;
     while (currentError != NULL && currentExpectedError != NULL) {
         if (!equalsErrorNode(currentError, currentExpectedError)) {
+            printf("%s", currentError->data);
             return 0;
         }
         currentError = currentError->next;

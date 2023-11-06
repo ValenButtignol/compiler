@@ -1,2 +1,0 @@
-boolean a = true;
-return a;

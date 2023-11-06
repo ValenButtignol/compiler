@@ -50,30 +50,30 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
     // printf("TERCERO: %s\n\n\n", thirdValue);
     
     switch(current->label) {
-        case SUM:
-            generateSum(file, firstValue, secondValue, thirdValue);
-            break;
-        case SUB:
-            generateSub(file, firstValue, secondValue, thirdValue);
-            break;
-        case MUL:
-            generateMul(file, firstValue, secondValue, thirdValue);
-            break;
-        case DIV:
-            generateDiv(file, firstValue, secondValue, thirdValue);
-            break;
-        case AND:
-            generateAnd(file, firstValue, secondValue, thirdValue);
-            break;
-        case OR:
-            generateOr(file,  firstValue, secondValue, thirdValue);
-            break;
-        case MOV:
-            generateMov(file, firstValue, secondValue);
-            break;
-        case RET:
-            generateRet(file, firstValue);
-            break;
+        // case SUM:
+        //     generateSum(file, firstValue, secondValue, thirdValue);
+        //     break;
+        // case SUB:
+        //     generateSub(file, firstValue, secondValue, thirdValue);
+        //     break;
+        // case MUL:
+        //     generateMul(file, firstValue, secondValue, thirdValue);
+        //     break;
+        // case DIV:
+        //     generateDiv(file, firstValue, secondValue, thirdValue);
+        //     break;
+        // case AND:
+        //     generateAnd(file, firstValue, secondValue, thirdValue);
+        //     break;
+        // case OR:
+        //     generateOr(file,  firstValue, secondValue, thirdValue);
+        //     break;
+        // case MOV:
+        //     generateMov(file, firstValue, secondValue);
+        //     break;
+        // case RET:
+        //     generateRet(file, firstValue);
+        //     break;
         default:
             break;
     }

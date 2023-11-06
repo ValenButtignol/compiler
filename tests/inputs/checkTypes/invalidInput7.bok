@@ -1,0 +1,23 @@
+Program {
+        
+    bool a = 1 && 2 && 3 && 4;
+    bool b = 1 && 2 && 3 && true;
+    bool c = 1 && 2 && true && 4;
+    bool d = 1 && true && 3 && 4;
+    bool e = true && 2 && 3 && 4;
+    bool f = 1 && 2 && true && true;
+    bool g = 1 && true && 3 && true;
+    bool h = true && 2 && 3 && true;
+    bool i = 1 && true && true && 4;
+    bool j = true && 2 && true && 4;
+    bool k = true && true && 3 && 4;
+    bool l = 1 && true && true && true;
+    bool m = true && 2 && true && true;
+    bool n = true && true && 3 && true;
+    bool o = true && true && true && 4;
+    bool p = true && true && true && true;
+
+    void main () {
+        return ;   
+    }
+}

@@ -4,7 +4,7 @@
 #include "utils/include/assemblyTestInputs.h"
 #include "utils/include/testerMethods.h"
 #include "utils/include/testingNodeInfoList.h"
-#include "../include/ast.h"
+#include "../include/dataStructures/ast.h"
 
 static void assemblyTestSuite(char* inputTestFileName) {
 

@@ -1,0 +1,21 @@
+Program {
+
+    bool a = 1 + 2;
+    bool b = 1 + false;
+    bool c = false + 1;
+    bool d = true + true;
+    
+    bool e = 1 && 2;
+    bool f = 1 && false;
+    bool g = false && 1;
+    bool h = true && true;
+
+    bool s = 1 && 2;
+    bool t = 1 && false;
+    bool u = false && 1;
+    bool v = true && true;
+
+    void main () {
+        return ;   
+    }
+}

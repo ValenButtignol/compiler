@@ -5,9 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../utils/enums.h"
-#include "ast.h"
 
-typedef struct{
+typedef struct NodeInfo{
 	void* value;
 	char* id;
 	enum TType type;
@@ -15,6 +14,7 @@ typedef struct{
 	int lineNumber;
 	int offset;
 	enum TOperator operatorVar;
+	struct NodeInfo* nextParams;
 }NodeInfo;
 
 NodeInfo* newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int lineNumber);
@@ -37,11 +37,11 @@ char* nodeInfoToString(NodeInfo node);
 
 char* constExprToString(NodeInfo node);
 
-int equalsNodeInfo(NodeInfo node1, NodeInfo node2);
-
 int isEmptyNode(NodeInfo node);
 
 void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset);
+
+int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode);
 
 /****************************** new constructors ********************************/
 

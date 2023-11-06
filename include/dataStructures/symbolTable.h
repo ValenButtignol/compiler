@@ -27,4 +27,6 @@ NodeInfo* searchLocalLevelSymbolTable(SymbolTable* table, char* key);
 
 NodeInfo* searchGlobalLevelSymbolTable(SymbolTable* table, char* key);
 
+void printSymbolTable(SymbolTable* table);
+
 #endif

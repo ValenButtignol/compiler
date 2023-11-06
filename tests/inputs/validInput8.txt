@@ -1,5 +1,0 @@
-boolean a = false;
-boolean b = true * true;
-a = b * true;
-b = b * false;
-return a;

@@ -32,40 +32,24 @@ TAst* newLeaf(NodeInfo **root) {
     return ast;
 }
 
-char* astToString(TAst* ast) {
-    return astToStringRecursive(ast);
-}
 
-char* astToStringRecursive(TAst* ast) {
+void printAst(TAst* ast) {
+
     if (ast == NULL || isEmptyAst(*ast)) {
-        return strdup(""); // Return an empty string for NULL ast
+        return ;
     }
 
-    char* lsStr = astToStringRecursive(ast->ls);
-    char* rootStr;
-    if (!isEmptyNode(*ast->data)) rootStr = nodeInfoToString(*ast->data);
-    else {
-        rootStr = malloc(sizeof(""));
-        strcpy(rootStr, ""); 
-    }
-    char* rsStr = astToStringRecursive(ast->rs);
+    printf("ROOT: ");
+    printf("%s", nodeInfoToString(*ast->data));
+    (ast->data->id == NULL) ? : printf("    (ID %s)", ast->data->id);
+    (ast->data->value == NULL) ? printf("\n") : printf("    (VALUE %d)\n", *(int*)ast->data->value);
+    printf("        LS: %s", (ast->ls == NULL) ? "NULL" : nodeInfoToString(*ast->ls->data));
+    printf("        RS: %s\n\n", (ast->rs == NULL) ? "NULL" : nodeInfoToString(*ast->rs->data));
+    printAst(ast->ls);
+    printAst(ast->rs);
 
-    // Calculate the length of the final string
-    size_t totalLength = strlen(rootStr) + strlen(lsStr) + strlen(rsStr) + 5; // +5 for formatting characters
+    return ;
 
-    char* result = (char*)malloc(totalLength * sizeof(char));
-    if (result == NULL) {
-        // Handle memory allocation failure
-        return NULL;
-    }
-    printf("    root: %s\nls: %s        lr: %s\n", rootStr, lsStr, rsStr);
-    // Format the result string
-    snprintf(result, totalLength, "%s %s %s", lsStr, rootStr, rsStr);
-    free(rootStr);
-    free(lsStr);
-    free(rsStr);
-
-    return result;
 }
 
 int isLeaf(TAst *ast){

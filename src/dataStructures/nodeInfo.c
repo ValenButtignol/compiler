@@ -62,60 +62,8 @@ void setValue(NodeInfo** node, void* value) {
 
 char* nodeInfoToString(NodeInfo node) {
     char* string;
-    string = malloc(sizeof(char*));
-    switch (node.tag) 
-    {
-    case 0: // PROGRAM 
-        strcpy(string, "");
-        break;
-
-    case 1: // DECL_BLOCK 
-        strcpy(string, "");
-        break;
-    
-    case 2: // DECL
-        strcpy(string, "");
-        break;
-    
-    case 3: // VAR_DECL
-        char* t = malloc(sizeof(char*)); 
-        t = typeToString(node.type);
-        size_t totalLength = strlen(t) + strlen(node.id) + 5; // +5 for formatting characters
-        string = malloc(totalLength*sizeof(char));
-        snprintf(string, totalLength, "%s %s", t, node.id);
-        break;
-    
-    case 4: // CONST_DECL
-        strcpy(string, "const");    
-        break;
-
-    case 5: // STMT_BLOCK
-        strcpy(string, "");
-        break;
-    
-    case 6: // ASSIGNMENT_OP
-        strcpy(string, "=");
-        break;
-    
-    case 7: // RETURN
-        strcpy(string, "return");
-        break;
-    
-    case 8: // EXPR_OP
-        strcpy(string, operatorToString(node.operatorVar));
-        break;
-    
-    case 9: // CONST_VALUE
-        strcpy(string, constExprToString(node));
-        break;
-    
-    case 10: // NONETAG
-        strcpy(string, "");
-        break;
-    
-    default:
-        return "DEFAULT";
-    }
+    string = (char*)malloc(20);
+    strcpy(string, tagToString(node.tag));
     return string;
 }
 
@@ -146,13 +94,6 @@ int isEmptyNode(NodeInfo node) {
     return node.value == NULL && node.type == NONETYPE && node.id == "" && node.tag == NONETAG;
 }
 
-int equalsNodeInfo(NodeInfo node1, NodeInfo node2) {
-    // printf("value %d\n", (int*)node1.value!=NULL? *(int*)node1.value : -9999);
-    // printf("%d == %d\n", *(int*)node1.value, node2.value);
-    return (node1.type == node2.type && strcmp(node1.id, node2.id) == 0 && node1.tag == node2.tag && 
-    ((int*)node1.value!=NULL? *(int*)node1.value : NULL) == node2.value);
-}
-
 void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset){
     free(temp->id);
     temp->id = malloc(20);
@@ -161,18 +102,30 @@ void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset)
     temp->offset = offset;
 }
 
+int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode) {
+
+    int idsComp = (firstNode->id && secondNode->id) ? strcmp(firstNode->id, secondNode->id) : 0;
+    if ((firstNode->id != NULL && secondNode->id == NULL) || (firstNode->id == NULL && secondNode->id != NULL)) {
+        idsComp = 1;
+    }
+
+    return (*(int*)firstNode->value == *(int*)secondNode->value) && (idsComp == 0) &&
+           (firstNode->type == secondNode->type) &&
+           (firstNode->tag == secondNode->tag);
+}
+
 /****************************** new constructors ********************************/
 
 NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber) {
-    NodeInfo *result = malloc(sizeof(NodeInfo*));    
+    NodeInfo *result = malloc(sizeof(NodeInfo));    
 
     result->value = NULL;
     result->type = NONETYPE;
-    result->id = ""; 
     result->operatorVar = NONOPERATOR;
     result->tag = tag;
     result->lineNumber = lineNumber;
     result->offset = 0;
+    result->nextParams = NULL;
     return result;
 }
 
@@ -185,7 +138,8 @@ NodeInfo* newNodeInfoType(enum TType type, enum TTag tag, int lineNumber) {
 NodeInfo* newNodeInfoDeclaration(char* id, enum TType type, enum TTag tag, int lineNumber, int offset) {
     NodeInfo* result = newNodeInfoSimple(tag, lineNumber);
     result->type = type;
-    result->id = strdup(id);
+    result->id = (char*)malloc(strlen(id)*sizeof(char)); 
+    strcpy(result->id, id);
     result->offset = offset; 
     return result;
 }
