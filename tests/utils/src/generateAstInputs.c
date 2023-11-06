@@ -1,7 +1,7 @@
 #include "../include/generateAstInputs.h"
 
 
-void generateAstFactory(char* fileName, TestingNodeInfoList* expectedNodes, ErrorNode** expectedErrors) {
+void generateAstFactory(char* fileName, TestingNodeInfoList** expectedNodes, ErrorNode** expectedErrors) {
     
     if (strcmp(fileName, "invalidInput1.bok") == 0) {
         generateAstListErrors1(expectedErrors);
@@ -122,28 +122,28 @@ void generateAstListErrors15(ErrorNode** expectedErrors) {
     insertErrorNode(expectedErrors, errorStr);   
 }
 
-void generateAstExpectedNodesCreator1(TestingNodeInfoList* expectedNodes) {
+void generateAstExpectedNodesCreator1(TestingNodeInfoList** expectedNodes) {
     NodeInfo* node;
     node = newNodeInfoWithoutValue(INTEGER, "a", VAR_DECL,0);
     addNodeToTestingList(expectedNodes, node);
 }
 
-void generateAstExpectedNodesCreator2(TestingNodeInfoList* expectedNodes) {
+void generateAstExpectedNodesCreator2(TestingNodeInfoList** expectedNodes) {
     NodeInfo node;
 
 }
 
-void generateAstExpectedNodesCreator3(TestingNodeInfoList* expectedNodes) {
+void generateAstExpectedNodesCreator3(TestingNodeInfoList** expectedNodes) {
     NodeInfo node;
 
 }
 
-void generateAstExpectedNodesCreator4(TestingNodeInfoList* expectedNodes) {
+void generateAstExpectedNodesCreator4(TestingNodeInfoList** expectedNodes) {
     NodeInfo node;
 
 }
 
-void generateAstExpectedNodesCreator5(TestingNodeInfoList* expectedNodes) {
+void generateAstExpectedNodesCreator5(TestingNodeInfoList** expectedNodes) {
     NodeInfo node;
 
 }

@@ -1,8 +1,9 @@
 #include "../include/checkTypesInputs.h"
 
-void checkTypesFactory(char* inputTestFileName, TestingNodeInfoList* expectedNodes, ErrorNode** expectedErrors) {
+void checkTypesFactory(char* inputTestFileName, TestingNodeInfoList** expectedNodes, ErrorNode** expectedErrors) {
     
     if (strcmp(inputTestFileName, "invalidInput1.bok") == 0) {
+        printf("AAAAAAa\n\n\n");
         checkTypesListErrors1(expectedErrors);
     } else if (strcmp(inputTestFileName, "invalidInput2.bok") == 0) {
         checkTypesListErrors2(expectedErrors);
@@ -108,28 +109,18 @@ void checkTypesListErrors15(ErrorNode** expectedErrors) {
     insertErrorNode(expectedErrors, errorStr);   
 }
 
-void checkTypesExpectedNodesCreator1(TestingNodeInfoList* expectedNodes) {
+void checkTypesExpectedNodesCreator1(TestingNodeInfoList** expectedNodes) {
     NodeInfo* node;
     node = newNodeInfoWithoutValue(INTEGER, "a", VAR_DECL,0);
     addNodeToTestingList(expectedNodes, node);
 }
 
-void checkTypesExpectedNodesCreator2(TestingNodeInfoList* expectedNodes) {
+void checkTypesExpectedNodesCreator2(TestingNodeInfoList** expectedNodes) {
     NodeInfo node;
 
 }
 
-void checkTypesExpectedNodesCreator3(TestingNodeInfoList* expectedNodes) {
-    NodeInfo node;
-
-}
-
-void checkTypesExpectedNodesCreator4(TestingNodeInfoList* expectedNodes) {
-    NodeInfo node;
-
-}
-
-void checkTypesExpectedNodesCreator5(TestingNodeInfoList* expectedNodes) {
+void checkTypesExpectedNodesCreator3(TestingNodeInfoList** expectedNodes) {
     NodeInfo node;
 
 }

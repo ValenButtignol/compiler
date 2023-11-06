@@ -101,12 +101,14 @@ char* currentMethodName;
 
    
 PROGRAM:  TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurlyBracket {
+
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);       
             $$ = newAst(programNode, $3, $4);
             globalAst = $$;
             popLevelSymbolTable(&symbolTable);          // This pop is not really necesary.
         }
     | TProgram TOpenCurlyBracket VAR_DECL_BLOCK TCloseCurlyBracket {
+
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);
             $$ = newAst(programNode, $3, NULL);
             globalAst = $$;
@@ -121,6 +123,7 @@ PROGRAM:  TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurl
     ;
 
 VAR_DECL_BLOCK: VAR_DECL_BLOCK VAR_DECL {
+
             NodeInfo* varDeclBlockNode = newNodeInfoSimple(VAR_DECL_BLOCK, yylineno);
             $$ = newAst(varDeclBlockNode, $2, $1);      // LS is VAR_DECL and RS others VAR_DECL_BLOCK.
         }
@@ -132,6 +135,7 @@ VAR_DECL_BLOCK: VAR_DECL_BLOCK VAR_DECL {
 VAR_DECL: TType TId TAssign EXPR TSemiColon {
             NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);       // Check if the identificator is already declared in the current level.
             if (alreadyDeclared != NULL) {   
+
                 char* error = (char*)malloc(80);
                 sprintf(error, "\033[1;31mLine: %d Error:\033[0m variable identifier '%s' already declared\n",yylineno, $2);
                 insertErrorNode(&errors, error);
@@ -145,6 +149,7 @@ VAR_DECL: TType TId TAssign EXPR TSemiColon {
             NodeInfo* varDecl = newNodeInfoType(varNode->type, VAR_DECL, yylineno);                  // Create a VAR_DECL node to evaluate VAR after with the EXPR.
 
             $$ = newAst(varDecl, declaredVariable, $4);
+
         }
     ;
 
@@ -158,6 +163,7 @@ METHOD_DECL_BLOCK: METHOD_DECL METHOD_DECL_BLOCK {
     ;
 
 METHOD_DECL: TType TId TOpenParenthesis {
+
                 NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);       // Check if the identificator is already declared in the current level.
                 if (alreadyDeclared != NULL) {   
                     char* error = (char*)malloc(80);
@@ -178,7 +184,8 @@ METHOD_DECL: TType TId TOpenParenthesis {
             }
 
     | TVoid TId TOpenParenthesis {
-                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, currentMethodName);
+                
+                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);
                 if (alreadyDeclared != NULL) {   
                     char* error = (char*)malloc(80);
                     sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier %s already declared\n",yylineno, $2);

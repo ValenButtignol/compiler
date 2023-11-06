@@ -17,7 +17,7 @@ typedef struct {
 
 TestingNodeInfoList* newTestingNodeInfoList();
 
-void addNodeToTestingList(TestingNodeInfoList* list, NodeInfo* data);
+void addNodeToTestingList(TestingNodeInfoList** list, NodeInfo* data);
 
 void freeTestingNodeInfoList(TestingNodeInfoList* list);
 

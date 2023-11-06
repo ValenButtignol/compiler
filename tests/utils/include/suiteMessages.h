@@ -10,4 +10,7 @@ void printTestFailedMessage(char* testType, char* inputFileName);
 
 void printNoTestSuiteMessage(char* inputFileName);
 
+void printIncorrectTypeTestMessage(char* testType);
+
+
 #endif

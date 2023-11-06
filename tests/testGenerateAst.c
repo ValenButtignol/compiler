@@ -10,7 +10,7 @@ static void generateAstTestSuite(char* inputTestFileName, TAst* globalAst, Error
     TestingNodeInfoList* expectedNodes = newTestingNodeInfoList(); 
     TestingNodeInfoList* nodesToFreeLater = expectedNodes;
     ErrorNode* expectedErrors = NULL;
-    generateAstFactory(inputTestFileName, expectedNodes, &expectedErrors);  //TODO: Implement
+    generateAstFactory(inputTestFileName, &expectedNodes, &expectedErrors);  //TODO: Implement
     
     if (expectedNodes->head == NULL && errors == NULL) {
         printNoTestSuiteMessage(inputTestFileName);

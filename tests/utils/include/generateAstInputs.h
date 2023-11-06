@@ -7,7 +7,7 @@
 #include "../../../include/utils/enums.h"
 #include "testingNodeInfoList.h"
 
-void generateAstFactory(char* fileName, TestingNodeInfoList* expectedNodes, ErrorNode** expectedErrors);
+void generateAstFactory(char* fileName, TestingNodeInfoList** expectedNodes, ErrorNode** expectedErrors);
 void generateAstListErrors1(ErrorNode** expectedErrors);
 void generateAstListErrors2(ErrorNode** expectedErrors);
 void generateAstListErrors3(ErrorNode** expectedErrors);
@@ -23,11 +23,11 @@ void generateAstListErrors12(ErrorNode** expectedErrors);
 void generateAstListErrors13(ErrorNode** expectedErrors);
 void generateAstListErrors14(ErrorNode** expectedErrors);
 void generateAstListErrors15(ErrorNode** expectedErrors);
-void generateAstExpectedNodesCreator1(TestingNodeInfoList* expectedNodes);
-void generateAstExpectedNodesCreator2(TestingNodeInfoList* expectedNodes);
-void generateAstExpectedNodesCreator3(TestingNodeInfoList* expectedNodes);
-void generateAstExpectedNodesCreator4(TestingNodeInfoList* expectedNodes);
-void generateAstExpectedNodesCreator5(TestingNodeInfoList* expectedNodes);
+void generateAstExpectedNodesCreator1(TestingNodeInfoList** expectedNodes);
+void generateAstExpectedNodesCreator2(TestingNodeInfoList** expectedNodes);
+void generateAstExpectedNodesCreator3(TestingNodeInfoList** expectedNodes);
+void generateAstExpectedNodesCreator4(TestingNodeInfoList** expectedNodes);
+void generateAstExpectedNodesCreator5(TestingNodeInfoList** expectedNodes);
 
 
 #endif
