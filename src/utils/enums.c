@@ -137,26 +137,41 @@ enum TOperator getOperatorFromText(char* op) {
     }
 }
 
-char *operatorToString(enum TOperator op) {
-    switch (op) {
-    case 0:
-        return "+";
-    
-    case 1:
-        return "-";
-    
+char *operatorToString(enum TTag tag) {
+    switch (tag)
+    {
     case 2:
-        return "*";
-    
-    case 3:
-        return "/";
-    
-    case 4:
         return "=";
-    
+    case 10:
+        return "=";
+    case 15:
+        return "RETURN";
+    case 16:
+        return "+";
+    case 17:
+        return "-";
+    case 18:
+        return "*";
+    case 19:
+        return "/";
+    case 20:
+        return "%%";
+    case 21:
+        return ">";
+    case 22:
+        return "<";
+    case 23:
+        return "==";
+    case 24:
+        return "&&";
+    case 25:
+        return "||";
+    case 26:
+        return "-";
+    case 27:
+        return "!";
     default:
         return "NO OPERATOR";
-        break;
     }
 }
 
@@ -175,7 +190,7 @@ int isArithmeticOperatorTag(enum TTag tag){
 }
 
 int isRelationalOperatorTag(enum TTag tag){
-    return tag ==  GREATER_THAN || tag ==  LESS_THAN;
+    return tag ==  GREATER_THAN || tag ==  LESS_THAN || tag == EQUALS;
 }
 
 int isComparatorTag(enum TTag tag){
@@ -188,4 +203,14 @@ int isBooleanOperatorTag(enum TTag tag){
 
 int isUnaryOperatorTag(enum TTag tag){
     return tag ==  NEGATIVE || tag ==  NOT;
+}
+
+int isReturnTag(enum TTag tag){
+    return tag ==  RETURN;
+}
+
+int isArithmeticOrBooleanTag(enum TTag tag){
+    return isBooleanOperatorTag(tag) 
+            || isArithmeticOperatorTag(tag)
+            || isUnaryOperatorTag(tag);
 }
