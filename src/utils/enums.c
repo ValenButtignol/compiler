@@ -209,6 +209,9 @@ int isReturnTag(enum TTag tag){
     return tag ==  RETURN;
 }
 
+int isMethodCallTag(enum TTag tag){
+    return tag == METHOD_CALL; 
+}
 int isArithmeticOrBooleanTag(enum TTag tag){
     return isBooleanOperatorTag(tag) 
             || isArithmeticOperatorTag(tag)
