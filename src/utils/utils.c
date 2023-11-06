@@ -17,16 +17,16 @@ void setParamsToNodeInfo(NodeInfo** node, TAst* ast){
 }
 
 void addOperationError(ErrorNode** errors, int lineNumber, enum TTag tag){
-    int errorStrLength = snprintf(NULL, 0, "\033[1;36mLine: %d \033[1;31mError:\033[0m Type mismatch in \'%s\'\n", lineNumber, operatorToString(tag));
+    int errorStrLength = snprintf(NULL, 0, "\033[1;36mLine: %d \033[1;31mError:\033[0m Type mismatch in \'\033[1;36m %s \033[0m \' \n", lineNumber, operatorToString(tag));
     char* errorStr = malloc(errorStrLength + 1);
-    sprintf(errorStr, "\033[1;36mLine: %d \033[1;31mError:\033[0m Type mismatch in \'%s\'\n", lineNumber, operatorToString(tag));
+    sprintf(errorStr, "\033[1;36mLine: %d \033[1;31mError:\033[0m Type mismatch in \'\033[1;36m %s \033[0m\' \n", lineNumber, operatorToString(tag));
     insertErrorNode(errors, errorStr);
 }
 
 void addMethodCallError(ErrorNode** errors, int lineNumber, char* message, char* methodName){
-    int errorStrLength = snprintf(NULL, 0, "\033[1;36mLine: %d \033[1;31mError:\033[0m %s in function %s\n", lineNumber, message, methodName);
+    int errorStrLength = snprintf(NULL, 0, "\033[1;36mLine: %d \033[1;31mError:\033[0m %s in function \'\033[1;36m %s \033[0m\' \n", lineNumber, message, methodName);
     char* errorStr = malloc(errorStrLength + 1);
-    sprintf(errorStr, "\033[1;36mLine: %d \033[1;31mError:\033[0m %s in function %s\n", lineNumber, message, methodName);
+    sprintf(errorStr, "\033[1;36mLine: %d \033[1;31mError:\033[0m %s in function \'\033[1;36m %s \033[0m\' \n", lineNumber, message, methodName);
     insertErrorNode(errors, errorStr);
 }
 
