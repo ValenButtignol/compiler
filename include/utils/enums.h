@@ -32,5 +32,6 @@ enum TOperator getOperatorFromText(char* op);
 char *operatorToString(enum TTag tag);
 int isReturnTag(enum TTag tag);
 int isArithmeticOrBooleanTag(enum TTag tag);
+int isMethodCallTag(enum TTag tag);
 
 #endif
