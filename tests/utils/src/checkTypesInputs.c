@@ -3,7 +3,6 @@
 void checkTypesFactory(char* inputTestFileName, TestingNodeInfoList** expectedNodes, ErrorNode** expectedErrors) {
     
     if (strcmp(inputTestFileName, "invalidInput1.bok") == 0) {
-        printf("AAAAAAa\n\n\n");
         checkTypesListErrors1(expectedErrors);
     } else if (strcmp(inputTestFileName, "invalidInput2.bok") == 0) {
         checkTypesListErrors2(expectedErrors);
