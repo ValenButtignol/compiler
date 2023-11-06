@@ -32,7 +32,7 @@ void addMethodCallError(ErrorNode** errors, int lineNumber, char* message, char*
 
 int checkReturnTypes(TAst *ast){
     enum TType lsType = getAstType(ast->ls);
-    return !((lsType==ast->data->type) && (VOID==ast->data->type && ast->ls==NULL && lsType==NONETYPE));
+    return (!(lsType==ast->data->type) && !(VOID==ast->data->type && ast->ls==NULL && lsType==NONETYPE));
 }
 
 int checkSonsTypes(TAst *ast){
@@ -40,7 +40,7 @@ int checkSonsTypes(TAst *ast){
 }
 
 int checkSonsFatherTypes(TAst *ast){
-    return !(!checkSonsTypes(ast) && getAstType(ast->ls) == ast->data->type);
+    return !(!checkSonsTypes(ast) && (getAstType(ast->ls) == ast->data->type));
 }
 void copyMethodName(char **methodName,TAst *ast){
     int methodNameSize = snprintf(NULL, 0, "%s", ast->data->id);

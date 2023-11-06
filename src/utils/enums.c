@@ -16,7 +16,7 @@ char *boolToString(enum TBoolean boolean) {
 enum TType getTypeFromText(char* type) {
     if (strcmp(type, "integer") == 0) {
         return INTEGER;
-    } else if (strcmp(type, "boolean") == 0) {
+    } else if (strcmp(type, "bool") == 0) {
         return BOOLEAN;
     } else if (strcmp(type, "void") == 0) {
         return VOID;
