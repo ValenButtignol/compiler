@@ -19,14 +19,16 @@ int main(int argc,char *argv[]) {
     TAst* globalAst = getGlobalAst();
     ErrorNode* errors = getErrors();
     if (errors != NULL) {
-        printf("ERRORS:\n");
-        printf("---------------------------------------------:\n");
+        // printf("ERRORS:\n");
+        // printf("---------------------------------------------:\n");
         printErrors(errors);
         freeErrorsList(errors);
     } 
-    printf("PARSE COMPLETE %d\n", globalAst==NULL);
-    printf("\n---------------------------------------------- \n");
-    printAst(globalAst);
-    checkTypes(globalAst, &errors);
-    
+    // printf("PARSE COMPLETE %d\n", globalAst==NULL);
+    // printf("\n---------------------------------------------- \n");
+    // printAst(globalAst);
+    if (!checkTypes(globalAst, &errors)) {
+        printErrors(errors);
+        freeErrorsList(errors);
+    }
 }
