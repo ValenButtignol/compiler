@@ -2,17 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include "include/dataStructures/ast.h"
-#include "include/dataStructures/threeAddressCodeList.h"
-#include "include/algorithms/assemblyCodeGenerator.h"
+#include "include/dataStructures/nodeInfo.h"
 #include "include/algorithms/checktypes.h"
-
 extern FILE *yyin;
 extern FILE *yyout;
 extern int yyparse(void);
-extern TAst* getGlobalAst(void);
-extern int getOffset(void);
-
-
+extern TAst* getGlobalAst();
+extern ErrorNode* getErrors();
 int main(int argc,char *argv[]) {
     ++argv,--argc;
 	if (argc > 0)
@@ -21,37 +17,16 @@ int main(int argc,char *argv[]) {
 		yyin = stdin;
     yyparse();
     TAst* globalAst = getGlobalAst();
-    ErrorNode* errors = NULL;
+    ErrorNode* errors = getErrors();
+    if (errors != NULL) {
+        printf("ERRORS:\n");
+        printf("---------------------------------------------:\n");
+        printErrors(errors);
+        freeErrorsList(errors);
+    } 
+    printf("PARSE COMPLETE %d\n", globalAst==NULL);
+    printf("\n---------------------------------------------- \n");
+    printAst(globalAst);
     checkTypes(globalAst, &errors);
-
-    // evaluateAst(globalAst);
-    ThreeAddressCodeList *list = createEmptyTAC();
-
-    int offset = getOffset();
-
-    createThreeAddressCodeList(globalAst, list, &offset);
-
-    // printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
     
-    generateAssembly(list);
-
-    return 0;
 }
-
-
-
-
-/*
-	.text
-    .globl	main
-	.type	main, @function
-main:
-    enter
-    ...
-    leave
-    ret
-    
-.LFE6:
-	.size	main, .-main
-	.section	.note.GNU-stack,"",@progbits
-*/

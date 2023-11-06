@@ -7,7 +7,7 @@ SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = output
 
-SRCS := $(wildcard $(SRC_DIR)/**/*.c) ./main2.c
+SRCS := $(wildcard $(SRC_DIR)/**/*.c) ./main.c
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))  
 
 TARGET = $(BIN_DIR)/my_program
