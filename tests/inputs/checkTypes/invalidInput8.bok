@@ -1,0 +1,14 @@
+Program {
+    void foo(integer a, bool b) {
+        foo(!b, -a);                //Error in params.
+        return ;
+    }
+
+    void main() {
+        integer a = 1;
+        bool b = true;
+        bool c = !a;                //Error here.
+        integer d = -b;             //Error here.
+        foo(a,b);
+    }
+}

@@ -1,0 +1,15 @@
+Program {
+    bool foo(integer a, integer b) {
+        return a == b-a;
+    }
+
+    integer g(integer a, integer b, integer c) {
+        return a + b - c; 
+    }
+
+    void main() {
+        bool a = foo(g(2+3, 5-6, 0), g(3/2, 5%4, 0));
+        integer b = foo(g(5 == 5, 2 - 3, 2*2 < 3+1), g(2, 3, 0));   // Multiple errors.      
+        return ;  
+    }
+}

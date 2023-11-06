@@ -7,7 +7,7 @@ SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = output
 
-SRCS := $(wildcard $(SRC_DIR)/**/*.c) ./main2.c
+SRCS := $(wildcard $(SRC_DIR)/**/*.c) ./main.c
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))  
 
 TARGET = $(BIN_DIR)/my_program
@@ -51,14 +51,23 @@ parse:
 SCRIPT_DIR = scripts
 TEST_DIR = tests
 
-test_suite:
-	$(SCRIPT_DIR)/test_suite.sh
+test_syntax:
+	sh $(SCRIPT_DIR)/test_syntax.sh
 
-IN_TEST ?= validInput1.txt
-TYPE ?=	eval
+test_checktypes:
+	sh $(SCRIPT_DIR)/test_checktypes.sh
 
-test_file:
-	$(SCRIPT_DIR)/test_file.sh $(TEST_DIR)/inputs/$(IN_TEST) $(TYPE)
+test_assembly:
+	sh $(SCRIPT_DIR)/test_assembly.sh
+
+test_all: test_syntax test_checktypes test_assembly
+
+
+#IN_TEST ?= validInput1.txt
+#TYPE ?=	eval
+#
+#test_file:
+#	$(SCRIPT_DIR)/test_file.sh $(TEST_DIR)/inputs/$(IN_TEST) $(TYPE)
 
 IN_FILE ?= input/input.txt
 

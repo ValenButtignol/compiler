@@ -7,7 +7,6 @@
 #include "../../../include/dataStructures/ast.h"
 #include "../../../include/dataStructures/nodeInfo.h"
 #include "../../../include/utils/enums.h"
-#include "../../../include/dataStructures/symbolTable.h"
 #include "testingNodeInfoList.h"
 
 void assembleExpectedOutputsFactory(char* inputTestFileName, int expectedNodes[MAXOUTPUTS]);

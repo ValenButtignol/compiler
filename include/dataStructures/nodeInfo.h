@@ -41,6 +41,8 @@ int isEmptyNode(NodeInfo node);
 
 void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset);
 
+int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode);
+
 /****************************** new constructors ********************************/
 
 NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber);

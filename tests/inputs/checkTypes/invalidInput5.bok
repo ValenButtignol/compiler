@@ -1,0 +1,15 @@
+Program {
+
+    bool a = 1 && 2 && 3;
+    bool b = 1 && 2 && true;
+    bool c = 1 && true && 3;
+    bool d = true && 2 && 3;
+    bool e = 1 && true && true;
+    bool f = true && 2 && true;
+    bool g = true && true && 3;
+    bool h = true && true && true;
+
+    void main () {
+        return ;   
+    }
+}

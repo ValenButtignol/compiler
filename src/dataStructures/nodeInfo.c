@@ -102,6 +102,18 @@ void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset)
     temp->offset = offset;
 }
 
+int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode) {
+
+    int idsComp = (firstNode->id && secondNode->id) ? strcmp(firstNode->id, secondNode->id) : 0;
+    if ((firstNode->id != NULL && secondNode->id == NULL) || (firstNode->id == NULL && secondNode->id != NULL)) {
+        idsComp = 1;
+    }
+
+    return (*(int*)firstNode->value == *(int*)secondNode->value) && (idsComp == 0) &&
+           (firstNode->type == secondNode->type) &&
+           (firstNode->tag == secondNode->tag);
+}
+
 /****************************** new constructors ********************************/
 
 NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber) {

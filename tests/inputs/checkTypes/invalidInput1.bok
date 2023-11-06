@@ -1,0 +1,11 @@
+Program {
+    integer a = 1;
+    integer b = false;
+    
+    bool x = 1;
+    bool y = true;
+
+    void main () {
+        return ;   
+    }
+}

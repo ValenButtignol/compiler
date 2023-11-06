@@ -6,7 +6,7 @@
 
 // Define the Node structure for the linked list
 typedef struct TestingNode {
-    NodeInfo data;
+    NodeInfo* data;
     struct TestingNode* next;
 } TestingNode;
 
@@ -17,7 +17,7 @@ typedef struct {
 
 TestingNodeInfoList* newTestingNodeInfoList();
 
-void addNodeToTestingList(TestingNodeInfoList* list, NodeInfo data);
+void addNodeToTestingList(TestingNodeInfoList** list, NodeInfo* data);
 
 void freeTestingNodeInfoList(TestingNodeInfoList* list);
 

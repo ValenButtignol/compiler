@@ -10,12 +10,12 @@ TestingNodeInfoList* newTestingNodeInfoList() {
 }
 
 // Function to add a NodeInfo to the linked list
-void addNodeToTestingList(TestingNodeInfoList* list, NodeInfo data) {
+void addNodeToTestingList(TestingNodeInfoList** list, NodeInfo* data) {
     TestingNode* newNode = (TestingNode*)malloc(sizeof(TestingNode));
     if (newNode != NULL) {
         newNode->data = data;
-        newNode->next = list->head;
-        list->head = newNode;
+        newNode->next = (*list)->head;
+        (*list)->head = newNode;
     } else {
         fprintf(stderr, "Memory allocation failed for new node.\n");
     }
