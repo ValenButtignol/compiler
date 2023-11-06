@@ -20,6 +20,8 @@ int main(int argc,char *argv[]) {
     printf("PARSE COMPLETE %d\n", globalAst==NULL);
     printf("\n---------------------------------------------- \n");
     printAst(globalAst);
-    checkTypes(globalAst, &errors);
+    if(!checkTypes(globalAst, &errors)){
+        printErrors(errors);
+    }
     
 }
