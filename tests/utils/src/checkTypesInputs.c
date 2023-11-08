@@ -1,6 +1,6 @@
 #include "../include/checkTypesInputs.h"
 
-void checkTypesFactory(char* inputTestFileName, TestingNodeInfoList** expectedNodes, ErrorNode** expectedErrors) {
+int checkTypesFactory(char* inputTestFileName, ErrorNode** expectedErrors) {
     
     if (strcmp(inputTestFileName, "invalidInput1.bok") == 0) {
         checkTypesListErrors1(expectedErrors);
@@ -27,12 +27,13 @@ void checkTypesFactory(char* inputTestFileName, TestingNodeInfoList** expectedNo
     } else if (strcmp(inputTestFileName, "invalidInput12.bok") == 0) {
         checkTypesListErrors12(expectedErrors);
     } else if (strcmp(inputTestFileName, "validInput1.bok") == 0) {
-        checkTypesExpectedNodesCreator1(expectedNodes);
+        return 1;
     } else if (strcmp(inputTestFileName, "validInput2.bok") == 0) {
-        checkTypesExpectedNodesCreator2(expectedNodes);
+        return 1;
     } else if (strcmp(inputTestFileName, "validInput3.bok") == 0) {
-        checkTypesExpectedNodesCreator3(expectedNodes);
+        return 1;
     }
+    return 0;
 }
 
 void checkTypesListErrors1(ErrorNode** expectedErrors) {
@@ -192,35 +193,4 @@ void checkTypesListErrors11(ErrorNode** expectedErrors) {
 
 void checkTypesListErrors12(ErrorNode** expectedErrors) {
     addMethodCallError(expectedErrors, 11, "Type mismatch", "foo");
-}
-
-void checkTypesListErrors13(ErrorNode** expectedErrors) {
-    char* errorStr = "\033[1;31mLine: 1 Error:\033[0m Type mismatch\n";
-    insertErrorNode(expectedErrors, errorStr);   
-}
-
-void checkTypesListErrors14(ErrorNode** expectedErrors) {
-    char* errorStr = "\033[1;31mLine: 1 Error:\033[0m Type mismatch\n";
-    insertErrorNode(expectedErrors, errorStr);   
-}
-
-void checkTypesListErrors15(ErrorNode** expectedErrors) {
-    char* errorStr = "\033[1;31mLine: 1 Error:\033[0m Type mismatch\n";
-    insertErrorNode(expectedErrors, errorStr);   
-}
-
-void checkTypesExpectedNodesCreator1(TestingNodeInfoList** expectedNodes) {
-    NodeInfo* node;
-    node = newNodeInfoWithoutValue(INTEGER, "a", VAR_DECL,0);
-    addNodeToTestingList(expectedNodes, node);
-}
-
-void checkTypesExpectedNodesCreator2(TestingNodeInfoList** expectedNodes) {
-    NodeInfo node;
-
-}
-
-void checkTypesExpectedNodesCreator3(TestingNodeInfoList** expectedNodes) {
-    NodeInfo node;
-
 }
