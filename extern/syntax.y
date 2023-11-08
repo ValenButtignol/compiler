@@ -39,6 +39,7 @@ char* currentMethodName;
 %token<string> TComma
 %token<type> TType
 %token<type> TVoid
+%token<string> TDef
 %token<string> TIf
 %token<string> TThen
 %token<string> TElse
@@ -100,19 +101,12 @@ char* currentMethodName;
 %%
 
    
-PROGRAM:  TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurlyBracket {
+PROGRAM: TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurlyBracket {
 
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);       
             $$ = newAst(programNode, $3, $4);
             globalAst = $$;
             popLevelSymbolTable(&symbolTable);          // This pop is not really necesary.
-        }
-    | TProgram TOpenCurlyBracket VAR_DECL_BLOCK TCloseCurlyBracket {
-
-            NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);
-            $$ = newAst(programNode, $3, NULL);
-            globalAst = $$;
-            popLevelSymbolTable(&symbolTable);
         }
     | TProgram TOpenCurlyBracket METHOD_DECL_BLOCK TCloseCurlyBracket {
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);
@@ -122,10 +116,10 @@ PROGRAM:  TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurl
         }
     ;
 
-VAR_DECL_BLOCK: VAR_DECL_BLOCK VAR_DECL {
+VAR_DECL_BLOCK: VAR_DECL VAR_DECL_BLOCK {
 
             NodeInfo* varDeclBlockNode = newNodeInfoSimple(VAR_DECL_BLOCK, yylineno);
-            $$ = newAst(varDeclBlockNode, $2, $1);      // LS is VAR_DECL and RS others VAR_DECL_BLOCK.
+            $$ = newAst(varDeclBlockNode, $1, $2);      // LS is VAR_DECL and RS others VAR_DECL_BLOCK.
         }
     | VAR_DECL {
             $$ = $1;
@@ -162,46 +156,46 @@ METHOD_DECL_BLOCK: METHOD_DECL METHOD_DECL_BLOCK {
         }
     ;
 
-METHOD_DECL: TType TId TOpenParenthesis {
+METHOD_DECL: TDef TType TId TOpenParenthesis {
 
-                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);       // Check if the identificator is already declared in the current level.
+                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $3);       // Check if the identificator is already declared in the current level.
                 if (alreadyDeclared != NULL) {   
                     char* error = (char*)malloc(80);
-                    sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier '%s' already declared\n",yylineno, $2);
+                    sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier '%s' already declared\n",yylineno, $3);
                     insertErrorNode(&errors, error);
                 }
                 offset++;
-                NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD_DECL, yylineno, offset);    
+                NodeInfo* methodNode = newNodeInfoDeclaration($3, *$2, METHOD_DECL, yylineno, offset);    
                 addNodeToSymbolTable(&symbolTable, methodNode);                                     // Add the method to the symbol table.
                 
-                currentMethodName = malloc(strlen($2) + 1);                                             
-                currentMethodName = $2;                                                                 // Save the current method name.
+                currentMethodName = malloc(strlen($3) + 1);                                             
+                currentMethodName = $3;                                                                 // Save the current method name.
                 
                 addLevelToSymbolTable(&symbolTable);                                                // We include a new level for the params of the method.
 
             } METHOD_ENDING {
-                $$ = $5;
+                $$ = $6;
             }
 
-    | TVoid TId TOpenParenthesis {
+    | TDef TVoid TId TOpenParenthesis {
                 
-                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);
+                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $3);
                 if (alreadyDeclared != NULL) {   
                     char* error = (char*)malloc(80);
-                    sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier %s already declared\n",yylineno, $2);
+                    sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier %s already declared\n",yylineno, $3);
                     insertErrorNode(&errors, error);
                 }
 
                 offset++;
-                NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD_DECL, yylineno, offset);
+                NodeInfo* methodNode = newNodeInfoDeclaration($3, *$2, METHOD_DECL, yylineno, offset);
                 addNodeToSymbolTable(&symbolTable, methodNode);                
-                currentMethodName = malloc(strlen($2) + 1);                                             
-                currentMethodName = $2;               
+                currentMethodName = malloc(strlen($3) + 1);                                             
+                currentMethodName = $3;               
                                                                   // Save the current method name.
                 addLevelToSymbolTable(&symbolTable);
 
             } METHOD_ENDING {
-                $$ = $5;
+                $$ = $6;
             }
     ;  
 
