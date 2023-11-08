@@ -11,6 +11,11 @@ static void checkTypeTestSuite(char* inputTestFileName, TAst* globalAst, ErrorNo
     ErrorNode* expectedErrors = NULL;
 
     checkTypesFactory(inputTestFileName, &expectedNodes, &expectedErrors);
+
+    printErrors(errors);
+    printErrors(expectedErrors);
+
+
     if (expectedNodes->head == NULL && expectedErrors == NULL) {
         printNoTestSuiteMessage(inputTestFileName);
         return ;

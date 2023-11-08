@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include "../../../include/dataStructures/ast.h"
+#include "../../../include/utils/utils.h"
 #include "../../../include/dataStructures/errorNode.h"
 #include "../../../include/dataStructures/nodeInfo.h"
 #include "../../../include/utils/enums.h"
