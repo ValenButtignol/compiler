@@ -1,14 +1,14 @@
 Program {
     integer foo(bool a, bool b) {
-        if (a == b) {
-            if (1 + 2 == 3) {                //No debería ser error
+        if (a == b) then {
+            if ((1 + 2) == 3) then {                //No debería ser error
                 while (!a || b) {
                     a = false;
                 }
                 return 1;
             }
         } else {
-            while (3 + 4 > true) {             //Deberia ser error.
+            while (3 + 4) {             
                 a = true;
             }
             return 1;               //Error in return.
