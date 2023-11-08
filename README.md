@@ -2,19 +2,21 @@
 
 This is a compiler made with Flex and Bison.
 
-## Run Project
-
 From root, execute:
 
+## Compile Project
 ```
-sh build.sh
+make parse;
+make src;
+```
+
+## Run Project
+```
+make run;
 ```
 
 ## Run Tests
-
-From root, execute:
-
 ```
-sh run_tests.sh
+make test_checktypes
 ```
 

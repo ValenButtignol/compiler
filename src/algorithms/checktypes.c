@@ -27,6 +27,9 @@ void checkForTypeErrors(TAst* ast, ErrorNode** errors) {
         }else if(isReturnTag(ast->data->tag)){
             if(checkReturnTypes(ast)) 
                 addOperationError(errors, ast->data->lineNumber, ast->data->tag);
+        }else if(isUnaryOperatorTag(ast->data->tag)){
+            if(checkFatherLeftSonTypes(ast)) 
+                addOperationError(errors, ast->data->lineNumber, ast->data->tag);
         }else if(isMethodCallTag(ast->data->tag)){
             char* methodName;
             copyMethodName(&methodName ,ast);

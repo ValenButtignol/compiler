@@ -35,6 +35,11 @@ int checkReturnTypes(TAst *ast){
     return (!(lsType==ast->data->type) && !(VOID==ast->data->type && ast->ls==NULL && lsType==NONETYPE));
 }
 
+int checkFatherLeftSonTypes(TAst *ast){
+    enum TType lsType = getAstType(ast->ls);
+    return !(lsType==ast->data->type);
+}
+
 int checkSonsTypes(TAst *ast){
     return !(getAstType(ast->ls) == getAstType(ast->rs));
 }
