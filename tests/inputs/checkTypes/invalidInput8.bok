@@ -1,10 +1,10 @@
 Program {
-    void foo(integer a, bool b) {
+    def void foo(integer a, bool b) {
         foo(!b, -a);                //Error in params.
         return ;
     }
 
-    void main() {
+    def void main() {
         integer a = 1;
         bool b = true;
         bool c = !a;                //Error here.

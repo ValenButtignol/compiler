@@ -15,7 +15,7 @@ Program {
     bool u = false && 1;
     bool v = true && true;
 
-    void main () {
+    def void main () {
         return ;   
     }
 }

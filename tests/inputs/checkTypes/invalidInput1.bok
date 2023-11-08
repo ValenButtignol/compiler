@@ -5,7 +5,7 @@ Program {
     bool x = 1;
     bool y = true;
 
-    void main () {
+    def void main () {
         return ;   
     }
 }

@@ -1,5 +1,5 @@
 Program {
-    integer foo(bool a, bool b) {
+    def integer foo(bool a, bool b) {
         if (a == b) then {
             if ((1 + 2) == 3) then {                //No debería ser error
                 while (!a || b) {
@@ -14,7 +14,7 @@ Program {
             return 1;               //Error in return.
         }
     }
-    void main () {
+    def void main () {
         return ;   
     }
 }
