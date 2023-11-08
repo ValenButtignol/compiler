@@ -21,6 +21,7 @@ void checkTypesListErrors8(ErrorNode** expectedErrors);
 void checkTypesListErrors9(ErrorNode** expectedErrors);
 void checkTypesListErrors10(ErrorNode** expectedErrors);
 void checkTypesListErrors11(ErrorNode** expectedErrors);
+void checkTypesListErrors12(ErrorNode** expectedErrors);
 void checkTypesExpectedNodesCreator1(TestingNodeInfoList** expectedNodes);
 void checkTypesExpectedNodesCreator2(TestingNodeInfoList** expectedNodes);
 void checkTypesExpectedNodesCreator3(TestingNodeInfoList** expectedNodes);

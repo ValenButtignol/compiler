@@ -13,7 +13,7 @@ static void checkTypeTestSuite(char* inputTestFileName, TAst* globalAst, ErrorNo
     checkTypesFactory(inputTestFileName, &expectedNodes, &expectedErrors);
 
     printErrors(errors);
-    printErrors(expectedErrors);
+//    printErrors(expectedErrors);
 
 
     if (expectedNodes->head == NULL && expectedErrors == NULL) {

@@ -171,11 +171,13 @@ void checkTypesListErrors8(ErrorNode** expectedErrors) {
 
     addMethodCallError(expectedErrors, 3, "Type mismatch", "foo");
     addMethodCallError(expectedErrors, 3, "Type mismatch", "foo");
-    addOperationError(expectedErrors, 10, NEGATIVE);
-    addOperationError(expectedErrors, 11, NOT);
+    addOperationError(expectedErrors, 11, NEGATIVE);
+    addOperationError(expectedErrors, 10, NOT);
 } 
 
 void checkTypesListErrors9(ErrorNode** expectedErrors) {
+    addOperationError(expectedErrors, 11, GREATER_THAN);
+    addOperationError(expectedErrors, 14, RETURN);
 } 
 
 void checkTypesListErrors10(ErrorNode** expectedErrors) {
