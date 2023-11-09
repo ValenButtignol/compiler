@@ -1,6 +1,7 @@
 #include "../../include/dataStructures/threeAddressCodeNode.h"
 
 char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
+    
     if(node->first != NULL){
         char *str = malloc(50);
         strcat(str, labelToString(node->label));
@@ -10,14 +11,15 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
         
         if(node->label != RETURN){
             // printf("ID: %s\n", node->second);
-            if(strcmp(node->second->id, "") == 0){
+            if(node->second->value != NULL){
                 strcat(str, valueToString(node->second));
             }
             else strcat(str, node->second->id);
             strcat(str, " ");
             if(node->label != ASSIGNMENT){
-                if(strcmp(node->third->id, "") == 0) strcat(str, valueToString(node->third));
+                if(node->third->value != NULL) strcat(str, valueToString(node->third));
                 else strcat(str, node->third->id);
+                printf("ME COY A RMP %s\n", str);
             }
         }
         return str;
@@ -74,24 +76,6 @@ ThreeAddressCodeNode *threeAddressCodeNodeFactory(
     enum TTag label, NodeInfo *first, NodeInfo *second, NodeInfo *third){
         switch (label)
         {
-        case ADD:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
-        case SUB:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
-        case MUL:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
-        case DIV:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
-        case AND:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
-        case OR:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
         case ASSIGNMENT:
             return createThreeAddressCodeNode(label, first, second, newEmptyNodeInfo());
             break;
@@ -99,6 +83,7 @@ ThreeAddressCodeNode *threeAddressCodeNodeFactory(
             return createThreeAddressCodeNode(label, first, newEmptyNodeInfo(), newEmptyNodeInfo());
             break;
         default:
+            return createThreeAddressCodeNode(label, first, second, third);
             break;
         }
 }
@@ -112,17 +97,6 @@ ThreeAddressCodeNode *createThreeAddressCodeNode(
         node->second = second;
         node->third = third;
         return node;
-}
-
-enum TTag geTTagFromOperator(enum TOperator op, enum TType type){
-    
-    if(op == PLUS && type == INTEGER) return ADD;
-    if(op == MINUS && type == INTEGER) return SUB;
-    if(op == MULTIPLY && type == INTEGER) return MUL;
-    if(op == DIVIDE && type == INTEGER) return DIV;
-    if(op == PLUS && type == BOOLEAN) return OR;//falta determinar cuando es un and o un OR
-    if(op == MULTIPLY && type == BOOLEAN) return AND;//podriamos pasar el tipo de la operacion asi es facil
-    if(op == 0) return ASSIGNMENT;
 }
 
 NodeInfo *getFirst(ThreeAddressCodeNode *node){

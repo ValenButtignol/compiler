@@ -123,20 +123,6 @@ char *tagToString(enum TTag tag) {
     }
 }
 
-enum TOperator getOperatorFromText(char* op) {
-    if (strcmp(op, "+") == 0) {
-        return PLUS;
-    } else if (strcmp(op, "-") == 0) {
-        return MINUS;
-    } else if (strcmp(op, "*") == 0) {
-        return MULTIPLY;
-    } else if (strcmp(op, "/") == 0) {
-        return DIVIDE;
-    } else if (strcmp(op, "=") == 0) {
-        return ASSIGN;
-    }
-}
-
 char *operatorToString(enum TTag tag) {
     switch (tag)
     {

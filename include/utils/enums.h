@@ -27,8 +27,6 @@ int isComparatorTag(enum TTag tag);
 int isBooleanOperatorTag(enum TTag tag);
 int isUnaryOperatorTag(enum TTag tag);
 int isAssignTag(enum TTag tag);
-enum TOperator {PLUS, MINUS, MULTIPLY, DIVIDE, ASSIGN, NONOPERATOR};
-enum TOperator getOperatorFromText(char* op);
 char *operatorToString(enum TTag tag);
 int isReturnTag(enum TTag tag);
 int isArithmeticOrBooleanTag(enum TTag tag);
