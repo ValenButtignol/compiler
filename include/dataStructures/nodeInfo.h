@@ -13,7 +13,6 @@ typedef struct NodeInfo{
 	enum TTag tag;
 	int lineNumber;
 	int offset;
-	enum TOperator operatorVar;
 	struct NodeInfo* nextParams;
 }NodeInfo;
 
@@ -24,8 +23,6 @@ NodeInfo *newNodeInfoWithOffset(void* value, enum TType type, char* id, enum TTa
 NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag, int lineNumber);
 
 NodeInfo* newNodeInfoWithoutValueWithOffset(enum TType type, char* id, enum TTag tag, int lineNumber, int offset);
-
-NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int lineNumber, enum TOperator operatorVar);
 
 NodeInfo* newEmptyNodeInfo();
 
@@ -39,7 +36,7 @@ char* constExprToString(NodeInfo node);
 
 int isEmptyNode(NodeInfo node);
 
-void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset);
+void createTemporalNodeInfo(char* id, NodeInfo *temp, int offset);
 
 int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode);
 
