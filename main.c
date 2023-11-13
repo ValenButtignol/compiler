@@ -4,11 +4,13 @@
 #include "include/dataStructures/ast.h"
 #include "include/dataStructures/nodeInfo.h"
 #include "include/algorithms/checktypes.h"
+#include "include/dataStructures/threeAddressCodeList.h"
 extern FILE *yyin;
 extern FILE *yyout;
 extern int yyparse(void);
 extern TAst* getGlobalAst();
 extern ErrorNode* getErrors();
+// extern int getOffset();
 int main(int argc,char *argv[]) {
     ++argv,--argc;
 	if (argc > 0)
@@ -24,11 +26,20 @@ int main(int argc,char *argv[]) {
         printErrors(errors);
         freeErrorsList(errors);
     } 
-    // printf("PARSE COMPLETE %d\n", globalAst==NULL);
     // printf("\n---------------------------------------------- \n");
     // printAst(globalAst);
+    // printf("PARSE COMPLETE %d\n", 1);
     if (!checkTypes(globalAst, &errors)) {
         printErrors(errors);
         freeErrorsList(errors);
     }
+    printf("CHEACK TYPES COMPLETE %d\n", 1);
+
+    ThreeAddressCodeList *list = createEmptyTAC();
+
+    int offset = 10;//getOffset();
+
+    createThreeAddressCodeList(globalAst, list, &offset);
+    printf("TERMINE\n");
+    printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
 }
