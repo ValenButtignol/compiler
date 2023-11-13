@@ -12,11 +12,9 @@ typedef struct ThreeAddressCodeList{
 
 ThreeAddressCodeList *createEmptyTAC();
 
-void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offset);
+void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offset, int* labelCounter);
 
 char* threeAddressListToString(ThreeAddressCodeList *list);
-
-char *createTemportalID(int tempNumber);
 
 void addToTAC(ThreeAddressCodeList* list,ThreeAddressCodeNode* node);
 

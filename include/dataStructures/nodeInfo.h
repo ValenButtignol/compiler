@@ -36,9 +36,19 @@ char* constExprToString(NodeInfo node);
 
 int isEmptyNode(NodeInfo node);
 
+int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode);
+
 void createTemporalNodeInfo(char* id, NodeInfo *temp, int offset);
 
-int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode);
+NodeInfo* createLabelNodeInfo(char* label, int labelNumber);
+
+char* createIDNodeInfo(char* id, int labelNumber);
+
+char* createEndThenTemporalNodeInfo(int labelNumber);
+
+char* createTemporalID(int tempNumber);
+
+
 
 /****************************** new constructors ********************************/
 

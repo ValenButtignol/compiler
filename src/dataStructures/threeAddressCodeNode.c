@@ -32,31 +32,34 @@ char *labelToString(enum TTag label){
     {
     case ADD:
         return "SUM";
-        break;
     case SUB:
         return "SUB";
-        break;
     case MUL:
         return "MUL";
-        break;
     case DIV:
         return "DIV";
-        break;
     case ASSIGNMENT:
         return "MOV";
-        break;
     case AND:
         return "AND";
-        break;
     case OR:
         return "OR";
-        break;
     case RETURN:
         return "RET";
-        break;
+    case JFALSE:
+        return "JUMP_BY_FALSE";
+    case JTRUE:
+        return "JUMP_BY_TRUE";
+    case LABEL:
+        return "LABEL";
+    case EQUALS:
+        return "EQUALS";
+    case GREATER_THAN:
+        return "GREATER_THAN";
+    case LESS_THAN:
+        return "LESS_THAN";
     default:
         return "UNDEFINED OPERATION";
-        break;
     }
 }
 

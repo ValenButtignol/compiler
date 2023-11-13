@@ -93,6 +93,27 @@ void createTemporalNodeInfo(char* id, NodeInfo *temp, int offset){
     temp->offset = offset;
 }
 
+NodeInfo* createLabelNodeInfo(char* label, int labelNumber) {
+    NodeInfo* node = newNodeInfoSimple(LABEL, 0);
+    node->id = (char*)malloc(strlen(label)+1); 
+    strcpy(node->id, createIDNodeInfo(label, labelNumber));
+    return node;
+}
+
+char* createIDNodeInfo(char* id, int number){
+    char* newId = malloc(strlen(id) + 1);
+    char* num = malloc(2);
+    strcpy(newId, id);
+    sprintf(num, "%d", number);
+    strcat(newId, num);
+    return newId;
+}
+
+char* createTemporalID(int tempNumber){
+    return createIDNodeInfo("temp", tempNumber);
+}
+
+
 int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode) {
 
     int idsComp = (firstNode->id && secondNode->id) ? strcmp(firstNode->id, secondNode->id) : 0;
