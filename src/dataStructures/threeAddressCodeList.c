@@ -5,7 +5,6 @@ extern int getOffset(void);
 
 void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offset){
     enum TTag treeTag = ast->data->tag;    
-        printf("TAG = %s\n", tagToString(ast->data->tag));
     if(isEmptyAst(*ast) || treeTag == NONETAG){
         return ;
     }    
@@ -29,16 +28,13 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
 
             *offset = *offset + 1;
 
-            // createTemporalNodeInfo(createTemportalID(*offset), EXPR_OP, ast->data, *offset);
             ThreeAddressCodeNode *node;
 
             if(isLeaf(ast->ls) && isLeaf(ast->rs)){
-                // printf("ENTRE A ESTE CASO %s\n\n", operatorToString(ast->data->operatorVar));
                 createTemporalNodeInfo(createTemportalID(*offset), ast->data, *offset);
                 node = threeAddressCodeNodeFactory(ast->data->tag, ast->data, ast->ls->data, ast->rs->data);
             }else{    
                 if(isLeaf(ast->ls) && !isLeaf(ast->rs)){
-                    // printf("ENTRE A ESTE CASO %s\n\n", operatorToString(ast->data->operatorVar));
                     createThreeAddressCodeList(ast->rs, list, offset);
                     createTemporalNodeInfo(createTemportalID(*offset), ast->data, *offset);
                     node = threeAddressCodeNodeFactory(
@@ -86,10 +82,34 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
 
     
     
-    // } else if(isMethodCall(treeTag)){
+    } else if(isMethodCallTag(treeTag)){
+        createThreeAddressCodeList(ast->ls, list, offset);
+        TAst *params = ast->ls;
+        int registerNumber = 1;
+        while(params != NULL){
+            ThreeAddressCodeNode *node;
+            NodeInfo *ni = newNodeInfoRegisterNumber(registerNumber);
+            NodeInfo *nd = params->rs->data;
+            node = threeAddressCodeNodeFactory(
+                    LOAD,
+                    nd,
+                    ni,
+                    NULL
+            );
+            addToTAC(list, node);
+            params = params->ls;
+            registerNumber++;
+        }
+        ThreeAddressCodeNode *node;
+            NodeInfo *nd = ast->rs->data;
+            node = threeAddressCodeNodeFactory(
+                    ast->data->tag,
+                    nd,
+                    NULL,
+                    NULL
+            );
+            addToTAC(list, node);
 
-    
-    
     }else if (treeTag == NONETAG) {
         return;
     }else{
@@ -104,7 +124,6 @@ char* threeAddressListToString(ThreeAddressCodeList *list){
     char *str = malloc(list->size*100);
     while(h != NULL)
     {   
-        // printf("LABL = %s\n", labelToString(h->label));
         strcat(str, threeAddressCodeNodeToString(h));
         strcat(str, "\n");
         h = h->next;
