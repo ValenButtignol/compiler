@@ -5,6 +5,8 @@
 #include "include/dataStructures/nodeInfo.h"
 #include "include/algorithms/checktypes.h"
 #include "include/dataStructures/threeAddressCodeList.h"
+#include "include/algorithms/assemblyCodeGenerator.h"
+
 extern FILE *yyin;
 extern FILE *yyout;
 extern int yyparse(void);
@@ -27,8 +29,6 @@ int main(int argc,char *argv[]) {
         freeErrorsList(errors);
     } 
     // printf("\n---------------------------------------------- \n");
-    // printAst(globalAst);
-    // printf("PARSE COMPLETE %d\n", 1);
     if (!checkTypes(globalAst, &errors)) {
         printErrors(errors);
         freeErrorsList(errors);
@@ -38,8 +38,12 @@ int main(int argc,char *argv[]) {
     ThreeAddressCodeList *list = createEmptyTAC();
 
     int offset = 10;//getOffset();
+    int labelCounter = 0;
 
-    createThreeAddressCodeList(globalAst, list, &offset);
+    printAst(globalAst);
+    createThreeAddressCodeList(globalAst, list, &offset, &labelCounter);
+    printf("PARSE COMPLETE %d\n", 1);
     printf("TERMINE\n");
     printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
+    generateAssembly(list);
 }
