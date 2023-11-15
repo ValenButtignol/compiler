@@ -211,6 +211,12 @@ int isMethodCallTag(enum TTag tag){
     return tag == METHOD_CALL; 
 }
 
+int isMethodDeclTag(enum TTag tag){
+    return tag == METHOD_DECL; 
+}
+
+
+
 int isArithmeticOrBooleanTag(enum TTag tag){
     return isBooleanOperatorTag(tag) || isArithmeticOperatorTag(tag);
 }
