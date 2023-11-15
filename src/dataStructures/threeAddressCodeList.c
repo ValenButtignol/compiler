@@ -169,28 +169,19 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
             ThreeAddressCodeNode *node;
             NodeInfo *ni = newNodeInfoRegisterNumber(registerNumber);
             NodeInfo *nd = params->rs->data;
-            node = threeAddressCodeNodeFactory(
-                    LOAD,
-                    nd,
-                    ni,
-                    NULL
-            );
+            node = threeAddressCodeNodeFactory(LOAD, nd, ni, newEmptyNodeInfo());
             addToTAC(list, node);
             params = params->ls;
             registerNumber++;
         }
+
         ThreeAddressCodeNode *node;
-            *offset = *offset + 1;
-            NodeInfo *nd = ast->rs->data;
-            NodeInfo *temp = newNodeInfoTemporal(ast->data->tag);
-            createTemporalNodeInfo(createTemporalID(*offset), temp, *offset);
-            node = threeAddressCodeNodeFactory(
-                    ast->data->tag,
-                    nd,
-                    temp,
-                    NULL
-            );
-            addToTAC(list, node);
+        *offset = *offset + 1;
+        NodeInfo *nd = ast->rs->data;
+        NodeInfo *temp = newNodeInfoTemporal(VAR);
+        createTemporalNodeInfo(createTemporalID(*offset), temp, *offset);
+        node = threeAddressCodeNodeFactory(ast->data->tag, nd, temp, newEmptyNodeInfo());
+        addToTAC(list, node);
 
     }else if (isUnaryOperatorTag(treeTag)) {
         
