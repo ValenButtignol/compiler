@@ -195,9 +195,22 @@ int isReturnTag(enum TTag tag){
     return tag ==  RETURN;
 }
 
+int isIf(enum TTag tag) {
+    return tag == IF;
+}
+
+int isIfElse(enum TTag tag) {
+    return tag == IF_ELSE;
+}
+
+int isWhile(enum TTag tag) {
+    return tag == WHILE;
+}
+
 int isMethodCallTag(enum TTag tag){
     return tag == METHOD_CALL; 
 }
+
 int isArithmeticOrBooleanTag(enum TTag tag){
     return isBooleanOperatorTag(tag) || isArithmeticOperatorTag(tag);
 }
