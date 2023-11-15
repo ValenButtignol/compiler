@@ -2,10 +2,12 @@
 #define ASSEMBLY_CODE_GENERATOR_H
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include "../dataStructures/threeAddressCodeList.h"
 #include "../dataStructures/nodeInfo.h"
 #include "../utils/enums.h"
+#include "../utils/utils.h"
 
 void generateAssembly(ThreeAddressCodeList* list);
 
@@ -49,12 +51,16 @@ void generateJumpByFalse(FILE* file, char* firstValue, char* secondValue);
 
 void generateJump(FILE* file, char* firstValue);
 
-/*
-
 void generateNegative(FILE* file, char* firstValue, char* secondValue);
 
 void generateNot(FILE* file, char* firstValue, char* secondValue);
-*/
 
+void generateLoad(FILE* file, char* firstValue, char* secondValue);
+
+void generateMethodCall(FILE* file, char* firstValue, char* secondValue);
+
+void generateMethodDecl(FILE* file, char* firstValue);
+
+void generateEndLabel(FILE* file, char* firstValue, char* secondValue);
 
 #endif
