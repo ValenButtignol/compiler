@@ -48,7 +48,6 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
     // printf("\n\n\nPRIMERO: %s\n", firstValue);
     // printf("SEGUNDO: %s\n", secondValue);
     // printf("TERCERO: %s\n\n\n", thirdValue);
-    
     switch(current->label) {
         case ADD:
             generateAdd(file, firstValue, secondValue, thirdValue);
@@ -92,15 +91,29 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
         case JFALSE:
             generateJumpByFalse(file, firstValue, secondValue);
             break;
-        /* 
         case JUMP:
             generateJump(file, firstValue);
             break;
         case NEGATIVE:
+            generateNegative(file, firstValue, secondValue);
             break;
         case NOT:
-            break; */
-
+            generateNot(file, firstValue, secondValue);
+            break; 
+        case METHOD_DECL:
+            break;
+        case METHOD_CALL:
+            printf("ID: %s\n", current->first->id);
+            printf("TAG: %s\n", tagToString(current->first->tag));
+            printf("ID2: %s\n", current->second->id);
+            printf("TAG2: %s\n", tagToString(current->second->tag));
+            generateMethodCall(file, firstValue, secondValue);
+            break;
+        case LOAD:
+            generateLoad(file, firstValue, secondValue);
+            break;
+        case END_LABEL:
+            break;
         default:
             break;
     }
@@ -116,7 +129,6 @@ void generateAdd(FILE* file, char* firstValue, char* secondValue, char* thirdVal
     fprintf(file, "    movl    %%rax, %s\n", firstValue);
     fprintf(file, "\n");
 }
-
 
 void generateSub(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
     fprintf(file, "    movl    %s, %%rax\n", secondValue);
@@ -177,7 +189,7 @@ void generateRet(FILE* file, char* firstValue) {
 char* generateValue(NodeInfo* node) {
     // printf("ID: %s\n", node->id);
     // printf("VALUE: %d\n", ((int *)node->value)!=NULL?*((int *)node->value):-9999);
-    // // printf("VALUE: %lu\n", (uintptr_t)node->value);
+    // printf("VALUE: %lu\n", (uintptr_t)node->value);
     // printf("TAG: %s\n",tagToString(node->tag));
     // printf("OFFSET: %d\n\n", node->offset);
     // printf("TYPE: %d\n\n",  node->type);
@@ -191,7 +203,11 @@ char* generateValue(NodeInfo* node) {
         sprintf(result, "$%d", *((int*)node->value));
     } else if (node->tag == NONETAG) {
         sprintf(result, "%s" ,"");
-    } else if (node->tag == LABEL){
+    } else if (node->tag == LABEL) {
+        sprintf(result, "%s", node->id);
+    } else if (node->tag == LOAD) {
+        sprintf(result, "%d", node->lineNumber);
+    } else if(node->tag == METHOD_DECL){
         sprintf(result, "%s", node->id);
     } else {
         sprintf(result, "-%d(%%rbp)", node->offset*4);
@@ -206,7 +222,7 @@ void generatePrint(FILE* file, char* valueToPrint) {
 }
 
 void generateLabel(FILE* file, char* firstValue) {
-    fprintf(file, ".%s:\n", firstValue);
+    fprintf(file, "%s:\n", firstValue);
 }
 
 void generateEquals(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
@@ -269,17 +285,33 @@ void generateJump(FILE* file, char* firstValue) {
 }
 
 void generateNegative(FILE* file, char* firstValue, char* secondValue) {
-
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    negl    %%rax\n");
+    fprintf(file, "    movl    %%rax, %s\n", firstValue);
+    fprintf(file, "\n");
 }
-
-/*
-void generateJumpByTrue(FILE* file, char* firstValue) {
-
-}
-
-
 
 void generateNot(FILE* file, char* firstValue, char* secondValue) {
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    notl    %%rax\n");
+    fprintf(file, "    movl    %%rax, %s\n", firstValue);
+    fprintf(file, "\n");
+}
+
+void generateLoad(FILE* file, char* firstValue, char* secondValue) {
+    fprintf(file, "    movl    %s, %s\n", firstValue, getParamRegister(secondValue));
+    fprintf(file, "\n");
+}
+
+void generateMethodCall(FILE* file, char* firstValue, char* secondValue) {
+    fprintf(file, "    call    %s, %s\n", firstValue, secondValue);
+    fprintf(file, "\n");
+}
+
+void generateMethodDecl(FILE* file, char* firstValue) {
 
 }
-*/
+
+void generateEndLabel(FILE* file, char* firstValue, char* secondValue) {
+
+}

@@ -81,16 +81,12 @@ char *labelToString(enum TTag label){
         return "LESS_THAN";
     case LOAD:
         return "LOAD";
-        break;
     case METHOD_CALL:
         return "CALL";
-        break;
     case METHOD_DECL:
         return "LABEL_START";
-        break;
     case END_LABEL:
         return "LABEL_END";
-        break;
     default:
         return "UNDEFINED OPERATION";
     }
