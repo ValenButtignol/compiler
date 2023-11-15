@@ -1,16 +1,26 @@
 #include "../../include/dataStructures/threeAddressCodeNode.h"
 
-char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
-    
-    if(node->first != NULL){
-        char *str = malloc(50);
-        strcat(str, labelToString(node->label));
+char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){     
+    char *str = malloc(50);
+    strcat(str, labelToString(node->label));
+    strcat(str, " ");
+    if(node->label == LOAD){
+            if(node->first->id != NULL) strcat(str, node->first->id);
+            if(node->first->value != NULL) strcat(str, valueToString(node->first)); 
+            strcat(str, " ");
+            sprintf(str + strlen(str), "%d", node->second->lineNumber);
+            strcat(str, " ");
+    }else if(node->label == METHOD_CALL){
+            
+            strcat(str, node->first->id);
+            strcat(str, " ");
+    }
+    else if(node->first != NULL){
+        if(node->first->tag != PARAM){
+            strcat(str, node->first->id);
+        }
         strcat(str, " ");
-        strcat(str, node->first->id);
-        strcat(str, " ");
-        
-        if(node->label != RETURN){
-            // printf("ID: %s\n", node->second);
+        if(node->label != RETURN && node->label != LOAD){
             if(node->second->value != NULL){
                 strcat(str, valueToString(node->second));
             }
@@ -19,12 +29,10 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
             if(node->label != ASSIGNMENT){
                 if(node->third->value != NULL) strcat(str, valueToString(node->third));
                 else strcat(str, node->third->id);
-                printf("ME COY A RMP %s\n", str);
             }
         }
-        return str;
     }
-    return "";
+    return str;
 }
 
 char *labelToString(enum TTag label){
@@ -53,6 +61,12 @@ char *labelToString(enum TTag label){
         break;
     case RETURN:
         return "RET";
+        break;
+    case LOAD:
+        return "LOAD";
+        break;
+    case METHOD_CALL:
+        return "CALL";
         break;
     default:
         return "UNDEFINED OPERATION";
