@@ -163,7 +163,7 @@ NodeInfo* newNodeInfoLiteral(void* value, enum TType type, enum TTag tag, int li
 }
 
 NodeInfo* newNodeInfoRegisterNumber(int registerNumber){
-    NodeInfo* result = newNodeInfoSimple(NONETAG, -1);
+    NodeInfo* result = newNodeInfoSimple(LOAD, 0);
     result->lineNumber = registerNumber;
     return result;
 }
