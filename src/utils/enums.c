@@ -81,7 +81,6 @@ char *tagToString(enum TTag tag) {
         return "ASSIGNMENT";
     case 11:
         return "IF";
-
     case 12:
         return "IF_ELSE";
     case 13:
@@ -117,6 +116,16 @@ char *tagToString(enum TTag tag) {
     case 28:
         return "CONST_VALUE";
     case 29:
+        return "LABEL";
+    case 30:
+        return "JFALSE";
+    case 31:
+        return "JUMP";
+    case 32:
+        return "LOAD";
+    case 33:
+        return "END_LABEL";
+    case 34:
         return "NONETAG";
     default:
         return "NULL";
