@@ -15,7 +15,7 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
         strcat(str, " ");
         strcat(str, node->second->id);
         strcat(str, " ");
-    }else if(isUnaryOperatorTag(node->label)){
+    }else if(isUnaryOperatorTag(node->label) || node->label == ASSIGNMENT){
         strcat(str, node->first->id);
         strcat(str, " ");
         if(node->second->id != NULL) strcat(str, node->second->id);
