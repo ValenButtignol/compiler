@@ -50,30 +50,54 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
     // printf("TERCERO: %s\n\n\n", thirdValue);
     
     switch(current->label) {
-        // case SUM:
-        //     generateSum(file, firstValue, secondValue, thirdValue);
-        //     break;
-        // case SUB:
-        //     generateSub(file, firstValue, secondValue, thirdValue);
-        //     break;
-        // case MUL:
-        //     generateMul(file, firstValue, secondValue, thirdValue);
-        //     break;
-        // case DIV:
-        //     generateDiv(file, firstValue, secondValue, thirdValue);
-        //     break;
-        // case AND:
-        //     generateAnd(file, firstValue, secondValue, thirdValue);
-        //     break;
-        // case OR:
-        //     generateOr(file,  firstValue, secondValue, thirdValue);
-        //     break;
-        // case MOV:
-        //     generateMov(file, firstValue, secondValue);
-        //     break;
-        // case RET:
-        //     generateRet(file, firstValue);
-        //     break;
+        case ADD:
+            generateAdd(file, firstValue, secondValue, thirdValue);
+            break;
+        case SUB:
+            generateSub(file, firstValue, secondValue, thirdValue);
+            break;
+        case MUL:
+            generateMul(file, firstValue, secondValue, thirdValue);
+            break;
+        case DIV:
+            generateDiv(file, firstValue, secondValue, thirdValue);
+            break;
+        case AND:
+            generateAnd(file, firstValue, secondValue, thirdValue);
+            break;
+        case OR:
+            generateOr(file,  firstValue, secondValue, thirdValue);
+            break;
+        case ASSIGNMENT:
+            generateMov(file, firstValue, secondValue);
+            break;
+        case RETURN:
+            generateRet(file, firstValue);
+            break;
+        case LABEL:
+            generateLabel(file, firstValue);
+            break;
+        case EQUALS:
+            generateEquals(file, firstValue, secondValue, thirdValue);
+            break;
+        case GREATER_THAN:
+            generateGreaterThan(file, firstValue, secondValue, thirdValue);
+            break;
+        case LESS_THAN:
+            generateLessThan(file, firstValue, secondValue, thirdValue);
+            break;
+        /* 
+        case JFALSE:
+            break;
+        case JTRUE:
+            break;
+        case MOD:
+            break;
+        case NEGATIVE:
+            break;
+        case NOT:
+            break; */
+
         default:
             break;
     }
@@ -83,64 +107,64 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
     free(thirdValue);
 }
 
-void generateSum(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%eax\n", secondValue);
-    fprintf(file, "    addl    %s, %%eax\n", thirdValue);
-    fprintf(file, "    movl    %%eax, %s\n", firstValue);
+void generateAdd(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    addl    %s, %%rax\n", thirdValue);
+    fprintf(file, "    movl    %%rax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 
 void generateSub(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%eax\n", secondValue);
-    fprintf(file, "    subl    %s, %%eax\n", thirdValue);
-    fprintf(file, "    movl    %%eax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    subl    %s, %%rax\n", thirdValue);
+    fprintf(file, "    movl    %%rax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateMul(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%eax\n", secondValue);
-    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
-    fprintf(file, "    imul    %%eax, %%ebx\n");
-    fprintf(file, "    movl    %%ebx, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
+    fprintf(file, "    imul    %%rax, %%rbx\n");
+    fprintf(file, "    movl    %%rbx, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateDiv(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%eax\n", secondValue);  // Dividend
-    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);   // Divisor
-    fprintf(file, "    xor     %%edx, %%edx\n");            // Clear EDX to prepare for the result
-    fprintf(file, "    div     %%ebx\n");                   // Divide EAX by EBX, quotient in EAX, remainder in EDX
-    fprintf(file, "    movl    %%eax, %s\n", firstValue);   // Store value
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);  // Dividend
+    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);   // Divisor
+    fprintf(file, "    xor     %%rdx, %%rdx\n");            // Clear rdx to prepare for the result
+    fprintf(file, "    div     %%rbx\n");                   // Divide rax by rbx, quotient in rax, remainder in rdx
+    fprintf(file, "    movl    %%rax, %s\n", firstValue);   // Store value
     fprintf(file, "\n");
 }
 
 void generateAnd(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%eax\n", secondValue);
-    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
-    fprintf(file, "    andl    %%ebx, %%eax\n");
-    fprintf(file, "    movl    %%eax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
+    fprintf(file, "    andl    %%rbx, %%rax\n");
+    fprintf(file, "    movl    %%rax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateOr(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%eax\n", secondValue);
-    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
-    fprintf(file, "    orl     %%ebx, %%eax\n");
-    fprintf(file, "    movl    %%eax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
+    fprintf(file, "    orl     %%rbx, %%rax\n");
+    fprintf(file, "    movl    %%rax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateMov(FILE* file, char* firstValue, char* secondValue) {
-    fprintf(file, "    movl    %s, %%eax\n", secondValue);
-    fprintf(file, "    movl    %%eax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    movl    %%rax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateRet(FILE* file, char* firstValue) {
     generatePrint(file, firstValue);
 
-    fprintf(file, "    movl    %s, %%eax\n", firstValue);
+    fprintf(file, "    movl    %s, %%rax\n", firstValue);
     // fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
     // fprintf(file, "    ret\n");
     fprintf(file, "\n");
@@ -164,6 +188,8 @@ char* generateValue(NodeInfo* node) {
         sprintf(result, "$%d", *((int*)node->value));
     } else if (node->tag == NONETAG) {
         sprintf(result, "%s" ,"");
+    } else if (node->tag == LABEL){
+        sprintf(result, "%s", node->id);
     } else {
         sprintf(result, "-%d(%%rbp)", node->offset*4);
     }
@@ -171,7 +197,81 @@ char* generateValue(NodeInfo* node) {
 }
 
 void generatePrint(FILE* file, char* valueToPrint) {
-    fprintf(file, "    movl    %s, %%edi\n", valueToPrint);
+    fprintf(file, "    movl    %s, %%rdi\n", valueToPrint);
     fprintf(file, "    call    print\n");
     fprintf(file, "\n");
 }
+
+void generateLabel(FILE* file, char* firstValue) {
+    fprintf(file, ".%s:\n", firstValue);
+}
+
+void generateEquals(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
+    
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
+    fprintf(file, "    cmp     %%rax, %%rbx\n");
+    fprintf(file, "    movl    $0, %%rbx\n");
+    fprintf(file, "    movl    $1, %%rax\n");
+    fprintf(file, "    cmove   %%rax %%rbx\n");
+    fprintf(file, "    movl    %%rbx, %s\n", firstValue);
+    fprintf(file, "\n");
+    
+}
+
+void generateGreaterThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
+    
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
+    fprintf(file, "    cmp     %%rax, %%rbx\n");
+    fprintf(file, "    movl    $0, %%rbx\n");
+    fprintf(file, "    movl    $1, %%rax\n");
+    fprintf(file, "    cmovg   %%rax %%rbx\n");
+    fprintf(file, "    movl    %%rbx, %s\n", firstValue);
+    fprintf(file, "\n");
+    
+}
+
+void generateLessThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
+    
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);
+    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
+    fprintf(file, "    cmp     %%rax, %%rbx\n");
+    fprintf(file, "    movl    $0, %%rbx\n");
+    fprintf(file, "    movl    $1, %%rax\n");
+    fprintf(file, "    cmovl   %%rax %%rbx\n");
+    fprintf(file, "    movl    %%rbx, %s\n", firstValue);
+    fprintf(file, "\n");
+    
+}
+
+/*
+
+void generateJumpByFalse(FILE* file, char* firstValue, char* secondValue) {
+
+}
+
+void generateJumpByTrue(FILE* file, char* firstValue, char* secondValue) {
+
+}
+
+void generateGreaterThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
+
+}
+
+void generateLesserThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
+
+}
+
+void generateMod(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
+
+}
+
+void generateNegative(FILE* file, char* firstValue, char* secondValue) {
+
+}
+
+void generateNot(FILE* file, char* firstValue, char* secondValue) {
+
+}
+*/

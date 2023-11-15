@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "../dataStructures/threeAddressCodeList.h"
 #include "../dataStructures/nodeInfo.h"
+#include "../utils/enums.h"
 
 void generateAssembly(ThreeAddressCodeList* list);
 
@@ -14,7 +15,7 @@ void generateHeader(FILE* file, ThreeAddressCodeList* list);
 
 void instructionFactory(FILE* file, ThreeAddressCodeNode* current);
 
-void generateSum(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
+void generateAdd(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
 
 void generateSub(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
 
@@ -33,5 +34,27 @@ void generateRet(FILE* file, char* firstValue);
 void generatePrint(FILE* file, char* valueToPrint);
 
 char* generateValue(NodeInfo* value);
+
+void generateLabel(FILE* file, char* firstValue);
+
+void generateEquals(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
+
+void generateGreaterThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
+
+void generateLessThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
+
+/*
+
+void generateJumpByFalse(FILE* file, char* firstValue, char* secondValue);
+
+void generateJumpByTrue(FILE* file, char* firstValue, char* secondValue);
+
+void generateMod(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
+
+void generateNegative(FILE* file, char* firstValue, char* secondValue);
+
+void generateNot(FILE* file, char* firstValue, char* secondValue);
+*/
+
 
 #endif
