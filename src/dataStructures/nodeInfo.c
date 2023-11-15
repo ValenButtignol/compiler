@@ -167,3 +167,10 @@ NodeInfo* newNodeInfoRegisterNumber(int registerNumber){
     result->lineNumber = registerNumber;
     return result;
 }
+
+NodeInfo* newNodeInfoTemporal(enum TTag tag) {
+    NodeInfo* result = newNodeInfoSimple(tag, 0);
+    result->id = (char*)malloc(strlen(" ")*sizeof(char)); 
+    strcpy(result->id, " ");
+    return result;
+}

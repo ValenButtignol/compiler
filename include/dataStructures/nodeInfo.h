@@ -61,4 +61,6 @@ NodeInfo* newNodeInfoDeclaration(char* id, enum TType type, enum TTag tag, int l
 NodeInfo* newNodeInfoLiteral(void* value, enum TType type, enum TTag tag, int lineNumber);
 
 NodeInfo* newNodeInfoRegisterNumber(int registerNumber);
+
+NodeInfo* newNodeInfoTemporal(enum TTag tag);
 #endif
