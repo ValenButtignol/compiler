@@ -57,7 +57,7 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
                 }
             }
             addToTAC(list, node);
-    } else if (isReturnTag(treeTag) || isUnaryOperatorTag(treeTag)) {
+    } else if (isReturnTag(treeTag)) {
         ThreeAddressCodeNode *node;
         if(isLeaf(ast->ls)){
             node = threeAddressCodeNodeFactory(treeTag, ast->ls->data, 
@@ -192,6 +192,20 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
             );
             addToTAC(list, node);
 
+    }else if (isUnaryOperatorTag(treeTag)) {
+        
+        
+        ThreeAddressCodeNode *node;
+        *offset = *offset + 1;
+        createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
+        
+        if(isLeaf(ast->ls)){
+            node = threeAddressCodeNodeFactory(treeTag, ast->data, ast->ls->data, newEmptyNodeInfo());
+        }else{
+            createThreeAddressCodeList(ast->ls, list, offset, labelCounter);
+            node = threeAddressCodeNodeFactory(treeTag, ast->data, getFromTAC(list, list->size)->first, newEmptyNodeInfo());
+        }
+        addToTAC(list, node);
     }else if (treeTag == NONETAG) {
         return;
     }else{

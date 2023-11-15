@@ -5,17 +5,22 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
     strcat(str, labelToString(node->label));
     strcat(str, " ");
     if(node->label == LOAD){
-            if(node->first->id != NULL) strcat(str, node->first->id);
-            if(node->first->value != NULL) strcat(str, valueToString(node->first)); 
-            strcat(str, " ");
-            sprintf(str + strlen(str), "%d", node->second->lineNumber);
-            strcat(str, " ");
+        if(node->first->id != NULL) strcat(str, node->first->id);
+        if(node->first->value != NULL) strcat(str, valueToString(node->first)); 
+        strcat(str, " ");
+        sprintf(str + strlen(str), "%d", node->second->lineNumber);
+        strcat(str, " ");
     }else if(node->label == METHOD_CALL){
-            
-            strcat(str, node->first->id);
-            strcat(str, " ");
-            strcat(str, node->second->id);
-            strcat(str, " ");
+        strcat(str, node->first->id);
+        strcat(str, " ");
+        strcat(str, node->second->id);
+        strcat(str, " ");
+    }else if(isUnaryOperatorTag(node->label)){
+        strcat(str, node->first->id);
+        strcat(str, " ");
+        if(node->second->id != NULL) strcat(str, node->second->id);
+        if(node->second->value != NULL) strcat(str, valueToString(node->second));
+        strcat(str, " ");
     }
     else if(node->first != NULL){
         if(node->first->tag != PARAM){
