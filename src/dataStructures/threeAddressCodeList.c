@@ -62,11 +62,11 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
     } else if (isReturnTag(treeTag) || isUnaryOperatorTag(treeTag)) {
         ThreeAddressCodeNode *node;
         if(isLeaf(ast->ls)){
-            node = threeAddressCodeNodeFactory(RETURN, ast->ls->data, 
+            node = threeAddressCodeNodeFactory(treeTag, ast->ls->data, 
                                                     newEmptyNodeInfo(), newEmptyNodeInfo());
         }else{
             createThreeAddressCodeList(ast->ls, list, offset, labelCounter);
-            node = threeAddressCodeNodeFactory(RETURN, getFromTAC(list, list->size)->first, 
+            node = threeAddressCodeNodeFactory(treeTag, getFromTAC(list, list->size)->first, 
                                                     newEmptyNodeInfo(), newEmptyNodeInfo());
         }
         addToTAC(list, node);

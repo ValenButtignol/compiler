@@ -48,6 +48,10 @@ char *labelToString(enum TTag label){
         return "OR";
     case RETURN:
         return "RET";
+    case NEGATIVE:
+        return "NEG";
+    case NOT:
+        return "NOT";
     case JFALSE:
         return "JUMP_BY_FALSE";
     case JTRUE:

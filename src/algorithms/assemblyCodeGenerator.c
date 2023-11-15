@@ -92,10 +92,10 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
         case JFALSE:
             generateJumpByFalse(file, firstValue, secondValue);
             break;
+        /* 
         case JUMP:
             generateJump(file, firstValue);
             break;
-        /* 
         case NEGATIVE:
             break;
         case NOT:
@@ -267,17 +267,17 @@ void generateJump(FILE* file, char* firstValue) {
     fprintf(file, "    jmp    %s\n", firstValue);
     fprintf(file, "\n");
 }
+
+void generateNegative(FILE* file, char* firstValue, char* secondValue) {
+
+}
+
 /*
-
-
 void generateJumpByTrue(FILE* file, char* firstValue) {
 
 }
 
 
-void generateNegative(FILE* file, char* firstValue, char* secondValue) {
-
-}
 
 void generateNot(FILE* file, char* firstValue, char* secondValue) {
 
