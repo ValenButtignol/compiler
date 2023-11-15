@@ -59,8 +59,10 @@ void generateLoad(FILE* file, char* firstValue, char* secondValue);
 
 void generateMethodCall(FILE* file, char* firstValue, char* secondValue);
 
-void generateMethodDecl(FILE* file, char* firstValue);
+void generateMethodDecl(FILE* file, NodeInfo* method);
 
-void generateEndLabel(FILE* file, char* firstValue, char* secondValue);
+void unloadRegisters(FILE* file, NodeInfo* params);
+
+void generateEndLabel(FILE* file);
 
 #endif

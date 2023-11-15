@@ -10,16 +10,12 @@ void generateAssembly(ThreeAddressCodeList* list) {
     }
 
     generateHeader(file, list);
-    generatePrologue(file, list);
     ThreeAddressCodeNode* current = list->head->next;
 
     while (current != NULL) {
         instructionFactory(file, current);
         current = current->next;
     }
-
-    fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
-    fprintf(file, "    ret\n");
 
     fclose(file);
 }
@@ -34,7 +30,6 @@ void generateHeader(FILE* file, ThreeAddressCodeList* list) {     // Probably th
     fprintf(file, "    .text\n");
     fprintf(file, "    .globl  main\n");
     fprintf(file, "    .type   main, @function\n");
-    fprintf(file, "main:\n");
 }
 
 
@@ -101,18 +96,16 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
             generateNot(file, firstValue, secondValue);
             break; 
         case METHOD_DECL:
+            generateMethodDecl(file, current->first);
             break;
         case METHOD_CALL:
-            printf("ID: %s\n", current->first->id);
-            printf("TAG: %s\n", tagToString(current->first->tag));
-            printf("ID2: %s\n", current->second->id);
-            printf("TAG2: %s\n", tagToString(current->second->tag));
             generateMethodCall(file, firstValue, secondValue);
             break;
         case LOAD:
             generateLoad(file, firstValue, secondValue);
             break;
         case END_LABEL:
+            generateEndLabel(file);
             break;
         default:
             break;
@@ -180,8 +173,6 @@ void generateRet(FILE* file, char* firstValue) {
     generatePrint(file, firstValue);
 
     fprintf(file, "    movl    %s, %%rax\n", firstValue);
-    // fprintf(file, "    leave\n");       // TODO: This is not correct, we need to generate the epilogue
-    // fprintf(file, "    ret\n");
     fprintf(file, "\n");
 
 }
@@ -189,7 +180,6 @@ void generateRet(FILE* file, char* firstValue) {
 char* generateValue(NodeInfo* node) {
     // printf("ID: %s\n", node->id);
     // printf("VALUE: %d\n", ((int *)node->value)!=NULL?*((int *)node->value):-9999);
-    // printf("VALUE: %lu\n", (uintptr_t)node->value);
     // printf("TAG: %s\n",tagToString(node->tag));
     // printf("OFFSET: %d\n\n", node->offset);
     // printf("TYPE: %d\n\n",  node->type);
@@ -308,10 +298,29 @@ void generateMethodCall(FILE* file, char* firstValue, char* secondValue) {
     fprintf(file, "\n");
 }
 
-void generateMethodDecl(FILE* file, char* firstValue) {
-
+void generateMethodDecl(FILE* file, NodeInfo* method) {
+    fprintf(file, "%s:\n", method->id);
+    fprintf(file, "    pushq   %%rbp\n");
+    fprintf(file, "    movq    %%rsp, %%rbp\n");
+    fprintf(file, "    subq    $64, %%rsp\n");
+    fprintf(file, "\n");
+    unloadRegisters(file, method);
 }
 
-void generateEndLabel(FILE* file, char* firstValue, char* secondValue) {
+void unloadRegisters(FILE* file, NodeInfo* method) {
+    NodeInfo* current = method->nextParams;
+    char* offsetString = (char*)malloc(2);
+    int offset = 1;
+    while (current != NULL) {
+        sprintf(offsetString, "%d", offset);
+        fprintf(file, "    movl    %s, -%d(%%rbp)\n", getParamRegister(offsetString), offset*4);
+        current = current->nextParams;
+        offset++;
+    }
+    
+}
 
+void generateEndLabel(FILE* file) {
+    fprintf(file, "    leave\n");
+    fprintf(file, "    ret\n");
 }
