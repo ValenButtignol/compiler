@@ -14,6 +14,8 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
             
             strcat(str, node->first->id);
             strcat(str, " ");
+            strcat(str, node->second->id);
+            strcat(str, " ");
     }
     else if(node->first != NULL){
         if(node->first->tag != PARAM){
@@ -56,8 +58,8 @@ char *labelToString(enum TTag label){
         return "RET";
     case JFALSE:
         return "JUMP_BY_FALSE";
-    case JTRUE:
-        return "JUMP_BY_TRUE";
+    case JUMP:
+        return "JUMP";
     case LABEL:
         return "LABEL";
     case EQUALS:
@@ -71,6 +73,12 @@ char *labelToString(enum TTag label){
         break;
     case METHOD_CALL:
         return "CALL";
+        break;
+    case METHOD_DECL:
+        return "LABEL_START";
+        break;
+    case END_LABEL:
+        return "LABEL_END";
         break;
     default:
         return "UNDEFINED OPERATION";

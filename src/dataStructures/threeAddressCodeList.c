@@ -31,7 +31,7 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
             ThreeAddressCodeNode *node;
 
             if(isLeaf(ast->ls) && isLeaf(ast->rs)){
-                createTemporalNodeInfo(createTemportalID(*offset), ast->data, *offset);
+                createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
                 createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
                 node = threeAddressCodeNodeFactory(ast->data->tag, ast->data, ast->ls->data, ast->rs->data);
             }else{    
@@ -101,7 +101,7 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         // THEN block
         createThreeAddressCodeList(ast->rs->ls, list, offset, labelCounter);
         
-        ThreeAddressCodeNode *jumpThenBlock = threeAddressCodeNodeFactory(JTRUE, condition, endElse, newEmptyNodeInfo());
+        ThreeAddressCodeNode *jumpThenBlock = threeAddressCodeNodeFactory(JUMP, endElse, newEmptyNodeInfo(), newEmptyNodeInfo());
         addToTAC(list, jumpThenBlock);
 
         ThreeAddressCodeNode *endThenTAC = threeAddressCodeNodeFactory(endThen->tag, endThen, newEmptyNodeInfo(), newEmptyNodeInfo());
@@ -118,14 +118,15 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         *labelCounter = *labelCounter + 1;
         NodeInfo* endWhile = createLabelNodeInfo("endwhile", *labelCounter);
 
+        // Write beginwhile label.
+        ThreeAddressCodeNode *beginWhileTAC = threeAddressCodeNodeFactory(beginWhile->tag, beginWhile, newEmptyNodeInfo(), newEmptyNodeInfo());
+        addToTAC(list, beginWhileTAC);
+
         // Reduce cond.
         createThreeAddressCodeList(ast->ls, list, offset, labelCounter);
         //Get cond generated
         NodeInfo* condition = getFromTAC(list, list->size)->first;
         
-        // Write beginwhile label.
-        ThreeAddressCodeNode *beginWhileTAC = threeAddressCodeNodeFactory(beginWhile->tag, beginWhile, newEmptyNodeInfo(), newEmptyNodeInfo());
-        addToTAC(list, beginWhileTAC);
 
         // Jump by false to endWhile.
         ThreeAddressCodeNode *jumpCond = threeAddressCodeNodeFactory(JFALSE, condition, endWhile, newEmptyNodeInfo());
@@ -135,15 +136,22 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         createThreeAddressCodeList(ast->rs, list, offset, labelCounter);
         
         // Jump by true to beginWhile.
-        ThreeAddressCodeNode *iterationCond = threeAddressCodeNodeFactory(JTRUE, condition, beginWhile, newEmptyNodeInfo());
+        ThreeAddressCodeNode *iterationCond = threeAddressCodeNodeFactory(JUMP, beginWhile, newEmptyNodeInfo(), newEmptyNodeInfo());
         addToTAC(list, iterationCond);
 
         ThreeAddressCodeNode *endWhileTAC = threeAddressCodeNodeFactory(endWhile->tag, endWhile, newEmptyNodeInfo(), newEmptyNodeInfo());
         addToTAC(list, endWhileTAC);
     
     
-    // } else if(isMethodDecl(treeTag)){
-        // hacer prólogo con un push del ebp, restando el máximo offset para guardar el espacio al que puede acceder el nuevo frame. El máximo offset debería estar calculado en el nodo del método.
+    } else if(isMethodDeclTag(treeTag)){
+        // Write beginwhile label.
+        ThreeAddressCodeNode *beginFunction = threeAddressCodeNodeFactory(ast->data->tag, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo());
+        addToTAC(list, beginFunction);
+        createThreeAddressCodeList(ast->rs, list, offset, labelCounter);
+        ThreeAddressCodeNode *endFunction = threeAddressCodeNodeFactory(END_LABEL, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo());
+        addToTAC(list, endFunction);
+
+
 
         // generar un temporal por cada parametro, y asignarles los valores de cada registro de activación. (los cargados por el "load").
         
@@ -154,7 +162,7 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
     
     
     } else if(isMethodCallTag(treeTag)){
-        createThreeAddressCodeList(ast->ls, list, offset);
+        createThreeAddressCodeList(ast->ls, list, offset, labelCounter);
         TAst *params = ast->ls;
         int registerNumber = 1;
         while(params != NULL){
@@ -172,11 +180,14 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
             registerNumber++;
         }
         ThreeAddressCodeNode *node;
+            *offset = *offset + 1;
             NodeInfo *nd = ast->rs->data;
+            NodeInfo *temp = newNodeInfoTemporal(ast->data->tag);
+            createTemporalNodeInfo(createTemporalID(*offset), temp, *offset);
             node = threeAddressCodeNodeFactory(
                     ast->data->tag,
                     nd,
-                    NULL,
+                    temp,
                     NULL
             );
             addToTAC(list, node);
