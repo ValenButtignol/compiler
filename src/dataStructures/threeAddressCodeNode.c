@@ -38,6 +38,8 @@ char *labelToString(enum TTag label){
         return "MUL";
     case DIV:
         return "DIV";
+    case MOD:
+        return "MOD";
     case ASSIGNMENT:
         return "MOV";
     case AND:

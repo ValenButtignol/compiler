@@ -86,13 +86,16 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
         case LESS_THAN:
             generateLessThan(file, firstValue, secondValue, thirdValue);
             break;
-        /* 
-        case JFALSE:
-            break;
-        case JTRUE:
-            break;
         case MOD:
+            generateMod(file, firstValue, secondValue, thirdValue);
             break;
+        case JFALSE:
+            generateJumpByFalse(file, firstValue, secondValue);
+            break;
+        case JUMP:
+            generateJump(file, firstValue);
+            break;
+        /* 
         case NEGATIVE:
             break;
         case NOT:
@@ -134,7 +137,7 @@ void generateDiv(FILE* file, char* firstValue, char* secondValue, char* thirdVal
     fprintf(file, "    movl    %s, %%rax\n", secondValue);  // Dividend
     fprintf(file, "    movl    %s, %%rbx\n", thirdValue);   // Divisor
     fprintf(file, "    xor     %%rdx, %%rdx\n");            // Clear rdx to prepare for the result
-    fprintf(file, "    div     %%rbx\n");                   // Divide rax by rbx, quotient in rax, remainder in rdx
+    fprintf(file, "    idiv    %%rbx\n");                   // Divide rax by rbx, quotient in rax, remainder in rdx
     fprintf(file, "    movl    %%rax, %s\n", firstValue);   // Store value
     fprintf(file, "\n");
 }
@@ -245,27 +248,32 @@ void generateLessThan(FILE* file, char* firstValue, char* secondValue, char* thi
     
 }
 
-/*
+void generateMod(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
+    fprintf(file, "    movl    %s, %%rax\n", secondValue);  // Dividend
+    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);   // Divisor
+    fprintf(file, "    xor     %%rdx, %%rdx\n");            // Clear rdx to prepare for the result
+    fprintf(file, "    idiv    %%rbx\n");                   // Divide rax by rbx, quotient in rax, remainder in rdx
+    fprintf(file, "    movl    %%rdx, %s\n", firstValue);   // Store value
+    fprintf(file, "\n");
+}
 
 void generateJumpByFalse(FILE* file, char* firstValue, char* secondValue) {
+    fprintf(file, "    cmp    $0, %s\n", firstValue);
+    fprintf(file, "    jne    %s\n", secondValue);
+    fprintf(file, "\n");
+}
+
+void generateJump(FILE* file, char* firstValue) {
+    fprintf(file, "    jmp    %s\n", firstValue);
+    fprintf(file, "\n");
+}
+/*
+
+
+void generateJumpByTrue(FILE* file, char* firstValue) {
 
 }
 
-void generateJumpByTrue(FILE* file, char* firstValue, char* secondValue) {
-
-}
-
-void generateGreaterThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-
-}
-
-void generateLesserThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-
-}
-
-void generateMod(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-
-}
 
 void generateNegative(FILE* file, char* firstValue, char* secondValue) {
 

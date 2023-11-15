@@ -43,13 +43,13 @@ void generateGreaterThan(FILE* file, char* firstValue, char* secondValue, char* 
 
 void generateLessThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
 
-/*
+void generateMod(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
 
 void generateJumpByFalse(FILE* file, char* firstValue, char* secondValue);
 
-void generateJumpByTrue(FILE* file, char* firstValue, char* secondValue);
+void generateJump(FILE* file, char* firstValue);
 
-void generateMod(FILE* file, char* firstValue, char* secondValue, char* thirdValue);
+/*
 
 void generateNegative(FILE* file, char* firstValue, char* secondValue);
 
