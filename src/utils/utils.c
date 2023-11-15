@@ -66,3 +66,17 @@ enum TType getAstType(TAst* ast) {
     return lsType;
 
 }
+
+char* getParamRegister(char* paramRegister) {
+    char* result = malloc(5);
+    strcpy(paramRegister, "");
+    if (strcmp(paramRegister, "1") == 0) {
+        strcpy(result, "%rdi");
+    } else if (strcmp(paramRegister, "2") == 0) {
+    } else if (strcmp(paramRegister, "3") == 0) {
+    } else if (strcmp(paramRegister, "4") == 0) {
+    } else if (strcmp(paramRegister, "5") == 0) {
+    } else if (strcmp(paramRegister, "6") == 0) {
+    }
+    return result;
+}
