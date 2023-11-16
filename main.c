@@ -23,15 +23,15 @@ int main(int argc,char *argv[]) {
     TAst* globalAst = getGlobalAst();
     ErrorNode* errors = getErrors();
     if (errors != NULL) {
-        // printf("ERRORS:\n");
-        // printf("---------------------------------------------:\n");
         printErrors(errors);
         freeErrorsList(errors);
+        exit(EXIT_FAILURE);
     } 
     // printf("\n---------------------------------------------- \n");
     if (!checkTypes(globalAst, &errors)) {
         printErrors(errors);
         freeErrorsList(errors);
+        exit(EXIT_FAILURE);
     }
     printf("CHEACK TYPES COMPLETE %d\n", 1);
 
@@ -40,10 +40,10 @@ int main(int argc,char *argv[]) {
     int offset = 10;//getOffset();
     int labelCounter = 0;
 
-    printAst(globalAst);
+    // printAst(globalAst);
     createThreeAddressCodeList(globalAst, list, &offset, &labelCounter);
     printf("PARSE COMPLETE %d\n", 1);
     printf("TERMINE\n");
-    printf("\n--------------------------TAC--------------------------\n%s------------------------------------\n",threeAddressListToString(list));
+    printf("\n--------------------------TAC--------------------------\n%s--------------------------------------------------------\n",threeAddressListToString(list));
     generateAssembly(list);
 }

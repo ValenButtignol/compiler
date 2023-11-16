@@ -19,7 +19,6 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
 
             createThreeAddressCodeList(ast->rs, list, offset, labelCounter);
             createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
-
             ThreeAddressCodeNode *node = 
             threeAddressCodeNodeFactory(ASSIGNMENT, ast->ls->data, ast->data, newEmptyNodeInfo());
             addToTAC(list, node);
