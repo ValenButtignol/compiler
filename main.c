@@ -5,6 +5,7 @@
 #include "include/dataStructures/nodeInfo.h"
 #include "include/algorithms/checktypes.h"
 #include "include/dataStructures/threeAddressCodeList.h"
+#include "include/dataStructures/nodeInfoStack.h"
 #include "include/algorithms/assemblyCodeGenerator.h"
 
 extern FILE *yyin;
@@ -41,7 +42,8 @@ int main(int argc,char *argv[]) {
     int labelCounter = 0;
 
     // printAst(globalAst);
-    createThreeAddressCodeList(globalAst, list, &offset, &labelCounter);
+    NodeInfoStack *parameterStack = createEmptyNodeInfoStack();
+    createThreeAddressCodeList(globalAst, list, &offset, &labelCounter, parameterStack);
     printf("PARSE COMPLETE %d\n", 1);
     printf("TERMINE\n");
     printf("\n--------------------------TAC--------------------------\n%s--------------------------------------------------------\n",threeAddressListToString(list));

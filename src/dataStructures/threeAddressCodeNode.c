@@ -1,14 +1,16 @@
 #include "../../include/dataStructures/threeAddressCodeNode.h"
 
-char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){     
+char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
+    printf("%s\n", tagToString(node->label));
     char *str = malloc(50);
     strcat(str, labelToString(node->label));
     strcat(str, " ");
     if(node->label == LOAD){
-        if(node->first->id != NULL) strcat(str, node->first->id);
-        if(node->first->value != NULL) strcat(str, valueToString(node->first)); 
+        sprintf(str + strlen(str), "%d", node->first->lineNumber);
         strcat(str, " ");
-        sprintf(str + strlen(str), "%d", node->second->lineNumber);
+        printf("%s\n", str);
+        if(node->second->id != NULL) strcat(str, node->second->id);
+        if(node->second->value != NULL) strcat(str, valueToString(node->second)); 
         strcat(str, " ");
     }else if(node->label == METHOD_CALL){
         strcat(str, node->first->id);
@@ -20,6 +22,16 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
         strcat(str, " ");
         if(node->second->id != NULL) strcat(str, node->second->id);
         if(node->second->value != NULL) strcat(str, valueToString(node->second));
+        strcat(str, " ");
+    }else if(isArithmeticOrBooleanTag(node->label)){
+        strcat(str, node->first->id);
+        strcat(str, " ");
+        printf("------------%s\n", str);
+        if(node->second->id != NULL) strcat(str, node->second->id);
+        if(node->second->value != NULL) strcat(str, valueToString(node->second));
+        strcat(str, " ");
+        if(node->third->id != NULL) strcat(str, node->third->id);
+        if(node->third->value != NULL) strcat(str, valueToString(node->third));
         strcat(str, " ");
     }
     else if(node->first != NULL){
