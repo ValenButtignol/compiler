@@ -48,7 +48,7 @@ char* createEndThenTemporalNodeInfo(int labelNumber);
 
 char* createTemporalID(int tempNumber);
 
-
+int nodeInfoIDEquals(NodeInfo* t, NodeInfo* param);
 
 /****************************** new constructors ********************************/
 

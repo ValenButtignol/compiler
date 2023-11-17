@@ -56,6 +56,8 @@ char* nodeInfoToString(NodeInfo node) {
     char* string;
     string = (char*)malloc(20);
     strcpy(string, tagToString(node.tag));
+    strcat(string, " ");
+    strcat(string, node.id);
     return string;
 }
 
@@ -173,4 +175,10 @@ NodeInfo* newNodeInfoTemporal(enum TTag tag) {
     result->id = (char*)malloc(strlen(" ")*sizeof(char)); 
     strcpy(result->id, " ");
     return result;
+}
+
+int nodeInfoIDEquals(NodeInfo* t, NodeInfo* param){
+    printf("comparando %s %s comp = %d\n", t->id, param->id);
+    if(t->id == NULL || param->id == NULL) return 0;
+    return strcmp(t->id, param->id) == 0;
 }
