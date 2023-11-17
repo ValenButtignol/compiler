@@ -311,13 +311,14 @@ STATEMENT: ASSIGNMENT TSemiColon {
 
 ASSIGNMENT: TId TAssign EXPR {
             NodeInfo* var = searchGlobalLevelSymbolTable(symbolTable, $1);
-            if (var == NULL) {   
+            if (var == NULL) { 
                 char* error = (char*)malloc(80); 
                 sprintf(error, "\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", yylineno, $1);
                 insertErrorNode(&errors, error);
+            }else{
+                NodeInfo* assignNode = newNodeInfoType(var->type, ASSIGNMENT, yylineno);
+                $$ = newAst(assignNode, newLeaf(&var), $3);
             }
-            NodeInfo* assignNode = newNodeInfoType(var->type, ASSIGNMENT, yylineno);
-            $$ = newAst(assignNode, newLeaf(&var), $3);
         }
     ;
 
@@ -327,10 +328,11 @@ METHOD_CALL: TId TOpenParenthesis PARAMS_CALL TCloseParenthesis {
                 char* error = (char*)malloc(80);
                 sprintf(error, "\033[1;31mLine: %d Error:\033[0m method %s not declared\n", yylineno, $1);
                 insertErrorNode(&errors, error);
+            }else{
+                NodeInfo* callNode = newNodeInfoType(method->type, METHOD_CALL, yylineno);
+                setParamsToNodeInfo(&callNode, $3);                                                           // TODO: maybe an else?
+                $$ = newAst(callNode, $3, newLeaf(&method));
             }
-            NodeInfo* callNode = newNodeInfoType(method->type, METHOD_CALL, yylineno);
-            setParamsToNodeInfo(&callNode, $3);                                                           // TODO: maybe an else?
-            $$ = newAst(callNode, $3, newLeaf(&method));
         }
     ;
 
@@ -445,8 +447,9 @@ EXPR: EXPR TAdd EXPR {
                 char* error = (char*)malloc(80);
                 sprintf(error, "\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", yylineno, $1);
                 insertErrorNode(&errors, error);
+            }else{
+                $$ = newLeaf(&var);
             }
-            $$ = newLeaf(&var);
         }
     | TOpenParenthesis EXPR TCloseParenthesis {
             $$ = $2;
