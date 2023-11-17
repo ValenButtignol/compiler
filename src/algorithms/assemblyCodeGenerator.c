@@ -117,62 +117,62 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
 }
 
 void generateAdd(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    addl    %s, %%rax\n", thirdValue);
-    fprintf(file, "    movl    %%rax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    addl    %s, %%eax\n", thirdValue);
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateSub(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    subl    %s, %%rax\n", thirdValue);
-    fprintf(file, "    movl    %%rax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    subl    %s, %%eax\n", thirdValue);
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateMul(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
-    fprintf(file, "    imul    %%rax, %%rbx\n");
-    fprintf(file, "    movl    %%rbx, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
+    fprintf(file, "    imul    %%eax, %%ebx\n");
+    fprintf(file, "    movl    %%ebx, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateDiv(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);  // Dividend
-    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);   // Divisor
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);  // Dividend
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);   // Divisor
     fprintf(file, "    xor     %%rdx, %%rdx\n");            // Clear rdx to prepare for the result
-    fprintf(file, "    idiv    %%rbx\n");                   // Divide rax by rbx, quotient in rax, remainder in rdx
-    fprintf(file, "    movl    %%rax, %s\n", firstValue);   // Store value
+    fprintf(file, "    idiv    %%ebx\n");                   // Divide eax by ebx, quotient in eax, remainder in rdx
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);   // Store value
     fprintf(file, "\n");
 }
 
 void generateAnd(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
-    fprintf(file, "    andl    %%rbx, %%rax\n");
-    fprintf(file, "    movl    %%rax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
+    fprintf(file, "    andl    %%ebx, %%eax\n");
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateOr(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
-    fprintf(file, "    orl     %%rbx, %%rax\n");
-    fprintf(file, "    movl    %%rax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
+    fprintf(file, "    orl     %%ebx, %%eax\n");
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateMov(FILE* file, char* firstValue, char* secondValue) {
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    movl    %%rax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateRet(FILE* file, char* firstValue) {
     generatePrint(file, firstValue);
 
-    fprintf(file, "    movl    %s, %%rax\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", firstValue);
     fprintf(file, "\n");
 
 }
@@ -217,55 +217,55 @@ void generateLabel(FILE* file, char* firstValue) {
 
 void generateEquals(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
     
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
-    fprintf(file, "    cmp     %%rax, %%rbx\n");
-    fprintf(file, "    movl    $0, %%rbx\n");
-    fprintf(file, "    movl    $1, %%rax\n");
-    fprintf(file, "    cmove   %%rax %%rbx\n");
-    fprintf(file, "    movl    %%rbx, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
+    fprintf(file, "    cmpl    %%eax, %%ebx\n");
+    fprintf(file, "    movl    $0, %%ebx\n");
+    fprintf(file, "    movl    $1, %%eax\n");
+    fprintf(file, "    cmove   %%eax, %%ebx\n");
+    fprintf(file, "    movl    %%ebx, %s\n", firstValue);
     fprintf(file, "\n");
     
 }
 
 void generateGreaterThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
     
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
-    fprintf(file, "    cmp     %%rax, %%rbx\n");
-    fprintf(file, "    movl    $0, %%rbx\n");
-    fprintf(file, "    movl    $1, %%rax\n");
-    fprintf(file, "    cmovg   %%rax %%rbx\n");
-    fprintf(file, "    movl    %%rbx, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
+    fprintf(file, "    cmpl    %%ebx, %%eax\n");
+    fprintf(file, "    movl    $0, %%ebx\n");
+    fprintf(file, "    movl    $1, %%eax\n");
+    fprintf(file, "    cmovg   %%eax, %%ebx\n");
+    fprintf(file, "    movl    %%ebx, %s\n", firstValue);
     fprintf(file, "\n");
     
 }
 
 void generateLessThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
     
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);
-    fprintf(file, "    cmp     %%rax, %%rbx\n");
-    fprintf(file, "    movl    $0, %%rbx\n");
-    fprintf(file, "    movl    $1, %%rax\n");
-    fprintf(file, "    cmovl   %%rax %%rbx\n");
-    fprintf(file, "    movl    %%rbx, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
+    fprintf(file, "    cmpl    %%ebx, %%eax\n");
+    fprintf(file, "    movl    $0, %%ebx\n");
+    fprintf(file, "    movl    $1, %%eax\n");
+    fprintf(file, "    cmovl   %%eax, %%ebx\n");
+    fprintf(file, "    movl    %%ebx, %s\n", firstValue);
     fprintf(file, "\n");
     
 }
 
 void generateMod(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);  // Dividend
-    fprintf(file, "    movl    %s, %%rbx\n", thirdValue);   // Divisor
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);  // Dividend
+    fprintf(file, "    movl    %s, %%ebx\n", thirdValue);   // Divisor
     fprintf(file, "    xor     %%rdx, %%rdx\n");            // Clear rdx to prepare for the result
-    fprintf(file, "    idiv    %%rbx\n");                   // Divide rax by rbx, quotient in rax, remainder in rdx
+    fprintf(file, "    idiv    %%ebx\n");                   // Divide eax by ebx, quotient in eax, remainder in rdx
     fprintf(file, "    movl    %%rdx, %s\n", firstValue);   // Store value
     fprintf(file, "\n");
 }
 
 void generateJumpByFalse(FILE* file, char* firstValue, char* secondValue) {
-    fprintf(file, "    cmp    $0, %s\n", firstValue);
-    fprintf(file, "    jne    %s\n", secondValue);
+    fprintf(file, "    cmpl    $0, %s\n", firstValue);
+    fprintf(file, "    je    %s\n", secondValue);
     fprintf(file, "\n");
 }
 
@@ -275,16 +275,16 @@ void generateJump(FILE* file, char* firstValue) {
 }
 
 void generateNegative(FILE* file, char* firstValue, char* secondValue) {
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    negl    %%rax\n");
-    fprintf(file, "    movl    %%rax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    negl    %%eax\n");
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateNot(FILE* file, char* firstValue, char* secondValue) {
-    fprintf(file, "    movl    %s, %%rax\n", secondValue);
-    fprintf(file, "    notl    %%rax\n");
-    fprintf(file, "    movl    %%rax, %s\n", firstValue);
+    fprintf(file, "    movl    %s, %%eax\n", secondValue);
+    fprintf(file, "    notl    %%eax\n");
+    fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
@@ -309,18 +309,20 @@ void generateMethodDecl(FILE* file, NodeInfo* method) {
 
 void unloadRegisters(FILE* file, NodeInfo* method) {
     NodeInfo* current = method->nextParams;
-    char* offsetString = (char*)malloc(2);
-    int offset = 1;
+    char* registerString = (char*)malloc(2);
+    int registerNumber = 1;
     while (current != NULL) {
-        sprintf(offsetString, "%d", offset);
-        fprintf(file, "    movl    %s, -%d(%%rbp)\n", getParamRegister(offsetString), offset*4);
+        sprintf(registerString, "%d", registerNumber);
+        fprintf(file, "    movl    %s, -%d(%%rbp)\n", getParamRegister(registerString), current->offset*4);
         current = current->nextParams;
-        offset++;
+        registerNumber++;
     }
     
 }
 
 void generateEndLabel(FILE* file) {
+
+    fprintf(file, "movl -8(%%rbp), %%edi\n    call print\n");
     fprintf(file, "    leave\n");
     fprintf(file, "    ret\n");
 }
