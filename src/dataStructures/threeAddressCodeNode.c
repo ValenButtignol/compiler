@@ -1,14 +1,12 @@
 #include "../../include/dataStructures/threeAddressCodeNode.h"
 
 char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
-    printf("%s\n", tagToString(node->label));
     char *str = malloc(50);
     strcat(str, labelToString(node->label));
     strcat(str, " ");
     if(node->label == LOAD){
         sprintf(str + strlen(str), "%d", node->first->lineNumber);
         strcat(str, " ");
-        printf("%s\n", str);
         if(node->second->id != NULL) strcat(str, node->second->id);
         if(node->second->value != NULL) strcat(str, valueToString(node->second)); 
         strcat(str, " ");
@@ -26,7 +24,6 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
     }else if(isArithmeticOrBooleanTag(node->label)){
         strcat(str, node->first->id);
         strcat(str, " ");
-        printf("------------%s\n", str);
         if(node->second->id != NULL) strcat(str, node->second->id);
         if(node->second->value != NULL) strcat(str, valueToString(node->second));
         strcat(str, " ");
