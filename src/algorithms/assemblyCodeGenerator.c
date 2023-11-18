@@ -178,11 +178,6 @@ void generateRet(FILE* file, char* firstValue) {
 }
 
 char* generateValue(NodeInfo* node) {
-    // printf("ID: %s\n", node->id);
-    // printf("VALUE: %d\n", ((int *)node->value)!=NULL?*((int *)node->value):-9999);
-    // printf("TAG: %s\n",tagToString(node->tag));
-    // printf("OFFSET: %d\n\n", node->offset);
-    // printf("TYPE: %d\n\n",  node->type);
     char* result;
     result = (char*)malloc(20);
     if (result == NULL) {
@@ -283,7 +278,11 @@ void generateNegative(FILE* file, char* firstValue, char* secondValue) {
 
 void generateNot(FILE* file, char* firstValue, char* secondValue) {
     fprintf(file, "    movl    %s, %%eax\n", secondValue);
-    fprintf(file, "    notl    %%eax\n");
+    fprintf(file, "    movl    $0, %%ebx\n");
+    fprintf(file, "    cmpl    %%eax, %%ebx\n");
+    fprintf(file, "    cmovne  %%ebx, %%eax\n");
+    fprintf(file, "    movl    $1, %%ebx\n", firstValue);
+    fprintf(file, "    cmove   %%ebx, %%eax\n");
     fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
 }
