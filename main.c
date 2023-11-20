@@ -13,7 +13,7 @@ extern FILE *yyout;
 extern int yyparse(void);
 extern TAst* getGlobalAst();
 extern ErrorNode* getErrors();
-// extern int getOffset();
+
 int main(int argc,char *argv[]) {
     ++argv,--argc;
 	if (argc > 0)
@@ -38,7 +38,7 @@ int main(int argc,char *argv[]) {
 
     ThreeAddressCodeList *list = createEmptyTAC();
 
-    int offset = 10;//getOffset();
+    int offset = 0;//getOffset();
     int labelCounter = 0;
 
     // printAst(globalAst);

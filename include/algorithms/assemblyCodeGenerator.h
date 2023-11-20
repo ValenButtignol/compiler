@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "../dataStructures/threeAddressCodeList.h"
 #include "../dataStructures/nodeInfo.h"
 #include "../utils/enums.h"

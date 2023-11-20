@@ -155,7 +155,9 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         // Write beginwhile label.
         ThreeAddressCodeNode *beginFunction = threeAddressCodeNodeFactory(ast->data->tag, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo());
         addToTAC(list, beginFunction);
+        *offset = ast->data->offset;    // Reset offset
         createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
+        ast->data->offset = *offset;    // TODO: Check if the offset is updated at this point.
         ThreeAddressCodeNode *endFunction = threeAddressCodeNodeFactory(END_LABEL, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo());
         addToTAC(list, endFunction);
 

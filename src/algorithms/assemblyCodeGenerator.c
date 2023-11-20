@@ -1,5 +1,4 @@
 #include "../../include/algorithms/assemblyCodeGenerator.h"
-#include <stdint.h>
 
 void generateAssembly(ThreeAddressCodeList* list) {
     FILE* file = fopen("assembly.s", "w");
@@ -26,7 +25,7 @@ void generatePrologue(FILE* file, ThreeAddressCodeList* list) {
     fprintf(file, "    subq    $64, %%rsp\n\n");
 }
 
-void generateHeader(FILE* file, ThreeAddressCodeList* list) {     // Probably this would be converted into generatePrologue
+void generateHeader(FILE* file, ThreeAddressCodeList* list) {
     fprintf(file, "    .text\n");
     fprintf(file, "    .globl  main\n");
     fprintf(file, "    .type   main, @function\n");
@@ -170,7 +169,7 @@ void generateMov(FILE* file, char* firstValue, char* secondValue) {
 }
 
 void generateRet(FILE* file, char* firstValue) {
-    generatePrint(file, firstValue);
+    //generatePrint(file, firstValue);
 
     fprintf(file, "    movl    %s, %%eax\n", firstValue);
     fprintf(file, "\n");
@@ -195,7 +194,7 @@ char* generateValue(NodeInfo* node) {
     } else if(node->tag == METHOD_DECL){
         sprintf(result, "%s", node->id);
     } else {
-        sprintf(result, "-%d(%%rbp)", node->offset*4);
+        sprintf(result, "-%d(%%rbp)", node->offset*8);
     }
     return result;
 }
@@ -260,7 +259,7 @@ void generateMod(FILE* file, char* firstValue, char* secondValue, char* thirdVal
 
 void generateJumpByFalse(FILE* file, char* firstValue, char* secondValue) {
     fprintf(file, "    cmpl    $0, %s\n", firstValue);
-    fprintf(file, "    je    %s\n", secondValue);
+    fprintf(file, "    je      %s\n", secondValue);
     fprintf(file, "\n");
 }
 
@@ -281,27 +280,27 @@ void generateNot(FILE* file, char* firstValue, char* secondValue) {
     fprintf(file, "    movl    $0, %%ebx\n");
     fprintf(file, "    cmpl    %%eax, %%ebx\n");
     fprintf(file, "    cmovne  %%ebx, %%eax\n");
-    fprintf(file, "    movl    $1, %%ebx\n", firstValue);
+    fprintf(file, "    movl    $1, %%ebx\n");
     fprintf(file, "    cmove   %%ebx, %%eax\n");
     fprintf(file, "    movl    %%eax, %s\n", firstValue);
     fprintf(file, "\n");
 }
 
 void generateLoad(FILE* file, char* firstValue, char* secondValue) {
-    fprintf(file, "    movl    %s, %s\n", firstValue, getParamRegister(secondValue));
-    fprintf(file, "\n");
+    fprintf(file, "    mov     %s, %s\n", secondValue, getParamRegister(firstValue));
 }
 
 void generateMethodCall(FILE* file, char* firstValue, char* secondValue) {
-    fprintf(file, "    call    %s, %s\n", firstValue, secondValue);
+    fprintf(file, "    call    %s\n", firstValue);
+    fprintf(file, "    movl    %%eax, %s\n", secondValue);
     fprintf(file, "\n");
 }
 
 void generateMethodDecl(FILE* file, NodeInfo* method) {
     fprintf(file, "%s:\n", method->id);
-    fprintf(file, "    pushq   %%rbp\n");
-    fprintf(file, "    movq    %%rsp, %%rbp\n");
-    fprintf(file, "    subq    $64, %%rsp\n");
+    char* maxOffsetString;
+    sprintf(maxOffsetString, "%d", method->offset);
+    fprintf(file, "    enter   $(8 * %s), $0\n", maxOffsetString);
     fprintf(file, "\n");
     unloadRegisters(file, method);
 }
@@ -312,7 +311,7 @@ void unloadRegisters(FILE* file, NodeInfo* method) {
     int registerNumber = 1;
     while (current != NULL) {
         sprintf(registerString, "%d", registerNumber);
-        fprintf(file, "    movl    %s, -%d(%%rbp)\n", getParamRegister(registerString), current->offset*4);
+        fprintf(file, "    mov     %s, -%d(%%rbp)\n", getParamRegister(registerString), current->offset*8);
         current = current->nextParams;
         registerNumber++;
     }
@@ -321,7 +320,7 @@ void unloadRegisters(FILE* file, NodeInfo* method) {
 
 void generateEndLabel(FILE* file) {
 
-    fprintf(file, "movl -8(%%rbp), %%edi\n    call print\n");
+//    fprintf(file, "    movl -8(%%rbp), %%edi\n    call print\n");
     fprintf(file, "    leave\n");
     fprintf(file, "    ret\n");
 }
