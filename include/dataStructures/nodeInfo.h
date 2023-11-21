@@ -63,4 +63,11 @@ NodeInfo* newNodeInfoLiteral(void* value, enum TType type, enum TTag tag, int li
 NodeInfo* newNodeInfoRegisterNumber(int registerNumber);
 
 NodeInfo* newNodeInfoTemporal(enum TTag tag);
+
+int nodeInfoIDEquals(NodeInfo* t, NodeInfo* param);
+
+void setNewOffset(NodeInfo** node, int offset);
+
+void setNewTag(NodeInfo** node, enum TTag tag);
+
 #endif

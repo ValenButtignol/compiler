@@ -182,3 +182,11 @@ int nodeInfoIDEquals(NodeInfo* t, NodeInfo* param){
     if(t->id == NULL || param->id == NULL) return 0;
     return strcmp(t->id, param->id) == 0;
 }
+
+void setNewOffset(NodeInfo** node, int offset){
+    (*node)->offset = offset;
+}
+
+void setNewTag(NodeInfo** node, enum TTag tag){
+    (*node)->tag = tag;
+}

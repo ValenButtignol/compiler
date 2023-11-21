@@ -164,7 +164,7 @@ METHOD_DECL: TDef TType TId TOpenParenthesis {
                     sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier '%s' already declared\n",yylineno, $3);
                     insertErrorNode(&errors, error);
                 }
-                offset++;
+                offset = 0;
                 NodeInfo* methodNode = newNodeInfoDeclaration($3, *$2, METHOD_DECL, yylineno, offset);    
                 addNodeToSymbolTable(&symbolTable, methodNode);                                     // Add the method to the symbol table.
                 
@@ -186,7 +186,7 @@ METHOD_DECL: TDef TType TId TOpenParenthesis {
                     insertErrorNode(&errors, error);
                 }
 
-                offset++;
+                offset = 0;
                 NodeInfo* methodNode = newNodeInfoDeclaration($3, *$2, METHOD_DECL, yylineno, offset);
                 addNodeToSymbolTable(&symbolTable, methodNode);                
                 currentMethodName = malloc(strlen($3) + 1);                                             
@@ -201,7 +201,8 @@ METHOD_DECL: TDef TType TId TOpenParenthesis {
 
 METHOD_ENDING: PARAMS_DECL TCloseParenthesis BLOCK {                                                      // The block itself creates and closes its own level
                 NodeInfo* methodNode = searchGlobalLevelSymbolTable(symbolTable, currentMethodName);     
-                setParamsToNodeInfo(&methodNode, $1);        
+                setParamsToNodeInfo(&methodNode, $1);
+                setNewOffset(&methodNode, offset);        
                 $$ = newAst(methodNode, $1, $3);                                                          // After the data is linked, and the block is created, we return the method node.
                 popLevelSymbolTable(&symbolTable);                                                        // Pop the level created for params.
                 free(currentMethodName);
@@ -209,6 +210,8 @@ METHOD_ENDING: PARAMS_DECL TCloseParenthesis BLOCK {                            
     | PARAMS_DECL TCloseParenthesis TExtern TSemiColon {
                 NodeInfo* methodNode = searchGlobalLevelSymbolTable(symbolTable, currentMethodName); 
                 setParamsToNodeInfo(&methodNode, $1);
+                setNewOffset(&methodNode, offset);
+                setNewTag(&methodNode, EXTERN_METHOD_DECL);
                 $$ = newLeaf(&methodNode);
                 popLevelSymbolTable(&symbolTable);
                 free(currentMethodName);
@@ -235,7 +238,7 @@ PARAMS_LIST_DECL: TType TId TComma PARAMS_LIST_DECL {
             }
 
             offset++;
-            NodeInfo* paramNode = newNodeInfoDeclaration($2, *$1, PARAM, yylineno, offset);    // Don't know if offset is needed.
+            NodeInfo* paramNode = newNodeInfoDeclaration($2, *$1, PARAM, yylineno, offset);
             addNodeToSymbolTable(&symbolTable, paramNode);
             $$ = newAst(paramNode, $4, NULL);
         }
@@ -330,7 +333,7 @@ METHOD_CALL: TId TOpenParenthesis PARAMS_CALL TCloseParenthesis {
                 insertErrorNode(&errors, error);
             }else{
                 NodeInfo* callNode = newNodeInfoType(method->type, METHOD_CALL, yylineno);
-                setParamsToNodeInfo(&callNode, $3);                                                           // TODO: maybe an else?
+                setParamsToNodeInfo(&callNode, $3);                                                           
                 $$ = newAst(callNode, $3, newLeaf(&method));
             }
         }
@@ -467,10 +470,6 @@ LITERAL: TIntegerLiteral {
     ;
 
 %%
-
-int getOffset() {
-    return offset;
-}
 
 TAst* getGlobalAst() {
     return globalAst;
