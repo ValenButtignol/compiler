@@ -80,7 +80,7 @@ ASSMBLE_EXE = executable
 OUTFILE ?= nofile
 
 assemble:
-	$(CC) $(ASSEMBLY_FILE) mainPrint.c -o $(BIN_DIR)/$(ASSMBLE_EXE)
+	$(CC) $(ASSEMBLY_FILE)  extern/*.c -o $(BIN_DIR)/$(ASSMBLE_EXE)
 
 	@if [ $(OUTFILE) = "nofile" ]; then \
 		$(BIN_DIR)/$(ASSMBLE_EXE) 2>/dev/null || true; \
