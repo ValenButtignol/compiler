@@ -299,7 +299,7 @@ void generateMethodCall(FILE* file, char* firstValue, char* secondValue) {
 void generateMethodDecl(FILE* file, NodeInfo* method) {
     fprintf(file, "%s:\n", method->id);
     char* maxOffsetString;
-    sprintf(maxOffsetString, "%d", method->offset);
+    sprintf(maxOffsetString, "%d", (method->offset % 2 == 0 ? method->offset : method->offset + 1));
     fprintf(file, "    enter   $(8 * %s), $0\n", maxOffsetString);
     fprintf(file, "\n");
     unloadRegisters(file, method);
