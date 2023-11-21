@@ -81,7 +81,6 @@ char *tagToString(enum TTag tag) {
         return "ASSIGNMENT";
     case 11:
         return "IF";
-
     case 12:
         return "IF_ELSE";
     case 13:
@@ -117,23 +116,21 @@ char *tagToString(enum TTag tag) {
     case 28:
         return "CONST_VALUE";
     case 29:
+        return "LABEL";
+    case 30:
+        return "JFALSE";
+    case 31:
+        return "JUMP";
+    case 32:
+        return "LOAD";
+    case 33:
+        return "END_LABEL";
+    case 34:
+        return "EXTERN_METHOD_DECL";
+    case 35:
         return "NONETAG";
     default:
         return "NULL";
-    }
-}
-
-enum TOperator getOperatorFromText(char* op) {
-    if (strcmp(op, "+") == 0) {
-        return PLUS;
-    } else if (strcmp(op, "-") == 0) {
-        return MINUS;
-    } else if (strcmp(op, "*") == 0) {
-        return MULTIPLY;
-    } else if (strcmp(op, "/") == 0) {
-        return DIVIDE;
-    } else if (strcmp(op, "=") == 0) {
-        return ASSIGN;
     }
 }
 
@@ -209,9 +206,26 @@ int isReturnTag(enum TTag tag){
     return tag ==  RETURN;
 }
 
+int isIf(enum TTag tag) {
+    return tag == IF;
+}
+
+int isIfElse(enum TTag tag) {
+    return tag == IF_ELSE;
+}
+
+int isWhile(enum TTag tag) {
+    return tag == WHILE;
+}
+
 int isMethodCallTag(enum TTag tag){
     return tag == METHOD_CALL; 
 }
+
+int isMethodDeclTag(enum TTag tag){
+    return tag == METHOD_DECL; 
+}
+
 int isArithmeticOrBooleanTag(enum TTag tag){
     return isBooleanOperatorTag(tag) || isArithmeticOperatorTag(tag);
 }

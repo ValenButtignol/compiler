@@ -13,4 +13,5 @@ int checkSonsFatherTypes(TAst *ast);
 void copyMethodName(char **methodName,TAst *ast);
 enum TType getAstType(TAst* ast);
 int checkFatherLeftSonTypes(TAst *ast);
+char* getParamRegister(char* paramRegister);
 #endif

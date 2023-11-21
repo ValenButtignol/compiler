@@ -4,6 +4,7 @@
 #include "threeAddressCodeNode.h"
 #include "nodeInfo.h"
 #include "ast.h"
+#include "nodeInfoStack.h"
 
 typedef struct ThreeAddressCodeList{
     ThreeAddressCodeNode* head;
@@ -12,11 +13,9 @@ typedef struct ThreeAddressCodeList{
 
 ThreeAddressCodeList *createEmptyTAC();
 
-void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offset);
+void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offset, int* labelCounter, NodeInfoStack *parameterStack);
 
 char* threeAddressListToString(ThreeAddressCodeList *list);
-
-char *createTemportalID(int tempNumber);
 
 void addToTAC(ThreeAddressCodeList* list,ThreeAddressCodeNode* node);
 

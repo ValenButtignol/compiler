@@ -1,28 +1,58 @@
 #include "../../include/dataStructures/threeAddressCodeNode.h"
 
 char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
-    if(node->first != NULL){
-        char *str = malloc(50);
-        strcat(str, labelToString(node->label));
+    char *str = malloc(50);
+    strcat(str, labelToString(node->label));
+    strcat(str, " ");
+    if(node->label == LOAD){
+        sprintf(str + strlen(str), "%d", node->first->lineNumber);
         strcat(str, " ");
+        if(node->second->id != NULL) strcat(str, node->second->id);
+        if(node->second->value != NULL) strcat(str, valueToString(node->second)); 
+        strcat(str, " ");
+    }else if(node->label == METHOD_CALL){
         strcat(str, node->first->id);
         strcat(str, " ");
-        
-        if(node->label != RETURN){
-            // printf("ID: %s\n", node->second);
-            if(strcmp(node->second->id, "") == 0){
+        strcat(str, node->second->id);
+        strcat(str, " ");
+    }else if(isUnaryOperatorTag(node->label) || node->label == ASSIGNMENT){
+        strcat(str, node->first->id);
+        strcat(str, " ");
+        if(node->second->id != NULL) strcat(str, node->second->id);
+        if(node->second->value != NULL) strcat(str, valueToString(node->second));
+        strcat(str, " ");
+    }else if(isReturnTag(node->label)){
+        if(node->first->id != NULL) strcat(str, node->first->id);
+        if(node->first->value != NULL) strcat(str, valueToString(node->first));
+        strcat(str, " ");
+    }else if(isArithmeticOrBooleanTag(node->label)){
+        strcat(str, node->first->id);
+        strcat(str, " ");
+        if(node->second->id != NULL) strcat(str, node->second->id);
+        if(node->second->value != NULL) strcat(str, valueToString(node->second));
+        strcat(str, " ");
+        if(node->third->id != NULL) strcat(str, node->third->id);
+        if(node->third->value != NULL) strcat(str, valueToString(node->third));
+        strcat(str, " ");
+    }
+    else if(node->first != NULL){
+        if(node->first->tag != PARAM){
+            strcat(str, node->first->id);
+        }
+        strcat(str, " ");
+        if(node->label != RETURN && node->label != LOAD){
+            if(node->second->value != NULL){
                 strcat(str, valueToString(node->second));
             }
             else strcat(str, node->second->id);
             strcat(str, " ");
             if(node->label != ASSIGNMENT){
-                if(strcmp(node->third->id, "") == 0) strcat(str, valueToString(node->third));
+                if(node->third->value != NULL) strcat(str, valueToString(node->third));
                 else strcat(str, node->third->id);
             }
         }
-        return str;
     }
-    return "";
+    return str;
 }
 
 char *labelToString(enum TTag label){
@@ -30,31 +60,48 @@ char *labelToString(enum TTag label){
     {
     case ADD:
         return "SUM";
-        break;
     case SUB:
         return "SUB";
-        break;
     case MUL:
         return "MUL";
-        break;
     case DIV:
         return "DIV";
-        break;
+    case MOD:
+        return "MOD";
     case ASSIGNMENT:
         return "MOV";
-        break;
     case AND:
         return "AND";
-        break;
     case OR:
         return "OR";
-        break;
     case RETURN:
         return "RET";
-        break;
+    case NEGATIVE:
+        return "NEG";
+    case NOT:
+        return "NOT";
+    case JFALSE:
+        return "JUMP_BY_FALSE";
+    case JUMP:
+        return "JUMP";
+    case LABEL:
+        return "LABEL";
+    case EQUALS:
+        return "EQUALS";
+    case GREATER_THAN:
+        return "GREATER_THAN";
+    case LESS_THAN:
+        return "LESS_THAN";
+    case LOAD:
+        return "LOAD";
+    case METHOD_CALL:
+        return "CALL";
+    case METHOD_DECL:
+        return "LABEL_START";
+    case END_LABEL:
+        return "LABEL_END";
     default:
         return "UNDEFINED OPERATION";
-        break;
     }
 }
 
@@ -74,24 +121,6 @@ ThreeAddressCodeNode *threeAddressCodeNodeFactory(
     enum TTag label, NodeInfo *first, NodeInfo *second, NodeInfo *third){
         switch (label)
         {
-        case ADD:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
-        case SUB:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
-        case MUL:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
-        case DIV:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
-        case AND:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
-        case OR:
-            return createThreeAddressCodeNode(label, first, second, third);
-            break;
         case ASSIGNMENT:
             return createThreeAddressCodeNode(label, first, second, newEmptyNodeInfo());
             break;
@@ -99,6 +128,7 @@ ThreeAddressCodeNode *threeAddressCodeNodeFactory(
             return createThreeAddressCodeNode(label, first, newEmptyNodeInfo(), newEmptyNodeInfo());
             break;
         default:
+            return createThreeAddressCodeNode(label, first, second, third);
             break;
         }
 }
@@ -112,17 +142,6 @@ ThreeAddressCodeNode *createThreeAddressCodeNode(
         node->second = second;
         node->third = third;
         return node;
-}
-
-enum TTag geTTagFromOperator(enum TOperator op, enum TType type){
-    
-    if(op == PLUS && type == INTEGER) return ADD;
-    if(op == MINUS && type == INTEGER) return SUB;
-    if(op == MULTIPLY && type == INTEGER) return MUL;
-    if(op == DIVIDE && type == INTEGER) return DIV;
-    if(op == PLUS && type == BOOLEAN) return OR;//falta determinar cuando es un and o un OR
-    if(op == MULTIPLY && type == BOOLEAN) return AND;//podriamos pasar el tipo de la operacion asi es facil
-    if(op == 0) return ASSIGNMENT;
 }
 
 NodeInfo *getFirst(ThreeAddressCodeNode *node){

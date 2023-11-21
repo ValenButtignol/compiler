@@ -7,7 +7,6 @@ NodeInfo *newNodeInfo(void* value, enum TType type, char* id, enum TTag tag, int
     result->type = type;
     result->id = strdup(id);     // Remember to free this later.
     result->tag = tag;
-    result->operatorVar = NONOPERATOR;
     result->lineNumber = lineNumber;
     return result;
 }
@@ -26,7 +25,6 @@ NodeInfo* newNodeInfoWithoutValue(enum TType type, char* id, enum TTag tag, int 
     result->type = type;
     result->id = strdup(id); 
     result->tag = tag;
-    result->operatorVar = NONOPERATOR;
     result->lineNumber = lineNumber;
     return result;
 }
@@ -35,12 +33,6 @@ NodeInfo* newNodeInfoWithoutValueWithOffset(enum TType type, char* id, enum TTag
     NodeInfo* result = newNodeInfoWithoutValue(type, id, tag, lineNumber);
     result->offset = offset;
     return result; 
-}
-
-NodeInfo* newNodeInfoOperator(enum TType type, char* id, enum TTag tag, int lineNumber, enum TOperator operator){
-    NodeInfo* node = newNodeInfoWithoutValue(type, id, tag, lineNumber);
-    node->operatorVar = operator;
-    return node;    
 }
 
 NodeInfo *newEmptyNodeInfo() {
@@ -64,6 +56,8 @@ char* nodeInfoToString(NodeInfo node) {
     char* string;
     string = (char*)malloc(20);
     strcpy(string, tagToString(node.tag));
+    strcat(string, " ");
+    strcat(string, node.id);
     return string;
 }
 
@@ -94,13 +88,33 @@ int isEmptyNode(NodeInfo node) {
     return node.value == NULL && node.type == NONETYPE && node.id == "" && node.tag == NONETAG;
 }
 
-void createTemporalNodeInfo(char* id, enum TTag tag, NodeInfo *temp, int offset){
+void createTemporalNodeInfo(char* id, NodeInfo *temp, int offset){
     free(temp->id);
-    temp->id = malloc(20);
+    temp->id = malloc(strlen(id));
     strcpy(temp->id, id);
-    temp->tag = tag;
     temp->offset = offset;
 }
+
+NodeInfo* createLabelNodeInfo(char* label, int labelNumber) {
+    NodeInfo* node = newNodeInfoSimple(LABEL, 0);
+    node->id = (char*)malloc(strlen(label)+1); 
+    strcpy(node->id, createIDNodeInfo(label, labelNumber));
+    return node;
+}
+
+char* createIDNodeInfo(char* id, int number){
+    char* newId = malloc(strlen(id) + 1);
+    char* num = malloc(2);
+    strcpy(newId, id);
+    sprintf(num, "%d", number);
+    strcat(newId, num);
+    return newId;
+}
+
+char* createTemporalID(int tempNumber){
+    return createIDNodeInfo("temp", tempNumber);
+}
+
 
 int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode) {
 
@@ -121,7 +135,6 @@ NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber) {
 
     result->value = NULL;
     result->type = NONETYPE;
-    result->operatorVar = NONOPERATOR;
     result->tag = tag;
     result->lineNumber = lineNumber;
     result->offset = 0;
@@ -149,4 +162,30 @@ NodeInfo* newNodeInfoLiteral(void* value, enum TType type, enum TTag tag, int li
     result->type = type;
     setValue(&result, value);
     return result;
+}
+
+NodeInfo* newNodeInfoRegisterNumber(int registerNumber){
+    NodeInfo* result = newNodeInfoSimple(LOAD, 0);
+    result->lineNumber = registerNumber;
+    return result;
+}
+
+NodeInfo* newNodeInfoTemporal(enum TTag tag) {
+    NodeInfo* result = newNodeInfoSimple(tag, 0);
+    result->id = (char*)malloc(strlen(" ")*sizeof(char)); 
+    strcpy(result->id, " ");
+    return result;
+}
+
+int nodeInfoIDEquals(NodeInfo* t, NodeInfo* param){
+    if(t->id == NULL || param->id == NULL) return 0;
+    return strcmp(t->id, param->id) == 0;
+}
+
+void setNewOffset(NodeInfo** node, int offset){
+    (*node)->offset = offset;
+}
+
+void setNewTag(NodeInfo** node, enum TTag tag){
+    (*node)->tag = tag;
 }
