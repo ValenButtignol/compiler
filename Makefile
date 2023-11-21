@@ -69,7 +69,7 @@ test_all: test_syntax test_checktypes test_assembly
 #test_file:
 #	$(SCRIPT_DIR)/test_file.sh $(TEST_DIR)/inputs/$(IN_TEST) $(TYPE)
 
-IN_FILE ?= input/input.txt
+IN_FILE ?= input/input.bok
 
 run:
 	./$(TARGET) $(IN_FILE) 
