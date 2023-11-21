@@ -38,10 +38,6 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
     char* secondValue = generateValue(current->second);
     char* thirdValue = generateValue(current->third);
 
-    // printf("LABEL = %s\n", labelToString(current->label));
-    // printf("\n\n\nPRIMERO: %s\n", firstValue);
-    // printf("SEGUNDO: %s\n", secondValue);
-    // printf("TERCERO: %s\n\n\n", thirdValue);
     switch(current->label) {
         case ADD:
             generateAdd(file, firstValue, secondValue, thirdValue);
@@ -65,7 +61,9 @@ void instructionFactory(FILE* file, ThreeAddressCodeNode* current) {
             generateMov(file, firstValue, secondValue);
             break;
         case RETURN:
-            generateRet(file, firstValue);
+            if(!isEmptyNode(*(current->first)))
+                generateRet(file, firstValue);
+            generateEndLabel(file);
             break;
         case LABEL:
             generateLabel(file, firstValue);
