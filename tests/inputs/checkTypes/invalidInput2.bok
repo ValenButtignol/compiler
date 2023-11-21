@@ -16,7 +16,7 @@ Program {
     integer u = false && 1;
     integer v = true && true;
 
-    void main () {
+    def void main () {
         return ;   
     }
 }

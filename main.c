@@ -4,11 +4,16 @@
 #include "include/dataStructures/ast.h"
 #include "include/dataStructures/nodeInfo.h"
 #include "include/algorithms/checktypes.h"
+#include "include/dataStructures/threeAddressCodeList.h"
+#include "include/dataStructures/nodeInfoStack.h"
+#include "include/algorithms/assemblyCodeGenerator.h"
+
 extern FILE *yyin;
 extern FILE *yyout;
 extern int yyparse(void);
 extern TAst* getGlobalAst();
 extern ErrorNode* getErrors();
+
 int main(int argc,char *argv[]) {
     ++argv,--argc;
 	if (argc > 0)
@@ -19,16 +24,28 @@ int main(int argc,char *argv[]) {
     TAst* globalAst = getGlobalAst();
     ErrorNode* errors = getErrors();
     if (errors != NULL) {
-        // printf("ERRORS:\n");
-        // printf("---------------------------------------------:\n");
         printErrors(errors);
         freeErrorsList(errors);
+        exit(EXIT_FAILURE);
     } 
-    // printf("PARSE COMPLETE %d\n", globalAst==NULL);
     // printf("\n---------------------------------------------- \n");
-    // printAst(globalAst);
     if (!checkTypes(globalAst, &errors)) {
         printErrors(errors);
         freeErrorsList(errors);
+        exit(EXIT_FAILURE);
     }
+    printf("CHEACK TYPES COMPLETE %d\n", 1);
+
+    ThreeAddressCodeList *list = createEmptyTAC();
+
+    int offset = 0;//getOffset();
+    int labelCounter = 0;
+
+    // printAst(globalAst);
+    NodeInfoStack *parameterStack = createEmptyNodeInfoStack();
+    createThreeAddressCodeList(globalAst, list, &offset, &labelCounter, parameterStack);
+    printf("PARSE COMPLETE %d\n", 1);
+    printf("TERMINE\n");
+    printf("\n--------------------------TAC--------------------------\n%s--------------------------------------------------------\n",threeAddressListToString(list));
+    generateAssembly(list);
 }

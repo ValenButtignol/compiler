@@ -41,7 +41,7 @@ int main(int argc,char *argv[]) {
     ErrorNode* errors = getErrors();
     char* testType = argv[1];
     char* fileName = getFileName(argv[0], testType);
-    printAst(globalAst);
+    //printAst(globalAst);
     
     if (strcmp(testType, "syntax") == 0) {
         generateAstTestSuite(fileName, globalAst, errors);
@@ -49,7 +49,6 @@ int main(int argc,char *argv[]) {
     } else if (strcmp(testType, "type") == 0) {
         // if errors != NULL, then there are syntax errors
         checkTypes(globalAst, &errors);
-        printErrors(errors);
         checkTypeTestSuite(fileName, globalAst, errors);
 
     } else if (strcmp(testType, "assemble") == 0){

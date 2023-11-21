@@ -6,31 +6,25 @@
 #include <assert.h>
 
 static void checkTypeTestSuite(char* inputTestFileName, TAst* globalAst, ErrorNode* errors) {
-    TestingNodeInfoList* expectedNodes = newTestingNodeInfoList(); 
-    TestingNodeInfoList* nodesToFreeLater = expectedNodes;
     ErrorNode* expectedErrors = NULL;
 
-    checkTypesFactory(inputTestFileName, &expectedNodes, &expectedErrors);
-    if (expectedNodes->head == NULL && expectedErrors == NULL) {
-        printNoTestSuiteMessage(inputTestFileName);
-        return ;
-    }
+    int inputIsValid = checkTypesFactory(inputTestFileName, &expectedErrors);
 
-    if (expectedNodes->head != NULL) {
-        if (testerDfs(globalAst, expectedNodes)){
-            printTestSuccessMessage("CheckTypes", inputTestFileName);
-            freeTestingNodeInfoList(nodesToFreeLater);
-        }else {
-            printTestFailedMessage("CheckTypes", inputTestFileName);
-        }
-
-    } else if (expectedErrors != NULL) {
+    if (expectedErrors != NULL) {
         if (testErrors(errors, expectedErrors)) {
             printTestSuccessMessage("CheckTypes", inputTestFileName);
             freeErrorsList(expectedErrors);
+            return;
         } else {
             printTestFailedMessage("CheckTypes", inputTestFileName);
+            return ;
         }
+    }
+
+    if (inputIsValid) {
+        printTestSuccessMessage("CheckTypes", inputTestFileName);
+    } else {
+        printNoTestSuiteMessage(inputTestFileName);
     }
     
     return ;

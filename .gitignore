@@ -5,3 +5,5 @@ syntax.tab.h
 output.out
 syntax.tab.c
 build/
+obj/
+output/

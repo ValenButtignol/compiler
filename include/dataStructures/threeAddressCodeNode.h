@@ -19,8 +19,6 @@ ThreeAddressCodeNode *threeAddressCodeNodeFactory(
 ThreeAddressCodeNode *createThreeAddressCodeNode(
     enum TTag label, NodeInfo *first, NodeInfo *second, NodeInfo *third);
 
-enum TTag geTTagFromOperator(enum TOperator op, enum TType type);
-
 NodeInfo *getFirst(ThreeAddressCodeNode *node);
 
 ThreeAddressCodeNode *newEmtyNodeTAC();

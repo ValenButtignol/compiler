@@ -1,13 +1,13 @@
 Program {
-    bool foo(integer a) {
+    def  bool foo(integer a) {
         return true;
     }
 
-    integer g(bool a) {
+    def integer g(bool a) {
         return 1; 
     }
 
-    void main() {
+    def void main() {
         bool a = foo(g(foo(g(foo(true)))));          // Error aca.
         return ;  
     }

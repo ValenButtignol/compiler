@@ -33,17 +33,17 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 FLEX = flex
 BISON = bison
-EXT_DIR = extern
+PARSER_DIR = parser
 
 parse:
 
-	$(FLEX) -o $(EXT_DIR)/lex.yy.c $(EXT_DIR)/lexicon.l
-	$(BISON) -b $(EXT_DIR)/syntax -d $(EXT_DIR)/syntax.y
+	$(FLEX) -o $(PARSER_DIR)/lex.yy.c $(PARSER_DIR)/lexicon.l
+	$(BISON) -b $(PARSER_DIR)/syntax -d $(PARSER_DIR)/syntax.y
 
 	@mkdir -p $(OBJ_DIR)
 
-	$(CC) -c $(EXT_DIR)/lex.yy.c -o $(OBJ_DIR)/lex.yy.o
-	$(CC) -c $(EXT_DIR)/syntax.tab.c -o $(OBJ_DIR)/syntax.tab.o
+	$(CC) -c $(PARSER_DIR)/lex.yy.c -o $(OBJ_DIR)/lex.yy.o
+	$(CC) -c $(PARSER_DIR)/syntax.tab.c -o $(OBJ_DIR)/syntax.tab.o
 
 
 # all: parse src

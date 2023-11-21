@@ -62,7 +62,6 @@ int testErrors(ErrorNode* errors, ErrorNode* expectedErrors) {
     ErrorNode* currentExpectedError = expectedErrors;
     while (currentError != NULL && currentExpectedError != NULL) {
         if (!equalsErrorNode(currentError, currentExpectedError)) {
-            printf("%s", currentError->data);
             return 0;
         }
         currentError = currentError->next;

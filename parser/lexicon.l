@@ -50,6 +50,10 @@ digit [0-9]
         return TType;
     }
 
+"def" {
+        return TDef;
+    }
+
 "void" {
         yylval.type = malloc(sizeof(enum TType*));
         *yylval.type = getTypeFromText(yytext);

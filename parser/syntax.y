@@ -39,6 +39,7 @@ char* currentMethodName;
 %token<string> TComma
 %token<type> TType
 %token<type> TVoid
+%token<string> TDef
 %token<string> TIf
 %token<string> TThen
 %token<string> TElse
@@ -100,19 +101,12 @@ char* currentMethodName;
 %%
 
    
-PROGRAM:  TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurlyBracket {
+PROGRAM: TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurlyBracket {
 
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);       
             $$ = newAst(programNode, $3, $4);
             globalAst = $$;
             popLevelSymbolTable(&symbolTable);          // This pop is not really necesary.
-        }
-    | TProgram TOpenCurlyBracket VAR_DECL_BLOCK TCloseCurlyBracket {
-
-            NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);
-            $$ = newAst(programNode, $3, NULL);
-            globalAst = $$;
-            popLevelSymbolTable(&symbolTable);
         }
     | TProgram TOpenCurlyBracket METHOD_DECL_BLOCK TCloseCurlyBracket {
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);
@@ -122,10 +116,10 @@ PROGRAM:  TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurl
         }
     ;
 
-VAR_DECL_BLOCK: VAR_DECL_BLOCK VAR_DECL {
+VAR_DECL_BLOCK: VAR_DECL VAR_DECL_BLOCK {
 
             NodeInfo* varDeclBlockNode = newNodeInfoSimple(VAR_DECL_BLOCK, yylineno);
-            $$ = newAst(varDeclBlockNode, $2, $1);      // LS is VAR_DECL and RS others VAR_DECL_BLOCK.
+            $$ = newAst(varDeclBlockNode, $1, $2);      // LS is VAR_DECL and RS others VAR_DECL_BLOCK.
         }
     | VAR_DECL {
             $$ = $1;
@@ -162,52 +156,53 @@ METHOD_DECL_BLOCK: METHOD_DECL METHOD_DECL_BLOCK {
         }
     ;
 
-METHOD_DECL: TType TId TOpenParenthesis {
+METHOD_DECL: TDef TType TId TOpenParenthesis {
 
-                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);       // Check if the identificator is already declared in the current level.
+                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $3);       // Check if the identificator is already declared in the current level.
                 if (alreadyDeclared != NULL) {   
                     char* error = (char*)malloc(80);
-                    sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier '%s' already declared\n",yylineno, $2);
+                    sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier '%s' already declared\n",yylineno, $3);
                     insertErrorNode(&errors, error);
                 }
-                offset++;
-                NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD_DECL, yylineno, offset);    
+                offset = 0;
+                NodeInfo* methodNode = newNodeInfoDeclaration($3, *$2, METHOD_DECL, yylineno, offset);    
                 addNodeToSymbolTable(&symbolTable, methodNode);                                     // Add the method to the symbol table.
                 
-                currentMethodName = malloc(strlen($2) + 1);                                             
-                currentMethodName = $2;                                                                 // Save the current method name.
+                currentMethodName = malloc(strlen($3) + 1);                                             
+                currentMethodName = $3;                                                                 // Save the current method name.
                 
                 addLevelToSymbolTable(&symbolTable);                                                // We include a new level for the params of the method.
 
             } METHOD_ENDING {
-                $$ = $5;
+                $$ = $6;
             }
 
-    | TVoid TId TOpenParenthesis {
+    | TDef TVoid TId TOpenParenthesis {
                 
-                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);
+                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $3);
                 if (alreadyDeclared != NULL) {   
                     char* error = (char*)malloc(80);
-                    sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier %s already declared\n",yylineno, $2);
+                    sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier %s already declared\n",yylineno, $3);
                     insertErrorNode(&errors, error);
                 }
 
-                offset++;
-                NodeInfo* methodNode = newNodeInfoDeclaration($2, *$1, METHOD_DECL, yylineno, offset);
+                offset = 0;
+                NodeInfo* methodNode = newNodeInfoDeclaration($3, *$2, METHOD_DECL, yylineno, offset);
                 addNodeToSymbolTable(&symbolTable, methodNode);                
-                currentMethodName = malloc(strlen($2) + 1);                                             
-                currentMethodName = $2;               
+                currentMethodName = malloc(strlen($3) + 1);                                             
+                currentMethodName = $3;               
                                                                   // Save the current method name.
                 addLevelToSymbolTable(&symbolTable);
 
             } METHOD_ENDING {
-                $$ = $5;
+                $$ = $6;
             }
     ;  
 
 METHOD_ENDING: PARAMS_DECL TCloseParenthesis BLOCK {                                                      // The block itself creates and closes its own level
                 NodeInfo* methodNode = searchGlobalLevelSymbolTable(symbolTable, currentMethodName);     
-                setParamsToNodeInfo(&methodNode, $1);        
+                setParamsToNodeInfo(&methodNode, $1);
+                setNewOffset(&methodNode, offset);        
                 $$ = newAst(methodNode, $1, $3);                                                          // After the data is linked, and the block is created, we return the method node.
                 popLevelSymbolTable(&symbolTable);                                                        // Pop the level created for params.
                 free(currentMethodName);
@@ -215,6 +210,8 @@ METHOD_ENDING: PARAMS_DECL TCloseParenthesis BLOCK {                            
     | PARAMS_DECL TCloseParenthesis TExtern TSemiColon {
                 NodeInfo* methodNode = searchGlobalLevelSymbolTable(symbolTable, currentMethodName); 
                 setParamsToNodeInfo(&methodNode, $1);
+                setNewOffset(&methodNode, offset);
+                setNewTag(&methodNode, EXTERN_METHOD_DECL);
                 $$ = newLeaf(&methodNode);
                 popLevelSymbolTable(&symbolTable);
                 free(currentMethodName);
@@ -241,7 +238,7 @@ PARAMS_LIST_DECL: TType TId TComma PARAMS_LIST_DECL {
             }
 
             offset++;
-            NodeInfo* paramNode = newNodeInfoDeclaration($2, *$1, PARAM, yylineno, offset);    // Don't know if offset is needed.
+            NodeInfo* paramNode = newNodeInfoDeclaration($2, *$1, PARAM, yylineno, offset);
             addNodeToSymbolTable(&symbolTable, paramNode);
             $$ = newAst(paramNode, $4, NULL);
         }
@@ -317,13 +314,14 @@ STATEMENT: ASSIGNMENT TSemiColon {
 
 ASSIGNMENT: TId TAssign EXPR {
             NodeInfo* var = searchGlobalLevelSymbolTable(symbolTable, $1);
-            if (var == NULL) {   
+            if (var == NULL) { 
                 char* error = (char*)malloc(80); 
                 sprintf(error, "\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", yylineno, $1);
                 insertErrorNode(&errors, error);
+            }else{
+                NodeInfo* assignNode = newNodeInfoType(var->type, ASSIGNMENT, yylineno);
+                $$ = newAst(assignNode, newLeaf(&var), $3);
             }
-            NodeInfo* assignNode = newNodeInfoType(var->type, ASSIGNMENT, yylineno);
-            $$ = newAst(assignNode, newLeaf(&var), $3);
         }
     ;
 
@@ -333,10 +331,11 @@ METHOD_CALL: TId TOpenParenthesis PARAMS_CALL TCloseParenthesis {
                 char* error = (char*)malloc(80);
                 sprintf(error, "\033[1;31mLine: %d Error:\033[0m method %s not declared\n", yylineno, $1);
                 insertErrorNode(&errors, error);
+            }else{
+                NodeInfo* callNode = newNodeInfoType(method->type, METHOD_CALL, yylineno);
+                setParamsToNodeInfo(&callNode, $3);                                                           
+                $$ = newAst(callNode, $3, newLeaf(&method));
             }
-            NodeInfo* callNode = newNodeInfoType(method->type, METHOD_CALL, yylineno);
-            setParamsToNodeInfo(&callNode, $3);                                                           // TODO: maybe an else?
-            $$ = newAst(callNode, $3, newLeaf(&method));
         }
     ;
 
@@ -451,8 +450,9 @@ EXPR: EXPR TAdd EXPR {
                 char* error = (char*)malloc(80);
                 sprintf(error, "\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", yylineno, $1);
                 insertErrorNode(&errors, error);
+            }else{
+                $$ = newLeaf(&var);
             }
-            $$ = newLeaf(&var);
         }
     | TOpenParenthesis EXPR TCloseParenthesis {
             $$ = $2;
@@ -470,10 +470,6 @@ LITERAL: TIntegerLiteral {
     ;
 
 %%
-
-int getOffset() {
-    return offset;
-}
 
 TAst* getGlobalAst() {
     return globalAst;

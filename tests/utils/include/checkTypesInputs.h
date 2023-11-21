@@ -3,12 +3,13 @@
 
 #include <string.h>
 #include "../../../include/dataStructures/ast.h"
+#include "../../../include/utils/utils.h"
 #include "../../../include/dataStructures/errorNode.h"
 #include "../../../include/dataStructures/nodeInfo.h"
 #include "../../../include/utils/enums.h"
 #include "testingNodeInfoList.h"
 
-void checkTypesFactory(char* inputTestFileName, TestingNodeInfoList** expectedNodes, ErrorNode** errors);
+int checkTypesFactory(char* inputTestFileName, ErrorNode** errors);
 void checkTypesListErrors1(ErrorNode** expectedErrors);
 void checkTypesListErrors2(ErrorNode** expectedErrors);
 void checkTypesListErrors3(ErrorNode** expectedErrors);
@@ -20,8 +21,6 @@ void checkTypesListErrors8(ErrorNode** expectedErrors);
 void checkTypesListErrors9(ErrorNode** expectedErrors);
 void checkTypesListErrors10(ErrorNode** expectedErrors);
 void checkTypesListErrors11(ErrorNode** expectedErrors);
-void checkTypesExpectedNodesCreator1(TestingNodeInfoList** expectedNodes);
-void checkTypesExpectedNodesCreator2(TestingNodeInfoList** expectedNodes);
-void checkTypesExpectedNodesCreator3(TestingNodeInfoList** expectedNodes);
+void checkTypesListErrors12(ErrorNode** expectedErrors);
 
 #endif

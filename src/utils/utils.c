@@ -35,6 +35,11 @@ int checkReturnTypes(TAst *ast){
     return (!(lsType==ast->data->type) && !(VOID==ast->data->type && ast->ls==NULL && lsType==NONETYPE));
 }
 
+int checkFatherLeftSonTypes(TAst *ast){
+    enum TType lsType = getAstType(ast->ls);
+    return !(lsType==ast->data->type);
+}
+
 int checkSonsTypes(TAst *ast){
     return !(getAstType(ast->ls) == getAstType(ast->rs));
 }
@@ -60,4 +65,23 @@ enum TType getAstType(TAst* ast) {
     (ast->data)->type = lsType;
     return lsType;
 
+}
+
+char* getParamRegister(char* paramRegister) {
+    char* result = malloc(5);
+    strcpy(result, "");
+    if (strcmp(paramRegister, "1") == 0) {
+        strcpy(result, "%rdi");
+    } else if (strcmp(paramRegister, "2") == 0) {
+        strcpy(result, "%rsi");
+    } else if (strcmp(paramRegister, "3") == 0) {
+        strcpy(result, "%rdx");
+    } else if (strcmp(paramRegister, "4") == 0) {
+        strcpy(result, "%rcx");
+    } else if (strcmp(paramRegister, "5") == 0) {
+        strcpy(result, "%r8");
+    } else if (strcmp(paramRegister, "6") == 0) {
+        strcpy(result, "%r9");
+    }
+    return result;
 }
