@@ -21,6 +21,10 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
         if(node->second->id != NULL) strcat(str, node->second->id);
         if(node->second->value != NULL) strcat(str, valueToString(node->second));
         strcat(str, " ");
+    }else if(isReturnTag(node->label)){
+        if(node->first->id != NULL) strcat(str, node->first->id);
+        if(node->first->value != NULL) strcat(str, valueToString(node->first));
+        strcat(str, " ");
     }else if(isArithmeticOrBooleanTag(node->label)){
         strcat(str, node->first->id);
         strcat(str, " ");
