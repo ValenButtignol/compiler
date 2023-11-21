@@ -34,18 +34,18 @@ int main(int argc,char *argv[]) {
         freeErrorsList(errors);
         exit(EXIT_FAILURE);
     }
-    printf("CHEACK TYPES COMPLETE %d\n", 1);
+    // printf("CHEACK TYPES COMPLETE %d\n", 1);
 
     ThreeAddressCodeList *list = createEmptyTAC();
 
     int offset = 0;//getOffset();
     int labelCounter = 0;
 
-    // printAst(globalAst);
+    //printAst(globalAst);
     NodeInfoStack *parameterStack = createEmptyNodeInfoStack();
     createThreeAddressCodeList(globalAst, list, &offset, &labelCounter, parameterStack);
-    printf("PARSE COMPLETE %d\n", 1);
-    printf("TERMINE\n");
-    printf("\n--------------------------TAC--------------------------\n%s--------------------------------------------------------\n",threeAddressListToString(list));
+    // printf("PARSE COMPLETE %d\n", 1);
+    // printf("TERMINE\n");
+    // printf("\n--------------------------TAC--------------------------\n%s--------------------------------------------------------\n",threeAddressListToString(list));
     generateAssembly(list);
 }
