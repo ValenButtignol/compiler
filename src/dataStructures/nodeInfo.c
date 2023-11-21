@@ -186,3 +186,7 @@ int nodeInfoIDEquals(NodeInfo* t, NodeInfo* param){
 void setNewOffset(NodeInfo** node, int offset){
     (*node)->offset = offset;
 }
+
+void setNewTag(NodeInfo** node, enum TTag tag){
+    (*node)->tag = tag;
+}

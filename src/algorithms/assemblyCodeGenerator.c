@@ -191,7 +191,7 @@ char* generateValue(NodeInfo* node) {
         sprintf(result, "%s", node->id);
     } else if (node->tag == LOAD) {
         sprintf(result, "%d", node->lineNumber);
-    } else if(node->tag == METHOD_DECL){
+    } else if(node->tag == METHOD_DECL || node->tag == EXTERN_METHOD_DECL){
         sprintf(result, "%s", node->id);
     } else {
         sprintf(result, "-%d(%%rbp)", node->offset*8);

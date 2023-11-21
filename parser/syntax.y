@@ -210,7 +210,8 @@ METHOD_ENDING: PARAMS_DECL TCloseParenthesis BLOCK {                            
     | PARAMS_DECL TCloseParenthesis TExtern TSemiColon {
                 NodeInfo* methodNode = searchGlobalLevelSymbolTable(symbolTable, currentMethodName); 
                 setParamsToNodeInfo(&methodNode, $1);
-                setNewOffset(&methodNode, offset);        
+                setNewOffset(&methodNode, offset);
+                setNewTag(&methodNode, EXTERN_METHOD_DECL);
                 $$ = newLeaf(&methodNode);
                 popLevelSymbolTable(&symbolTable);
                 free(currentMethodName);

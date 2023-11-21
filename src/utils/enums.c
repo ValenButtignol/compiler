@@ -126,6 +126,8 @@ char *tagToString(enum TTag tag) {
     case 33:
         return "END_LABEL";
     case 34:
+        return "EXTERN_METHOD_DECL";
+    case 35:
         return "NONETAG";
     default:
         return "NULL";
@@ -223,8 +225,6 @@ int isMethodCallTag(enum TTag tag){
 int isMethodDeclTag(enum TTag tag){
     return tag == METHOD_DECL; 
 }
-
-
 
 int isArithmeticOrBooleanTag(enum TTag tag){
     return isBooleanOperatorTag(tag) || isArithmeticOperatorTag(tag);

@@ -68,4 +68,6 @@ int nodeInfoIDEquals(NodeInfo* t, NodeInfo* param);
 
 void setNewOffset(NodeInfo** node, int offset);
 
+void setNewTag(NodeInfo** node, enum TTag tag);
+
 #endif
