@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gcc  -w testRunner.c src/*.c extern/*.c tests/utils/src/*.c -o output/tests.out
+gcc  -w testRunner.c src/*.c parser/*.c tests/utils/src/*.c -o output/tests.out
 
 input_file=$1
 test_type=$2
