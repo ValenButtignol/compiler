@@ -1,0 +1,24 @@
+Program {
+    def void print_int(integer x) extern;
+
+    def integer factorial(integer x) {
+        if(x == 0) then{
+            return 1;
+        }
+        return factorial(x - 1) * x;
+    }
+
+    def void main() {
+        integer x = -1;
+        x = factorial(1);
+        print_int(x);
+        x = factorial(2);
+        print_int(x);
+        x = factorial(3);
+        print_int(x);
+        x = factorial(4);
+        print_int(x);
+        x = factorial(5);
+        print_int(x);
+    }
+}
