@@ -188,15 +188,20 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         
         
         ThreeAddressCodeNode *node;
-        *offset = *offset + 1;
-        createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
-        pushTACNode(&parameterStack, ast->data);
+
         
         if(isLeaf(ast->ls)){
+            *offset = *offset + 1;
+            createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
+            pushTACNode(&parameterStack, ast->data);
             node = threeAddressCodeNodeFactory(treeTag, ast->data, ast->ls->data, newEmptyNodeInfo());
         }else{
             createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
-            node = threeAddressCodeNodeFactory(treeTag, ast->data, getFromTAC(list, list->size)->first, newEmptyNodeInfo());
+            NodeInfo* temp = popTACNode(&parameterStack);
+            *offset = *offset + 1;
+            createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
+            pushTACNode(&parameterStack, ast->data);
+            node = threeAddressCodeNodeFactory(treeTag, ast->data, temp, newEmptyNodeInfo());
         }
         addToTAC(list, node);
     }else if (treeTag == NONETAG) {
