@@ -39,7 +39,6 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
                 node = threeAddressCodeNodeFactory(ast->data->tag, ast->data, ast->ls->data, ast->rs->data);
             }else{    
                 if(isLeaf(ast->ls) && !isLeaf(ast->rs)){
-                    // printf("ENTRE A ESTE CASO %s\n\n", operatorToString(ast->data->operatorVar));
                     createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
                     createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
                     pushTACNode(&parameterStack, ast->data);
@@ -58,21 +57,24 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
                     NodeInfo *temp0 = popTACNode(&parameterStack);
                     NodeInfo *temp1 = popTACNode(&parameterStack);
                     pushTACNode(&parameterStack, ast->data);
-                    printf("temp0 = %s\n",nodeInfoToString(*temp0));
-                    printf("temp1 = %s\n",nodeInfoToString(*temp1));
                     node = threeAddressCodeNodeFactory(ast->data->tag, ast->data, temp1, temp0);
-                    printf("node = %s\n",threeAddressCodeNodeToString(node));
                 }
             }
             addToTAC(list, node);
     } else if (isReturnTag(treeTag)) {
         ThreeAddressCodeNode *node;
-        if(isLeaf(ast->ls)){
+
+        if(isLeaf(ast)){
+            node = threeAddressCodeNodeFactory(treeTag, ast->data, 
+                                                    newEmptyNodeInfo(), newEmptyNodeInfo());
+        }
+        else if(isLeaf(ast->ls)){
             node = threeAddressCodeNodeFactory(treeTag, ast->ls->data, 
                                                     newEmptyNodeInfo(), newEmptyNodeInfo());
         }else{
             createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
-            node = threeAddressCodeNodeFactory(treeTag, getFromTAC(list, list->size)->first, 
+            NodeInfo* temp = popTACNode(&parameterStack);
+            node = threeAddressCodeNodeFactory(treeTag, temp, 
                                                     newEmptyNodeInfo(), newEmptyNodeInfo());
         }
         addToTAC(list, node);
@@ -83,14 +85,14 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         NodeInfo* endThen = createLabelNodeInfo("endthen", *labelCounter);
 
         createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
+        NodeInfo* temp = popTACNode(&parameterStack);
         // Probably, a new tag called JUMPBYFALSE would be better.
-        ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(JFALSE, getFromTAC(list, list->size)->first, endThen, newEmptyNodeInfo());
+        ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(JFALSE, temp, endThen, newEmptyNodeInfo());
         addToTAC(list, node);
         createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
         ThreeAddressCodeNode* endThenTAC = threeAddressCodeNodeFactory(endThen->tag, endThen, newEmptyNodeInfo(), newEmptyNodeInfo());
         addToTAC(list, endThenTAC);
         // Agregas el nodo del label pregenerado a la lista de TAC.
-
     
     } else if (isIfElse(treeTag)) {
         *labelCounter = *labelCounter + 1;
@@ -101,8 +103,9 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         // write condition
         createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
 
+        
         // Probably, a new tag called JUMPBYFALSE would be better.
-        NodeInfo* condition = getFromTAC(list, list->size)->first;
+        NodeInfo* condition = popTACNode(&parameterStack);
         ThreeAddressCodeNode *jumpCond = threeAddressCodeNodeFactory(JFALSE, condition, endThen, newEmptyNodeInfo());
         addToTAC(list, jumpCond);
         
@@ -133,7 +136,7 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         // Reduce cond.
         createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
         //Get cond generated
-        NodeInfo* condition = getFromTAC(list, list->size)->first;
+        NodeInfo* condition = popTACNode(&parameterStack);
         
 
         // Jump by false to endWhile.
@@ -169,8 +172,7 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
             ThreeAddressCodeNode *node;
             NodeInfo *registerNode = newNodeInfoRegisterNumber(registerNumber);
             NodeInfo *param = params->rs->data;
-            printf("LABEL PARAM = %s\n", tagToString(param->tag));
-            popIfEquals(parameterStack, param);
+            popIfEquals(&parameterStack, param);
             node = threeAddressCodeNodeFactory(LOAD, registerNode, param, newEmptyNodeInfo());
             addToTAC(list, node);
             params = params->ls;
@@ -237,15 +239,6 @@ void addToTAC(ThreeAddressCodeList* list,ThreeAddressCodeNode* node){
     h->next = node;
     list->size++;
     node->next = NULL;
-}
-
-ThreeAddressCodeNode *getFromTAC(ThreeAddressCodeList *list, int index){
-    ThreeAddressCodeNode *h = list->head;
-    for (int i = 0; i < index; i++)
-    {
-        h = h->next;
-    }
-    return h;
 }
 
 ThreeAddressCodeList *createEmptyTAC(){
