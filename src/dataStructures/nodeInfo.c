@@ -178,7 +178,6 @@ NodeInfo* newNodeInfoTemporal(enum TTag tag) {
 }
 
 int nodeInfoIDEquals(NodeInfo* t, NodeInfo* param){
-    printf("comparando %s %s comp = %d\n", t->id, param->id);
     if(t->id == NULL || param->id == NULL) return 0;
     return strcmp(t->id, param->id) == 0;
 }
