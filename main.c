@@ -16,6 +16,11 @@ extern ErrorNode* getErrors();
 
 int main(int argc,char *argv[]) {
     ++argv,--argc;
+    char* filename = argv[0];
+    if(!hasBokExtension(filename)){
+        printf("\033[1;31mError:\033[0m file format not recognized\n");
+        exit(1);
+    }
 	if (argc > 0)
         yyin = fopen(argv[0], "r");
 	else

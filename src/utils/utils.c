@@ -85,3 +85,15 @@ char* getParamRegister(char* paramRegister) {
     }
     return result;
 }
+
+int hasBokExtension(const char* fileName) {
+    // Find the last occurrence of '.' in the file name
+    const char* dotPosition = strrchr(fileName, '.');
+
+    // Check if there is a dot and if the extension is ".bok"
+    if (dotPosition != NULL && strcmp(dotPosition, ".bok") == 0) {
+        return 1; // File has ".bok" extension
+    } else {
+        return 0; // File does not have ".bok" extension
+    }
+}
