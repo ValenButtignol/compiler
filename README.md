@@ -76,12 +76,12 @@ Si bien la detección de errores es casi completa y correcta, la utilización de
 
 El chequeo de tipos es una etapa fundamental en la construcción de un compilador, ya que permite detectar errores semánticos en el código fuente. En esta etapa se analiza la estructura del AST, y se verifica que las operaciones realizadas sean válidas, es decir, que los tipos de datos de los operandos sean compatibles con el operador utilizado.
 
-El algoritmo lo que hace es un recorrido del árbol generado, y en cada nodo que tenga una etiqueta apropiada para realizar una operación, se verifica que los tipos de los operandos sean compatibles con el operador utilizado. En caso de que no sean compatibles, se agrega un error a la lista de errores, y se continúa con el recorrido del árbol. A continuación se deja el enlace al algoritmo:
+Lo que hace el algoritmo es un recorrer el árbol generado, y en cada nodo que tenga una etiqueta apropiada para realizar una operación, se verifica que los tipos de los operandos sean compatibles con el operador utilizado. En caso de que no sean compatibles, se agrega un error a la lista de errores, y se continúa con el recorrido del árbol. A continuación se deja el enlace al algoritmo:
 
 - [Header checkTypes](include/algorithms/checktypes.h)
 - [Source checkTypes](src/algorithms/checktypes.c)
 
-Un atributo positivo de emplear este enfoque es que se puede detectar todos los errores semánticos en una sola pasada del árbol, y no se necesita realizar un recorrido del árbol por cada error semántico que se encuentre. Sin embargo, un atributo negativo es que no se puede detectar errores semánticos que se correspondan a identificadores no declarados, ya que el algoritmo no puede continuar con el recorrido del árbol si no se encuentra un identificador declarado.
+Un atributo positivo de emplear este enfoque es que se pueden detectar todos los errores de tipos en una sola pasada del árbol, y no se necesita realizar un recorrido del árbol por cada error semántico que se encuentre. Sin embargo, un atributo negativo es que no se puede detectar errores semánticos que se correspondan a identificadores no declarados, ya que el algoritmo no puede continuar con el recorrido del árbol si no se encuentra un identificador.
 
 ### 2.4: Generación de código intermedio.
 
@@ -107,14 +107,14 @@ Para la generación de código ensamblador, se implementó una fábrica de instr
 
 ## 3: Tests.
 
-Dentro del proyecto se incluyen tests para las etapas más complejas del proceso. Los mismos se encuentran en la carpeta `tests`, y se pueden ejecutar con el comando `make test`. A continuación se deja el enlace a los tests:
+Dentro del proyecto se incluyen tests para las etapas más complejas del proceso. A continuación se deja el enlace a los tests:
 
 - [Tests Check Types](tests/testCheckType.c)
 - [Tests Assembly Generation](tests/assemblyTestSuite.c)
 
 También está la test suite para la generación correcta del AST, pero el problema es que, por cuestiones de tiempo, se toma la desición de no implementar casos de tests; debido al esfuerzo que demanda la implementación de los mismos. 
 
-Un factor muy positivo de haber separado los algoritmos (la generación del AST, chequeo de tipos, etc.) es que se pueden realizar tests individualmente de cada etapa, y así poder detectar errores más fácilmente. Además, queda muy sencillo el realizar una verificación exhaustiva de cada etapa, ya que se pueden realizar tests de cada caso de error que se pueda encontrar en el código fuente. Un factor negativo es que la manera de generar cada caso de test manuales requiere de tiempo y esfuerzo, ya que se debe pensar con profundidad cada caso a analizar y cómo realizar dicha aserción.
+Un factor muy positivo de haber separado los algoritmos (la generación del AST, chequeo de tipos, etc.) es que se pueden realizar tests individualmente de cada etapa, y así poder detectar errores más fácilmente. Además, queda muy sencillo el realizar una verificación exhaustiva de cada etapa, ya que se pueden realizar tests de cada caso de error que se pueda encontrar en el código fuente. Un factor negativo es que la manera de generar un test manual requiere de tiempo y esfuerzo, ya que se debe pensar con profundidad cada caso a analizar y cómo realizar dicha aserción.
 
 ## 4: Conclusiones.
 
@@ -128,6 +128,6 @@ La generación de código ensamblador, aunque ha sido abordada de manera efectiv
 
 La inclusión de tests para las etapas más complejas del proceso ha sido una práctica valiosa para verificar la corrección de cada fase de desarrollo de manera individual. Sin embargo, se reconoce la necesidad de ampliar la suite de pruebas para lograr una cobertura más completa y exhaustiva.
 
-Debemos remarcar que la visión ideal a seguir para el desarrollo de un buen compilador, es la combinación de las ideas en la eficiencia de la generación de código con la capacidad de evaluar expresiones en tiempo real. En este informe se destacan algunas de las ventajas y desventajas de cada enfoque, y se busca resaltar la importancia de la elección de un enfoque u otro, dependiendo de las necesidades del compilador.
+Debemos remarcar que la visión ideal a seguir para el desarrollo de un buen compilador, es la combinación de las ideas en la eficiencia de la generación de código con la capacidad de evaluar expresiones en tiempo real. En este informe se destacan algunas de las ventajas y desventajas de cada enfoque, y se busca resaltar la importancia de la elección de una aproximación u otra, dependiendo de las necesidades del compilador.
 
 En resumen, este proyecto no solo ha proporcionado una comprensión profunda de la construcción de compiladores, sino que también ha revelado áreas de mejora y optimización para futuras iteraciones. La implementación exitosa de cada fase, junto con la identificación de posibles mejoras, representa un paso significativo en la comprensión y aplicación práctica de los conceptos fundamentales de diseño de software y construcción de compiladores.
