@@ -204,7 +204,6 @@ void generateLabel(FILE* file, char* firstValue) {
 }
 
 void generateEquals(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    
     fprintf(file, "    movl    %s, %%eax\n", secondValue);
     fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
     fprintf(file, "    cmpl    %%eax, %%ebx\n");
@@ -213,11 +212,9 @@ void generateEquals(FILE* file, char* firstValue, char* secondValue, char* third
     fprintf(file, "    cmove   %%eax, %%ebx\n");
     fprintf(file, "    movl    %%ebx, %s\n", firstValue);
     fprintf(file, "\n");
-    
 }
 
 void generateGreaterThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    
     fprintf(file, "    movl    %s, %%eax\n", secondValue);
     fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
     fprintf(file, "    cmpl    %%ebx, %%eax\n");
@@ -226,11 +223,9 @@ void generateGreaterThan(FILE* file, char* firstValue, char* secondValue, char* 
     fprintf(file, "    cmovg   %%eax, %%ebx\n");
     fprintf(file, "    movl    %%ebx, %s\n", firstValue);
     fprintf(file, "\n");
-    
 }
 
 void generateLessThan(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
-    
     fprintf(file, "    movl    %s, %%eax\n", secondValue);
     fprintf(file, "    movl    %s, %%ebx\n", thirdValue);
     fprintf(file, "    cmpl    %%ebx, %%eax\n");
@@ -239,7 +234,6 @@ void generateLessThan(FILE* file, char* firstValue, char* secondValue, char* thi
     fprintf(file, "    cmovl   %%eax, %%ebx\n");
     fprintf(file, "    movl    %%ebx, %s\n", firstValue);
     fprintf(file, "\n");
-    
 }
 
 void generateMod(FILE* file, char* firstValue, char* secondValue, char* thirdValue) {
@@ -309,11 +303,9 @@ void unloadRegisters(FILE* file, NodeInfo* method) {
         current = current->nextParams;
         registerNumber++;
     }
-    
 }
 
 void generateEndLabel(FILE* file) {
-
     fprintf(file, "    leave\n");
     fprintf(file, "    ret\n");
 }

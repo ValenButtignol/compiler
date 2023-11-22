@@ -27,7 +27,6 @@ char* nodeInfoToString(NodeInfo node) {
     return string;
 }
 
-
 int isEmptyNode(NodeInfo node) {
     return node.value == NULL && node.type == NONETYPE && node.id == "" && node.tag == NONETAG;
 }
@@ -59,7 +58,6 @@ char* createTemporalID(int tempNumber){
     return createIDNodeInfo("temp", tempNumber);
 }
 
-
 int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode) {
 
     int idsComp = (firstNode->id && secondNode->id) ? strcmp(firstNode->id, secondNode->id) : 0;
@@ -71,8 +69,6 @@ int equalsNodeInfo(NodeInfo* firstNode, NodeInfo* secondNode) {
            (firstNode->type == secondNode->type) &&
            (firstNode->tag == secondNode->tag);
 }
-
-/****************************** new constructors ********************************/
 
 NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber) {
     NodeInfo *result = malloc(sizeof(NodeInfo));    

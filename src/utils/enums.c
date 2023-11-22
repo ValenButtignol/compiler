@@ -24,24 +24,19 @@ enum TType getTypeFromText(char* type) {
 }
 
 char *typeToString(enum TType type) {
-    switch (type)
-    {
+    switch (type) {
     case INTEGER:
         return "integer";
-
     case BOOLEAN:
         return "boolean";
-    
     case VOID:
         return "VOID";
-    
     case NONETYPE:
         return "NONETYPE";
     case ERROR:
         return "ERROR";
     default:
         return "MAYBE NULL :/";
-        break;
     }
 }
 
@@ -55,8 +50,7 @@ enum TTag getTagFromText(char* tag) {
 
         
 char *tagToString(enum TTag tag) {
-    switch (tag)
-    {
+    switch (tag) {
     case 0:
         return "PROGRAM";
     case 1:
@@ -135,8 +129,7 @@ char *tagToString(enum TTag tag) {
 }
 
 char *operatorToString(enum TTag tag) {
-    switch (tag)
-    {
+    switch (tag) {
     case 2:
         return "=";
     case 10:
@@ -174,8 +167,8 @@ char *operatorToString(enum TTag tag) {
 
 int isTypeableTag(enum TTag tag){
     return  tag == ASSIGNMENT || tag ==  ADD || tag == SUB || tag ==  MUL || tag == DIV || tag ==  MOD
-            || tag ==  GREATER_THAN || tag ==  LESS_THAN || tag ==  EQUALS || tag ==  AND || tag == OR
-            || tag ==  NEGATIVE || tag ==  NOT || tag == VAR_DECL;
+        || tag ==  GREATER_THAN || tag ==  LESS_THAN || tag ==  EQUALS || tag ==  AND || tag == OR
+        || tag ==  NEGATIVE || tag ==  NOT || tag == VAR_DECL;
 }
 
 int isAssignTag(enum TTag tag){

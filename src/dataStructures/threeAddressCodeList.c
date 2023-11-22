@@ -1,24 +1,20 @@
 #include "../../include/dataStructures/threeAddressCodeList.h"
 
-extern int getOffset(void);
-
-
-
 void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offset, int* labelCounter,
-                                NodeInfoStack *parameterStack){
+    NodeInfoStack *parameterStack)
+{
     enum TTag treeTag = ast->data->tag;    
-    if(isEmptyAst(*ast) || treeTag == NONETAG){
+    if (isEmptyAst(*ast) || treeTag == NONETAG) {
         return ;
     }    
-    if(isAssignTag(treeTag)){
+
+    if (isAssignTag(treeTag)) {
         ThreeAddressCodeNode *node;
-        if(isLeaf(ast->rs)){
+        if (isLeaf(ast->rs)) {
             node = threeAddressCodeNodeFactory(ASSIGNMENT, ast->ls->data, ast->rs->data, newEmptyNodeInfo());
             addToTAC(list, node);
-        }else{
-
+        } else {
             *offset = *offset + 1;
-
             createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
             createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
             pushTACNode(&parameterStack, ast->data);
@@ -26,56 +22,67 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
             threeAddressCodeNodeFactory(ASSIGNMENT, ast->ls->data, ast->data, newEmptyNodeInfo());
             addToTAC(list, node);
         }
-    }else if(isArithmeticOrBooleanTag(treeTag) || isRelationalOperatorTag(treeTag)){
 
-            *offset = *offset + 1;
+    } else if (isArithmeticOrBooleanTag(treeTag) || isRelationalOperatorTag(treeTag)) {
 
-            ThreeAddressCodeNode *node;
-
-            if(isLeaf(ast->ls) && isLeaf(ast->rs)){
-                createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
-                pushTACNode(&parameterStack, ast->data);
-                node = threeAddressCodeNodeFactory(ast->data->tag, ast->data, ast->ls->data, ast->rs->data);
-            }else{    
-                if(isLeaf(ast->ls) && !isLeaf(ast->rs)){
-                    createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
-                    createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
-                    pushTACNode(&parameterStack, ast->data);
-                    node = threeAddressCodeNodeFactory(
-                        ast->data->tag, ast->data, ast->ls->data, popTACNode(&parameterStack));
-                }else if(!isLeaf(ast->ls) && isLeaf(ast->rs)){
-                    createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
-                    createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
-                    pushTACNode(&parameterStack, ast->data);
-                    node = threeAddressCodeNodeFactory(
-                        ast->data->tag, ast->data, popTACNode(&parameterStack), ast->rs->data);
-                }else if(!isLeaf(ast->ls) && !isLeaf(ast->rs)){
-                    createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
-                    createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
-                    createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
-                    NodeInfo *temp0 = popTACNode(&parameterStack);
-                    NodeInfo *temp1 = popTACNode(&parameterStack);
-                    pushTACNode(&parameterStack, ast->data);
-                    node = threeAddressCodeNodeFactory(ast->data->tag, ast->data, temp1, temp0);
-                }
-            }
-            addToTAC(list, node);
-    } else if (isReturnTag(treeTag)) {
+        *offset = *offset + 1;
         ThreeAddressCodeNode *node;
 
-        if(isLeaf(ast)){
-            node = threeAddressCodeNodeFactory(treeTag, ast->data, 
-                                                    newEmptyNodeInfo(), newEmptyNodeInfo());
+        if (isLeaf(ast->ls) && isLeaf(ast->rs)) {
+            createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
+            pushTACNode(&parameterStack, ast->data);
+            node = threeAddressCodeNodeFactory(ast->data->tag, ast->data, ast->ls->data, ast->rs->data);
+        } else {    
+            if (isLeaf(ast->ls) && !isLeaf(ast->rs)) {
+                createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
+                createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
+                pushTACNode(&parameterStack, ast->data);
+                
+                node = threeAddressCodeNodeFactory(
+                    ast->data->tag, ast->data, ast->ls->data, popTACNode(&parameterStack)
+                );
+            
+            } else if (!isLeaf(ast->ls) && isLeaf(ast->rs)) {
+                createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
+                createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
+                pushTACNode(&parameterStack, ast->data);
+                
+                node = threeAddressCodeNodeFactory(
+                    ast->data->tag, ast->data, popTACNode(&parameterStack), ast->rs->data
+                );
+            
+            } else if (!isLeaf(ast->ls) && !isLeaf(ast->rs)) {
+                createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
+                createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
+                createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
+                NodeInfo *temp0 = popTACNode(&parameterStack);
+                NodeInfo *temp1 = popTACNode(&parameterStack);
+                pushTACNode(&parameterStack, ast->data);
+                node = threeAddressCodeNodeFactory(ast->data->tag, ast->data, temp1, temp0);
+            }
         }
-        else if(isLeaf(ast->ls)){
-            node = threeAddressCodeNodeFactory(treeTag, ast->ls->data, 
-                                                    newEmptyNodeInfo(), newEmptyNodeInfo());
-        }else{
+        addToTAC(list, node);
+
+    } else if (isReturnTag(treeTag)) {
+        ThreeAddressCodeNode *node;
+        if(isLeaf(ast)){
+            node = threeAddressCodeNodeFactory(
+                treeTag, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo()
+            );
+        
+        } else if (isLeaf(ast->ls)) {
+            node = threeAddressCodeNodeFactory(
+                treeTag, ast->ls->data, newEmptyNodeInfo(), newEmptyNodeInfo()
+            );
+        
+        } else {
             createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
             NodeInfo* temp = popTACNode(&parameterStack);
-            node = threeAddressCodeNodeFactory(treeTag, temp, 
-                                                    newEmptyNodeInfo(), newEmptyNodeInfo());
+            node = threeAddressCodeNodeFactory(
+                treeTag, temp, newEmptyNodeInfo(), newEmptyNodeInfo()
+            );
         }
+
         addToTAC(list, node);
     
     } else if (isIf(treeTag)) {
@@ -83,16 +90,22 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         *labelCounter = *labelCounter + 1;
         NodeInfo* endThen = createLabelNodeInfo("endthen", *labelCounter);
         NodeInfo* temp;
-        if(isLeaf(ast->ls)){
+        if (isLeaf(ast->ls)) {
             temp = ast->ls->data;
-        }else{
+        
+        } else {
             createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
             temp = popTACNode(&parameterStack);
         }
+        
         ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(JFALSE, temp, endThen, newEmptyNodeInfo());
         addToTAC(list, node);
         createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
-        ThreeAddressCodeNode* endThenTAC = threeAddressCodeNodeFactory(endThen->tag, endThen, newEmptyNodeInfo(), newEmptyNodeInfo());
+        
+        ThreeAddressCodeNode* endThenTAC = threeAddressCodeNodeFactory(
+            endThen->tag, endThen, newEmptyNodeInfo(), newEmptyNodeInfo()
+        );
+
         addToTAC(list, endThenTAC);
     
     } else if (isIfElse(treeTag)) {
@@ -101,11 +114,10 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         *labelCounter = *labelCounter + 1;
         NodeInfo* endElse = createLabelNodeInfo("endelse", *labelCounter);
 
-        
         NodeInfo* condition;
-        if(isLeaf(ast->ls)){
+        if (isLeaf(ast->ls)) {
             condition = ast->ls->data;
-        }else{
+        } else {
             // write condition
             createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
             condition = popTACNode(&parameterStack);
@@ -117,15 +129,21 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         // THEN block
         createThreeAddressCodeList(ast->rs->ls, list, offset, labelCounter, parameterStack);
         
-        ThreeAddressCodeNode *jumpThenBlock = threeAddressCodeNodeFactory(JUMP, endElse, newEmptyNodeInfo(), newEmptyNodeInfo());
+        ThreeAddressCodeNode *jumpThenBlock = threeAddressCodeNodeFactory(
+            JUMP, endElse, newEmptyNodeInfo(), newEmptyNodeInfo()
+        );
         addToTAC(list, jumpThenBlock);
 
-        ThreeAddressCodeNode *endThenTAC = threeAddressCodeNodeFactory(endThen->tag, endThen, newEmptyNodeInfo(), newEmptyNodeInfo());
+        ThreeAddressCodeNode *endThenTAC = threeAddressCodeNodeFactory(
+            endThen->tag, endThen, newEmptyNodeInfo(), newEmptyNodeInfo()
+        );
         addToTAC(list, endThenTAC);
 
         // ELSE block
         createThreeAddressCodeList(ast->rs->rs, list, offset, labelCounter, parameterStack);
-        ThreeAddressCodeNode *jumpElseBlock = threeAddressCodeNodeFactory(endElse->tag, endElse, newEmptyNodeInfo(), newEmptyNodeInfo());
+        ThreeAddressCodeNode *jumpElseBlock = threeAddressCodeNodeFactory(
+            endElse->tag, endElse, newEmptyNodeInfo(), newEmptyNodeInfo()
+        );
         addToTAC(list, jumpElseBlock);
     
     } else if (isWhile(treeTag)) {
@@ -135,14 +153,15 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         NodeInfo* endWhile = createLabelNodeInfo("endwhile", *labelCounter);
 
         // Write beginwhile label.
-        ThreeAddressCodeNode *beginWhileTAC = threeAddressCodeNodeFactory(beginWhile->tag, beginWhile, newEmptyNodeInfo(), newEmptyNodeInfo());
+        ThreeAddressCodeNode *beginWhileTAC = threeAddressCodeNodeFactory(
+            beginWhile->tag, beginWhile, newEmptyNodeInfo(), newEmptyNodeInfo()
+        );
         addToTAC(list, beginWhileTAC);
         
-
         NodeInfo* condition;
-        if(isLeaf(ast->ls)){
+        if (isLeaf(ast->ls)) {
             condition = ast->ls->data;
-        }else{
+        } else {
             // Reduce cond.
             createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
             //Get cond generated
@@ -157,28 +176,38 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
         
         // Jump by true to beginWhile.
-        ThreeAddressCodeNode *iterationCond = threeAddressCodeNodeFactory(JUMP, beginWhile, newEmptyNodeInfo(), newEmptyNodeInfo());
+        ThreeAddressCodeNode *iterationCond = threeAddressCodeNodeFactory(
+            JUMP, beginWhile, newEmptyNodeInfo(), newEmptyNodeInfo()
+        );
         addToTAC(list, iterationCond);
 
-        ThreeAddressCodeNode *endWhileTAC = threeAddressCodeNodeFactory(endWhile->tag, endWhile, newEmptyNodeInfo(), newEmptyNodeInfo());
+        ThreeAddressCodeNode *endWhileTAC = threeAddressCodeNodeFactory(
+            endWhile->tag, endWhile, newEmptyNodeInfo(), newEmptyNodeInfo()
+        );
         addToTAC(list, endWhileTAC);
     
-    
-    } else if(isMethodDeclTag(treeTag)){
+    } else if(isMethodDeclTag(treeTag)) {
         // Write beginwhile label.
-        ThreeAddressCodeNode *beginFunction = threeAddressCodeNodeFactory(ast->data->tag, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo());
+        ThreeAddressCodeNode *beginFunction = threeAddressCodeNodeFactory(
+            ast->data->tag, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo()
+        );
         addToTAC(list, beginFunction);
+        
         *offset = ast->data->offset;
         createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
         ast->data->offset = *offset;
-        ThreeAddressCodeNode *endFunction = threeAddressCodeNodeFactory(END_LABEL, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo());
+        ThreeAddressCodeNode *endFunction = threeAddressCodeNodeFactory(
+            END_LABEL, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo()
+        );
         addToTAC(list, endFunction);
 
-    } else if(isMethodCallTag(treeTag)){
+    } else if(isMethodCallTag(treeTag)) {
+
         createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
         TAst *params = ast->ls;
         int registerNumber = 1;
-        while(params != NULL){
+        
+        while (params != NULL) {
             ThreeAddressCodeNode *node;
             NodeInfo *registerNode = newNodeInfoRegisterNumber(registerNumber);
             NodeInfo *param = params->rs->data;
@@ -198,18 +227,17 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         node = threeAddressCodeNodeFactory(ast->data->tag, nd, ast->data, newEmptyNodeInfo());
         addToTAC(list, node);
 
-    }else if (isUnaryOperatorTag(treeTag)) {
-        
-        
+    } else if (isUnaryOperatorTag(treeTag)) {
         ThreeAddressCodeNode *node;
 
-        
-        if(isLeaf(ast->ls)){
+        if (isLeaf(ast->ls)) {
             *offset = *offset + 1;
             createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
             pushTACNode(&parameterStack, ast->data);
             node = threeAddressCodeNodeFactory(treeTag, ast->data, ast->ls->data, newEmptyNodeInfo());
-        }else{
+        
+        } else {
+
             createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
             NodeInfo* temp = popTACNode(&parameterStack);
             *offset = *offset + 1;
@@ -218,9 +246,10 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
             node = threeAddressCodeNodeFactory(treeTag, ast->data, temp, newEmptyNodeInfo());
         }
         addToTAC(list, node);
-    }else if (treeTag == NONETAG) {
+    
+    } else if (treeTag == NONETAG) {
         return;
-    }else{
+    } else {
         if(ast->ls!=NULL)createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
         if(ast->rs!=NULL)createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
     }
@@ -230,12 +259,13 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
 char* threeAddressListToString(ThreeAddressCodeList *list){
     ThreeAddressCodeNode *h = list->head->next;
     char *str = malloc(list->size*100);
-    while(h != NULL)
-    {   
+    
+    while (h != NULL) {   
         strcat(str, threeAddressCodeNodeToString(h));
         strcat(str, "\n");
         h = h->next;
     }
+
     strcat(str, "");   
     return str;
 }
@@ -243,19 +273,21 @@ char* threeAddressListToString(ThreeAddressCodeList *list){
 
 void addToTAC(ThreeAddressCodeList* list,ThreeAddressCodeNode* node){
     ThreeAddressCodeNode *h = list->head;
-    while(h->next != NULL){
+    
+    while (h->next != NULL) {
         h = h->next;
     }
+    
     h->next = node;
     list->size++;
     node->next = NULL;
 }
 
 ThreeAddressCodeList *createEmptyTAC(){
-   ThreeAddressCodeList *list = malloc(sizeof(ThreeAddressCodeList*));
+    ThreeAddressCodeList *list = malloc(sizeof(ThreeAddressCodeList*));
 
-   list->head = newEmtyNodeTAC();
-   list->size = 0;
+    list->head = newEmtyNodeTAC();
+    list->size = 0;
 
     return list;
 }
