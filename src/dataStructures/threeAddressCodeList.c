@@ -83,9 +83,13 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
 
         *labelCounter = *labelCounter + 1;
         NodeInfo* endThen = createLabelNodeInfo("endthen", *labelCounter);
-
-        createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
-        NodeInfo* temp = popTACNode(&parameterStack);
+        NodeInfo* temp;
+        if(isLeaf(ast->ls)){
+            temp = ast->ls->data;
+        }else{
+            createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
+            temp = popTACNode(&parameterStack);
+        }
         // Probably, a new tag called JUMPBYFALSE would be better.
         ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(JFALSE, temp, endThen, newEmptyNodeInfo());
         addToTAC(list, node);
@@ -100,12 +104,16 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         *labelCounter = *labelCounter + 1;
         NodeInfo* endElse = createLabelNodeInfo("endelse", *labelCounter);
 
-        // write condition
-        createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
-
         
-        // Probably, a new tag called JUMPBYFALSE would be better.
-        NodeInfo* condition = popTACNode(&parameterStack);
+        NodeInfo* condition;
+        if(isLeaf(ast->ls)){
+            condition = ast->ls->data;
+        }else{
+            // write condition
+            createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
+            condition = popTACNode(&parameterStack);
+        }
+
         ThreeAddressCodeNode *jumpCond = threeAddressCodeNodeFactory(JFALSE, condition, endThen, newEmptyNodeInfo());
         addToTAC(list, jumpCond);
         
@@ -132,12 +140,17 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         // Write beginwhile label.
         ThreeAddressCodeNode *beginWhileTAC = threeAddressCodeNodeFactory(beginWhile->tag, beginWhile, newEmptyNodeInfo(), newEmptyNodeInfo());
         addToTAC(list, beginWhileTAC);
-
-        // Reduce cond.
-        createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
-        //Get cond generated
-        NodeInfo* condition = popTACNode(&parameterStack);
         
+
+        NodeInfo* condition;
+        if(isLeaf(ast->ls)){
+            condition = ast->ls->data;
+        }else{
+            // Reduce cond.
+            createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
+            //Get cond generated
+            condition = popTACNode(&parameterStack);
+        }
 
         // Jump by false to endWhile.
         ThreeAddressCodeNode *jumpCond = threeAddressCodeNodeFactory(JFALSE, condition, endWhile, newEmptyNodeInfo());

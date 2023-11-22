@@ -10,6 +10,7 @@ Program {
     integer h = true && true;
 
     integer i = 1 / 0;
+    integer z = 1 % 0;
     
     integer s = 1 && 2;
     integer t = 1 && false;

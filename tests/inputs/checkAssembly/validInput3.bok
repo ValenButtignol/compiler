@@ -1,0 +1,23 @@
+Program {
+
+    def void print_int(integer x) extern;
+    def void print_bool(bool b) extern;
+
+    def integer inc(integer x, bool b) {
+        if(b == true) then{
+            print_bool(b);
+            return x + 1;
+        }
+        print_bool(b);
+        return x;
+    }
+
+    def void main() {
+        bool b = true;
+        integer x = 0;
+        x = inc(x, b);
+        print_int(x);
+        x = inc(x, false);
+        print_int(x);
+    }
+}

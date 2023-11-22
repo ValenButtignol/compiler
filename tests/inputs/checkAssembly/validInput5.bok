@@ -1,0 +1,26 @@
+Program {
+
+    def void print_int(integer x) extern;
+    def void print_bool(bool b) extern;
+
+    def bool square(integer x, integer y) {
+        integer i = 0;
+        while(i < y){
+            print_int(i);
+            x = x * 2;
+            i = i + 1;
+        }
+        if(x % 2 == 0) then{
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    def void main() {
+        bool b = true;
+        integer x = 1;
+        b = square(x, 10);
+        print_bool(b);
+    }
+}
