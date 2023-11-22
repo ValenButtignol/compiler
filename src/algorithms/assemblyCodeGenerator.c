@@ -251,7 +251,7 @@ void generateMod(FILE* file, char* firstValue, char* secondValue, char* thirdVal
     fprintf(file, "    movl    %s, %%ebx\n", thirdValue);   // Divisor
     fprintf(file, "    xor     %%rdx, %%rdx\n");            // Clear rdx to prepare for the result
     fprintf(file, "    idiv    %%ebx\n");                   // Divide eax by ebx, quotient in eax, remainder in rdx
-    fprintf(file, "    movl    %%rdx, %s\n", firstValue);   // Store value
+    fprintf(file, "    mov     %%rdx, %s\n", firstValue);   // Store value
     fprintf(file, "\n");
 }
 
