@@ -1,7 +1,7 @@
 # Taller de Diseño de Software 2023
 
 ## Introducción
-Este informe presenta un análisis sobre la implementación de un compilador. El enfoque abarca la utilización de herramientas clave como Flex y Bison para definir las reglas y tokens del lenguaje a compilar, la construcción del Abstract Syntax Tree (AST) mediante las reglas de Bison, la implementación del algoritmo de chequeo de tipos, y la generación del Three Address Code y Assembly Code, todos estos últimos llevados a cabo en el lenguaje C.
+Este informe presenta un análisis sobre la implementación de un compilador. El enfoque abarca la utilización de herramientas clave como Flex y Bison para definir las reglas y tokens del lenguaje a compilar, la construcción del Abstract Syntax Tree (AST) mediante las reglas de Bison, la implementación del algoritmo de chequeo de tipos, la generación del Three Address Code y Assembly Code, todos estos últimos llevados a cabo en el lenguaje C.
 
 Este proyecto tiene como objetivo principal no solo mostrar la utilización del compilador con los comandos de ejecución del mismo, sino también proporcionar una visión detallada de cada fase del proceso de construcción. A lo largo del informe, se analizarán minuciosamente los detalles de implementación, capacidades e inconveniencias presentes para posibles mejoras en cada etapa, ofreciendo así una comprensión profunda de las decisiones tomadas durante la implementación.
 
@@ -81,6 +81,17 @@ El algoritmo lo que hace es un recorrido del árbol generado, y en cada nodo que
 Un atributo positivo de emplear este enfoque es que se puede detectar todos los errores semánticos en una sola pasada del árbol, y no se necesita realizar un recorrido del árbol por cada error semántico que se encuentre. Sin embargo, un atributo negativo es que no se puede detectar errores semánticos que se correspondan a identificadores no declarados, ya que el algoritmo no puede continuar con el recorrido del árbol si no se encuentra un identificador declarado.
 
 ### 2.4: Generación de código intermedio.
+
+La fase de generación de código intermedio, específicamente en forma de código de tres direcciones, es un paso crucial antes de generar codigo assembly. Este proceso nos permite desplazarnos desde el árbol sintáctico hacia una representación simplificada del código, considerablemente cercana al lenguaje ensamblador. Para llevar a cabo la generación de este código, implementamos un caso específico para cada etiqueta de los nodos del árbol, asignándoles instrucciones correspondientes en el código de tres direcciones.
+Las estructuras de datos empleadas para esta implementación simulan una lista simplemente encadenada. Cada nodo de la lista posee una etiqueta que identifica la instrucción y tres nodos, siendo un receptor y dos operadores. Ademas, para almacenar las variables temporales generadas, utilizamos una pila. Esta elección podría ser ventajosa en futuras mejoras del compilador, en caso de que optemos por reutilizar variables temporales para evitar la creación excesiva.
+Podemos destacar que evaluamos todas las expresiones antes de incorporarlas como parámetros de las funciones. Además, cuando nos enfrentamos a expresiones compuestas por más de una operación, se intenta reutilizar temporales asociados a esa expresión, reduciendo así su cantidad. Sin embargo, este aspecto también representa un área de mejora, ya que actualmente se genera una variable temporal por cada expresión, la cual no se utiliza posteriormente en el código. Por ende, existe la posibilidad de mejorar la gestión de estas variables temporales para evitar su creación innecesaria. Otro punto de mejora identificado es la modularización del algoritmo responsable de generar este código, con el objetivo de mejorar su legibilidad y facilitar la detección de errores.
+
+- [Header threeAddresCodeNode](include/dataStructures/threeAddressCodeNode.h)
+- [Source threeAddresCodeNode](src/dataStructures/threeAddressCodeNode.c)
+- [Header threeAddresCodeList](include/dataStructures/threeAddressCodeList.h)
+- [Source threeAddresCodeList](src/dataStructures/threeAddressCodeList.c)
+- [Header NodeInfoStack](include/dataStructures/nodeInfoStack.h)
+- [Source NodeInfoStack](src/dataStructures/nodeInfoStack.c)
 
 ### 2.5: Generación de código ensamblador.
 
