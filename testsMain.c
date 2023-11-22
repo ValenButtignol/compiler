@@ -41,7 +41,6 @@ int main(int argc,char *argv[]) {
     ErrorNode* errors = getErrors();
     char* testType = argv[1];
     char* fileName = getFileName(argv[0], testType);
-    //printAst(globalAst);
     
     if (strcmp(testType, "syntax") == 0) {
         generateAstTestSuite(fileName, globalAst, errors);

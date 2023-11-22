@@ -3,6 +3,7 @@
 #include "../include/testerMethods.h"
 
 int testerOutputs(char *filename, int expectedOutput[]){
+
     FILE *file; 
     file = fopen(filename, "r");
     char buffer[100];
@@ -23,6 +24,8 @@ int testerOutputs(char *filename, int expectedOutput[]){
 
     return expectedOutput[i] == -999999;
 }
+
+
 int testerDfs(TAst* globalAst, TestingNodeInfoList* expectedNodes) {
     
     if (globalAst->ls == NULL && globalAst->rs == NULL) {

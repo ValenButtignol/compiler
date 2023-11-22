@@ -10,11 +10,9 @@ if [ ! -f "./output/tests.out" ]; then
     exit 1
 fi
 
-
-
 if [ -f "$input_file" ]; then
     if [ "$test_type" = "assemble" ]; then
-        make compile OUTFILE=out.txt IN_FILE="$input_file"
+        make compile_test OUTFILE=out.txt IN_FILE="$input_file"
         # Run ./a.out with the input file and save the output to outputs folder
         ./output/tests.out "$input_file" "$test_type"
         # rm out.txt

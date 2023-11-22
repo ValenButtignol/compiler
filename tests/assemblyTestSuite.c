@@ -11,7 +11,6 @@ static void assemblyTestSuite(char* inputTestFileName) {
     int expectedOutput[MAXOUTPUTS] = {-999999};
     
     assembleExpectedOutputsFactory(inputTestFileName, expectedOutput);
-    
     if (expectedOutput == NULL) {
         printNoTestSuiteMessage(inputTestFileName);
         return ;

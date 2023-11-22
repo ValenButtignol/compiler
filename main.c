@@ -53,6 +53,5 @@ int main(int argc,char *argv[]) {
     // printf("TERMINE\n");
     // printf("\n--------------------------TAC--------------------------\n%s--------------------------------------------------------\n",threeAddressListToString(list));
     char* assemblyFilename = generateAssemblyFilename(filename);
-    printf("Assembly file: %s\n", assemblyFilename);
     generateAssembly(list, assemblyFilename);
 }

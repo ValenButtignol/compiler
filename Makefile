@@ -63,29 +63,28 @@ test_assembly:
 test_all: test_syntax test_checktypes test_assembly
 
 
-#IN_TEST ?= validInput1.txt
-#TYPE ?=	eval
-#
-#test_file:
-#	$(SCRIPT_DIR)/test_file.sh $(TEST_DIR)/inputs/$(IN_TEST) $(TYPE)
-
 IN_FILE ?= input.bok
+ASM_FILE = input.s
+ASM_EXEC = executable
+
 
 run:
-	./$(TARGET) input/$(IN_FILE) 
+	./$(TARGET) input/$(IN_FILE) ; \
 
-ASSEMBLY_FILE = assembly.s
-ASSMBLE_EXE = executable
+link:
+	$(CC) $(BIN_DIR)/$(ASM_FILE) extern/*.c -o $(BIN_DIR)/$(ASM_EXEC)
 
 OUTFILE ?= nofile
 
-assemble:
-	$(CC) $(ASSEMBLY_FILE)  extern/*.c -o $(BIN_DIR)/$(ASSMBLE_EXE)
-
+asm:
 	@if [ $(OUTFILE) = "nofile" ]; then \
-		$(BIN_DIR)/$(ASSMBLE_EXE) 2>/dev/null || true; \
+		$(BIN_DIR)/$(ASM_EXEC) 2>/dev/null || true; \
 	else \
-		$(BIN_DIR)/$(ASSMBLE_EXE) > $(OUTFILE) 2>/dev/null || true; \
+		$(BIN_DIR)/$(ASM_EXEC) > $(OUTFILE) 2>/dev/null || true; \
 	fi
 
-compile: run assemble
+compile: run link asm
+
+compile_test:
+	./$(TARGET) $(IN_FILE)
+	$(CC) $(BIN_DIR)/$(ASM_FILE) extern/*.c -o $(BIN_DIR)/$(ASM_EXEC)

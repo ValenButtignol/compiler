@@ -7,17 +7,63 @@ Este proyecto tiene como objetivo principal no solo mostrar la utilización del 
 
 ## 1: Instrucciones de uso.
 
-### 1.1: Compilación
+Dentro de las siguientes instrucciones, se encuentran los diferentes comandos para poner en funcionamiento al proyecto. Se debe tener en cuenta que el proyecto actualmente cuenta con programas de ejemplo, ubicados dentro del folder `input`, que es en donde se deberan ubicar los programas a compilar. Además, notar que el proyecto cuenta con un archivo `Makefile`, el cual permite compilar el proyecto de manera sencilla.
+
+### 1.1: Generar Parser
+
+El siguiente comando permite la generación de los archivos correspondientes al lexer y parser del lenguaje, en base a las reglas y tokens definidos en los archivos [lexicon.l](parser/lexicon.l) y [syntax.y](parser/syntax.y). Los archivos generados son `lex.yy.c`, `syntax.tab.h` y `syntax.tab.c`, los cuales se encuentran en el folder `parser`.
+
 ```
-Poner comandos de compilación.
+make parse
 ```
 
-### 1.2: Ejecución
+### 1.2: Compilación del proyecto
+
+La compilación del proyecto, es referida a la generación del ejecutable del compilador; compilando todos los archivos que contienen a los diversos algoritmos del proyecto. De esta forma, dentro del folder `output` se generará un archivo ejecutable llamado `compiler`, que sería el compilador ejecutable. El comando para realizar dicha compilación es el siguiente:
+
 ```
-Poner comandos de ejecución.
+make src
+``` 
+
+### 1.3: Compilar programa
+
+Para compilar un programa, una vez se haya escrito, debe estar alocado en el folder `input`. Luego, se debe ejecutar el siguiente comando:
+
+```
+make run IN_FILE=<nombre_archivo>.bok
 ```
 
-### 1.3: Ejecución de Tests
+Es importante tener en cuenta que el archivo deba tener la extensión ".bok" debido a que es la extensión elegida para nuestr lenguaje. Luego, el código assembler que se genera, se encuentra en el folder `output`, con el nombre `<nombre_archivo>.s`. En caso de no pasar un argumento a la variable `IN_FILE`, se compilará el archivo `input.bok` por defecto.
+
+### 1.4: Linkeo de assembly code
+
+Este comando permite el linkeo del código assembler generado con todos los archivos `.c` ubicados dentro del folder `extern`. De esta forma, se puede utilizar cualquier función externa que se quiera declarar dentro del programa, y dicha función externa puede estar escrita en cualquier lenguaje que `gcc` admita (C, C++, Fortran, etc.). El comando para realizar dicho linkeo es el siguiente:
+
+```
+make link ASM_FILE=<nombre_archivo>.s ASM_EXEC=<nombre_ejecutable>
+```
+
+La variable `ASM_FILE` indica el nombre del archivo de código assembler a linkear, mientras que la variable `ASM_EXEC` indica el nombre del ejecutable que se generará. En caso de no pasar un argumento a la variable `ASM_FILE`, se linkeará el archivo `input.s` por defecto. En caso de no pasar un argumento a la variable `ASM_EXEC`, se generará un ejecutable llamado `executable` por defecto.
+
+### 1.5: Ejecución del programa
+
+Para ejecutar el archivo generado con el paso anterior, se debe ejecutar el siguiente comando:
+
+```
+make asm ASM_EXEC=<nombre_ejecutable>
+```
+
+### 1.6: Compilar, linkear y ejecutar
+
+A modo de ahorro de tiempo, se puede ejecutar el siguiente comando para realizar todos los últimos tres pasos anteriores en un solo comando:
+
+```
+make compile IN_FILE=<nombre_archivo>.bok ASM_FILE=<nombre_archivo>.s ASM_EXEC=<nombre_ejecutable>
+```
+
+### 1.7: Ejecución de Tests
+
+
 ```
 Poner comandos de ejecución.
 ```
