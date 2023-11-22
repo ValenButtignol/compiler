@@ -21,6 +21,7 @@ void checkForTypeErrors(TAst* ast, ErrorNode** errors) {
         if(isAssignTag(ast->data->tag) || isArithmeticOrBooleanTag(ast->data->tag)){
             if(checkSonsFatherTypes(ast))
                 addOperationError(errors, ast->data->lineNumber, ast->data->tag);
+            checkDivByZero(ast, errors);
         }else if(isRelationalOperatorTag(ast->data->tag)){
             if(checkSonsTypes(ast))
                 addOperationError(errors, ast->data->lineNumber, ast->data->tag);

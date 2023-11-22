@@ -152,7 +152,7 @@ char *operatorToString(enum TTag tag) {
     case 19:
         return "/";
     case 20:
-        return "%%";
+        return "%";
     case 21:
         return ">";
     case 22:

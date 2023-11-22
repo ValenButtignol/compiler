@@ -34,6 +34,12 @@ char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node){
         if(node->third->id != NULL) strcat(str, node->third->id);
         if(node->third->value != NULL) strcat(str, valueToString(node->third));
         strcat(str, " ");
+    }else if(node->label == JFALSE){
+        if(node->first->id != NULL) strcat(str, node->first->id);
+        if(node->first->value != NULL) strcat(str, valueToString(node->first));
+        strcat(str, " ");
+        strcat(str, node->second->id);
+        strcat(str, " ");
     }
     else if(node->first != NULL){
         if(node->first->tag != PARAM){

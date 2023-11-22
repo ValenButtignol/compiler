@@ -16,6 +16,11 @@ extern ErrorNode* getErrors();
 
 int main(int argc,char *argv[]) {
     ++argv,--argc;
+    char* filename = argv[0];
+    if(!hasBokExtension(filename)){
+        printf("\033[1;31mError:\033[0m file format not recognized\n");
+        exit(1);
+    }
 	if (argc > 0)
         yyin = fopen(argv[0], "r");
 	else
@@ -34,18 +39,18 @@ int main(int argc,char *argv[]) {
         freeErrorsList(errors);
         exit(EXIT_FAILURE);
     }
-    printf("CHEACK TYPES COMPLETE %d\n", 1);
+    // printf("CHEACK TYPES COMPLETE %d\n", 1);
 
     ThreeAddressCodeList *list = createEmptyTAC();
 
     int offset = 0;//getOffset();
     int labelCounter = 0;
 
-    // printAst(globalAst);
+    //printAst(globalAst);
     NodeInfoStack *parameterStack = createEmptyNodeInfoStack();
     createThreeAddressCodeList(globalAst, list, &offset, &labelCounter, parameterStack);
-    printf("PARSE COMPLETE %d\n", 1);
-    printf("TERMINE\n");
-    printf("\n--------------------------TAC--------------------------\n%s--------------------------------------------------------\n",threeAddressListToString(list));
+    // printf("PARSE COMPLETE %d\n", 1);
+    // printf("TERMINE\n");
+    // printf("\n--------------------------TAC--------------------------\n%s--------------------------------------------------------\n",threeAddressListToString(list));
     generateAssembly(list);
 }
