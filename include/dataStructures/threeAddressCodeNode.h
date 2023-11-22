@@ -13,11 +13,14 @@ typedef struct ThreeAddressCodeNode{
 } ThreeAddressCodeNode;
 
 char *threeAddressCodeNodeToString(ThreeAddressCodeNode *node);
+
 ThreeAddressCodeNode *threeAddressCodeNodeFactory(
-    enum TTag label, NodeInfo *first, NodeInfo *second, NodeInfo *third);
+    enum TTag label, NodeInfo *first, NodeInfo *second, NodeInfo *third
+);
 
 ThreeAddressCodeNode *createThreeAddressCodeNode(
-    enum TTag label, NodeInfo *first, NodeInfo *second, NodeInfo *third);
+    enum TTag label, NodeInfo *first, NodeInfo *second, NodeInfo *third
+);
 
 NodeInfo *getFirst(ThreeAddressCodeNode *node);
 

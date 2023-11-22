@@ -8,6 +8,7 @@
 #include "../utils/utils.h"
 
 int checkTypes(TAst* ast, ErrorNode** errors);
+
 void checkForTypeErrors(TAst* ast, ErrorNode** errors);
 
 #endif

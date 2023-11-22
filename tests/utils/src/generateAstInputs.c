@@ -124,8 +124,6 @@ void generateAstListErrors15(ErrorNode** expectedErrors) {
 
 void generateAstExpectedNodesCreator1(TestingNodeInfoList** expectedNodes) {
     NodeInfo* node;
-    node = newNodeInfoWithoutValue(INTEGER, "a", VAR_DECL,0);
-    addNodeToTestingList(expectedNodes, node);
 }
 
 void generateAstExpectedNodesCreator2(TestingNodeInfoList** expectedNodes) {

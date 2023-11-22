@@ -5,7 +5,7 @@ Este informe presenta un análisis sobre la implementación de un compilador. El
 
 Este proyecto tiene como objetivo principal no solo mostrar la utilización del compilador con los comandos de ejecución del mismo, sino también proporcionar una visión detallada de cada fase del proceso de construcción. A lo largo del informe, se analizarán minuciosamente los detalles de implementación, capacidades e inconveniencias presentes para posibles mejoras en cada etapa, ofreciendo así una comprensión profunda de las decisiones tomadas durante la implementación.
 
-## 1: Comandos de ejecución
+## 1: Instrucciones de uso.
 
 ### 1.1: Compilación
 ```

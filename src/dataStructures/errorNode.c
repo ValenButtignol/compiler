@@ -51,3 +51,24 @@ int equalsErrorNode(ErrorNode* error1, ErrorNode* error2) {
         return strcmp(error1->data, error2->data) == 0;
     }
 }
+
+void addOperationError(ErrorNode** errors, int lineNumber, enum TTag tag){
+    int errorStrLength = snprintf(NULL, 0, "\033[1;36mLine: %d \033[1;31mError:\033[0m Type mismatch in \'\033[1;36m %s \033[0m \' \n", lineNumber, operatorToString(tag));
+    char* errorStr = malloc(errorStrLength + 1);
+    sprintf(errorStr, "\033[1;36mLine: %d \033[1;31mError:\033[0m Type mismatch in \'\033[1;36m %s \033[0m\' \n", lineNumber, operatorToString(tag));
+    insertErrorNode(errors, errorStr);
+}
+
+void addMethodCallError(ErrorNode** errors, int lineNumber, char* message, char* methodName){
+    int errorStrLength = snprintf(NULL, 0, "\033[1;36mLine: %d \033[1;31mError:\033[0m %s in function \'\033[1;36m %s \033[0m\' \n", lineNumber, message, methodName);
+    char* errorStr = malloc(errorStrLength + 1);
+    sprintf(errorStr, "\033[1;36mLine: %d \033[1;31mError:\033[0m %s in function \'\033[1;36m %s \033[0m\' \n", lineNumber, message, methodName);
+    insertErrorNode(errors, errorStr);
+}
+
+void addDivByZeroError(ErrorNode** errors, int lineNumber, enum TTag tag){
+    int errorStrLength = snprintf(NULL, 0, "\033[1;36mLine: %d \033[1;31mError:\033[0m Division by zero in \'\033[1;36m %s \033[0m\' \n", lineNumber, operatorToString(tag));
+    char* errorStr = malloc(errorStrLength + 1);
+    sprintf(errorStr, "\033[1;36mLine: %d \033[1;31mError:\033[0m Division by zero in \'\033[1;36m %s \033[0m\' \n", lineNumber, operatorToString(tag));
+    insertErrorNode(errors, errorStr);
+}

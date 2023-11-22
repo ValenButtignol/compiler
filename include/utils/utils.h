@@ -3,14 +3,9 @@
 #include <stdio.h>
 #include "../dataStructures/ast.h"
 #include "../dataStructures/nodeInfo.h"
+#include "../dataStructures/errorNode.h"
 
 void setParamsToNodeInfo(NodeInfo** node, TAst* ast);
-
-void addOperationError(ErrorNode** errors, int lineNumber, enum TTag tag);
-
-void addMethodCallError(ErrorNode** errors, int lineNumber, char* message, char* methodName);
-
-void addDivByZeroError(ErrorNode** errors, int lineNumber, enum TTag tag);
 
 int checkReturnTypes(TAst *ast);
 
