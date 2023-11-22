@@ -30,6 +30,13 @@ void addMethodCallError(ErrorNode** errors, int lineNumber, char* message, char*
     insertErrorNode(errors, errorStr);
 }
 
+void addDivByZeroError(ErrorNode** errors, int lineNumber, enum TTag tag){
+    int errorStrLength = snprintf(NULL, 0, "\033[1;36mLine: %d \033[1;31mError:\033[0m Division by zero in \'\033[1;36m %s \033[0m\' \n", lineNumber, operatorToString(tag));
+    char* errorStr = malloc(errorStrLength + 1);
+    sprintf(errorStr, "\033[1;36mLine: %d \033[1;31mError:\033[0m Division by zero in \'\033[1;36m %s \033[0m\' \n", lineNumber, operatorToString(tag));
+    insertErrorNode(errors, errorStr);
+}
+
 int checkReturnTypes(TAst *ast){
     enum TType lsType = getAstType(ast->ls);
     return (!(lsType==ast->data->type) && !(VOID==ast->data->type && ast->ls==NULL && lsType==NONETYPE));
@@ -47,11 +54,21 @@ int checkSonsTypes(TAst *ast){
 int checkSonsFatherTypes(TAst *ast){
     return !(!checkSonsTypes(ast) && (getAstType(ast->ls) == ast->data->type));
 }
+
+void checkDivByZero(TAst *ast, ErrorNode** errors){
+    if(ast->data->tag == DIV || ast->data->tag == MOD){
+        if(ast->rs->data->tag == CONST_VALUE && *((int*)ast->rs->data->value) == 0){
+            addDivByZeroError(errors, ast->data->lineNumber, ast->data->tag);
+        }
+    }
+}
+
 void copyMethodName(char **methodName,TAst *ast){
     int methodNameSize = snprintf(NULL, 0, "%s", ast->data->id);
     *methodName = malloc(methodNameSize + 1);
     sprintf(*methodName, "%s", ast->rs->data->id);
 }
+
 enum TType getAstType(TAst* ast) { 
     if(ast==NULL) return NONETYPE;
     if ((ast->data)->type != NONETYPE) {
