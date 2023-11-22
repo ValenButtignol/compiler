@@ -10,7 +10,7 @@ BIN_DIR = output
 SRCS := $(wildcard $(SRC_DIR)/**/*.c) ./main.c
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))  
 
-TARGET = $(BIN_DIR)/my_program
+TARGET = $(BIN_DIR)/compiler
 
 .PHONY: all clean
 
@@ -69,10 +69,10 @@ test_all: test_syntax test_checktypes test_assembly
 #test_file:
 #	$(SCRIPT_DIR)/test_file.sh $(TEST_DIR)/inputs/$(IN_TEST) $(TYPE)
 
-IN_FILE ?= input/input.bok
+IN_FILE ?= input.bok
 
 run:
-	./$(TARGET) $(IN_FILE) 
+	./$(TARGET) input/$(IN_FILE) 
 
 ASSEMBLY_FILE = assembly.s
 ASSMBLE_EXE = executable

@@ -25,4 +25,6 @@ char* getParamRegister(char* paramRegister);
 
 int hasBokExtension(const char* fileName);
 
+char* generateAssemblyFilename(const char* fileName);
+
 #endif

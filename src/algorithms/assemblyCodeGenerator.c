@@ -1,7 +1,7 @@
 #include "../../include/algorithms/assemblyCodeGenerator.h"
 
-void generateAssembly(ThreeAddressCodeList* list) {
-    FILE* file = fopen("assembly.s", "w");
+void generateAssembly(ThreeAddressCodeList* list, const char* filename) {
+    FILE* file = fopen(filename, "w");
     if (file == NULL) {
         perror("Error opening the file");
         exit(1);

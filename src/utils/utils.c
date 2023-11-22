@@ -93,3 +93,20 @@ int hasBokExtension(const char* fileName) {
         return 0;
     }
 }
+
+char* generateAssemblyFilename(const char* fileName) {
+    size_t length = strlen(fileName);
+    size_t lengthSuffix = strlen(".bok");
+    size_t lengthPrefix = strlen("input/");
+
+    char* copy = malloc(length - lengthPrefix - lengthSuffix + strlen("output/") + strlen(".s") + 1);
+    if (copy == NULL) {
+        return NULL;
+    }
+
+    strcpy(copy, "output/");
+    strcat(copy, fileName + lengthPrefix);
+    strcpy(copy + strlen(copy) - lengthSuffix, ".s");
+
+    return copy;
+}

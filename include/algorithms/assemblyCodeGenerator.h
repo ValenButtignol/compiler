@@ -10,7 +10,7 @@
 #include "../utils/enums.h"
 #include "../utils/utils.h"
 
-void generateAssembly(ThreeAddressCodeList* list);
+void generateAssembly(ThreeAddressCodeList* list, const char* filename);
 
 void generatePrologue(FILE* file, ThreeAddressCodeList* list);
 

@@ -52,5 +52,7 @@ int main(int argc,char *argv[]) {
     // printf("PARSE COMPLETE %d\n", 1);
     // printf("TERMINE\n");
     // printf("\n--------------------------TAC--------------------------\n%s--------------------------------------------------------\n",threeAddressListToString(list));
-    generateAssembly(list);
+    char* assemblyFilename = generateAssemblyFilename(filename);
+    printf("Assembly file: %s\n", assemblyFilename);
+    generateAssembly(list, assemblyFilename);
 }
