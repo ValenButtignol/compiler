@@ -52,13 +52,15 @@ void checkTypesListErrors2(ErrorNode** expectedErrors) {
     addOperationError(expectedErrors, 9, ASSIGNMENT);
     addOperationError(expectedErrors, 9, AND);
     addOperationError(expectedErrors, 10, ASSIGNMENT);
-    addOperationError(expectedErrors, 14, ASSIGNMENT);
-    addOperationError(expectedErrors, 14, AND);
+    addDivByZeroError(expectedErrors, 12, DIV);
+    addDivByZeroError(expectedErrors, 13, MOD);
     addOperationError(expectedErrors, 15, ASSIGNMENT);
     addOperationError(expectedErrors, 15, AND);
     addOperationError(expectedErrors, 16, ASSIGNMENT);
     addOperationError(expectedErrors, 16, AND);
     addOperationError(expectedErrors, 17, ASSIGNMENT);
+    addOperationError(expectedErrors, 17, AND);
+    addOperationError(expectedErrors, 18, ASSIGNMENT);
 
 } 
 
