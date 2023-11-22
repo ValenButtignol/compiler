@@ -27,4 +27,18 @@ void addMethodCallError(ErrorNode** errors, int lineNumber, char* message, char*
 
 void addDivByZeroError(ErrorNode** errors, int lineNumber, enum TTag tag);
 
+void addVariableIDDeclaredError(ErrorNode** errors, int lineNumber, char* id);
+
+void addProcedureIDDeclaredError(ErrorNode** errors, int lineNumber, char* id);
+
+void addParameterIDDeclaredError(ErrorNode** errors, int lineNumber, char* id);
+
+void addIDDeclaredError(ErrorNode** errors, int lineNumber, char* id, const char* typeOfID);
+
+void addVariableIDNotDeclaredError(ErrorNode** errors, int lineNumber, char* id);
+
+void addProcedureIDNotDeclaredError(ErrorNode** errors, int lineNumber, char* id);
+
+void addIDNotDeclaredError(ErrorNode** errors, int lineNumber, char* id, const char* typeOfID);
+
 #endif

@@ -16,7 +16,6 @@ typedef struct NodeInfo{
 	struct NodeInfo* nextParams;
 }NodeInfo;
 
-
 NodeInfo* newEmptyNodeInfo();
 
 NodeInfo* newNodeInfoSimple(enum TTag tag, int lineNumber);

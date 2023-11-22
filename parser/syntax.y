@@ -129,10 +129,7 @@ VAR_DECL_BLOCK: VAR_DECL VAR_DECL_BLOCK {
 VAR_DECL: TType TId TAssign EXPR TSemiColon {
             NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);       // Check if the identificator is already declared in the current level.
             if (alreadyDeclared != NULL) {   
-
-                char* error = (char*)malloc(80);
-                sprintf(error, "\033[1;31mLine: %d Error:\033[0m variable identifier '%s' already declared\n",yylineno, $2);
-                insertErrorNode(&errors, error);
+                addVariableIDDeclaredError(&errors, yylineno, $2);
             }
 
             offset++;
@@ -160,9 +157,7 @@ METHOD_DECL: TDef TType TId TOpenParenthesis {
 
                 NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $3);       // Check if the identificator is already declared in the current level.
                 if (alreadyDeclared != NULL) {   
-                    char* error = (char*)malloc(80);
-                    sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier '%s' already declared\n",yylineno, $3);
-                    insertErrorNode(&errors, error);
+                    addProcedureIDDeclaredError(&errors, yylineno, $3);
                 }
                 offset = 0;
                 NodeInfo* methodNode = newNodeInfoDeclaration($3, *$2, METHOD_DECL, yylineno, offset);    
@@ -181,9 +176,7 @@ METHOD_DECL: TDef TType TId TOpenParenthesis {
                 
                 NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $3);
                 if (alreadyDeclared != NULL) {   
-                    char* error = (char*)malloc(80);
-                    sprintf(error, "\033[1;31mLine: %d Error:\033[0m function identifier %s already declared\n",yylineno, $3);
-                    insertErrorNode(&errors, error);
+                    addProcedureIDDeclaredError(&errors, yylineno, $3);
                 }
 
                 offset = 0;
@@ -232,9 +225,7 @@ PARAMS_DECL: PARAMS_LIST_DECL {
 PARAMS_LIST_DECL: TType TId TComma PARAMS_LIST_DECL {
             NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);
             if (alreadyDeclared != NULL) {   
-                char* error = (char*)malloc(80);
-                sprintf(error, "\033[1;31mLine: %d Error:\033[0m parameter identifier %s already declared\n",yylineno, $2);
-                insertErrorNode(&errors, error);
+                addParameterIDDeclaredError(&errors, yylineno, $2);
             }
 
             offset++;
@@ -245,9 +236,7 @@ PARAMS_LIST_DECL: TType TId TComma PARAMS_LIST_DECL {
     | TType TId {
             NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);
             if (alreadyDeclared != NULL) {   
-                char* error = (char*)malloc(80);
-                sprintf(error, "\033[1;31mLine: %d Error:\033[0m parameter identifier %s already declared\n",yylineno, $2);
-                insertErrorNode(&errors, error);
+                addParameterIDDeclaredError(&errors, yylineno, $2);
             }
             offset++;
             NodeInfo* paramNode = newNodeInfoDeclaration($2, *$1, PARAM, yylineno, offset);
@@ -315,9 +304,7 @@ STATEMENT: ASSIGNMENT TSemiColon {
 ASSIGNMENT: TId TAssign EXPR {
             NodeInfo* var = searchGlobalLevelSymbolTable(symbolTable, $1);
             if (var == NULL) { 
-                char* error = (char*)malloc(80); 
-                sprintf(error, "\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", yylineno, $1);
-                insertErrorNode(&errors, error);
+                addVariableIDNotDeclaredError(&errors, yylineno, $1);
             }else{
                 NodeInfo* assignNode = newNodeInfoType(var->type, ASSIGNMENT, yylineno);
                 $$ = newAst(assignNode, newLeaf(&var), $3);
@@ -328,9 +315,7 @@ ASSIGNMENT: TId TAssign EXPR {
 METHOD_CALL: TId TOpenParenthesis PARAMS_CALL TCloseParenthesis {
             NodeInfo* method = searchGlobalLevelSymbolTable(symbolTable, $1);
             if (method == NULL) {
-                char* error = (char*)malloc(80);
-                sprintf(error, "\033[1;31mLine: %d Error:\033[0m method %s not declared\n", yylineno, $1);
-                insertErrorNode(&errors, error);
+                addProcedureIDNotDeclaredError(&errors, yylineno, $1);
             }else{
                 NodeInfo* callNode = newNodeInfoType(method->type, METHOD_CALL, yylineno);
                 setParamsToNodeInfo(&callNode, $3);                                                           
@@ -447,9 +432,7 @@ EXPR: EXPR TAdd EXPR {
     | TId {
             NodeInfo* var = searchGlobalLevelSymbolTable(symbolTable, $1);
             if (var == NULL) {   
-                char* error = (char*)malloc(80);
-                sprintf(error, "\033[1;31mLine: %d Error:\033[0m variable %s not declared\n", yylineno, $1);
-                insertErrorNode(&errors, error);
+                addVariableIDNotDeclaredError(&errors, yylineno, $1);
             }else{
                 $$ = newLeaf(&var);
             }
