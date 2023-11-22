@@ -35,7 +35,6 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
             if(isLeaf(ast->ls) && isLeaf(ast->rs)){
                 createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
                 pushTACNode(&parameterStack, ast->data);
-                //createTemporalNodeInfo(createTemporalID(*offset), ast->data, *offset);
                 node = threeAddressCodeNodeFactory(ast->data->tag, ast->data, ast->ls->data, ast->rs->data);
             }else{    
                 if(isLeaf(ast->ls) && !isLeaf(ast->rs)){
@@ -90,13 +89,11 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
             createThreeAddressCodeList(ast->ls, list, offset, labelCounter, parameterStack);
             temp = popTACNode(&parameterStack);
         }
-        // Probably, a new tag called JUMPBYFALSE would be better.
         ThreeAddressCodeNode *node = threeAddressCodeNodeFactory(JFALSE, temp, endThen, newEmptyNodeInfo());
         addToTAC(list, node);
         createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
         ThreeAddressCodeNode* endThenTAC = threeAddressCodeNodeFactory(endThen->tag, endThen, newEmptyNodeInfo(), newEmptyNodeInfo());
         addToTAC(list, endThenTAC);
-        // Agregas el nodo del label pregenerado a la lista de TAC.
     
     } else if (isIfElse(treeTag)) {
         *labelCounter = *labelCounter + 1;
@@ -171,9 +168,9 @@ void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offs
         // Write beginwhile label.
         ThreeAddressCodeNode *beginFunction = threeAddressCodeNodeFactory(ast->data->tag, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo());
         addToTAC(list, beginFunction);
-        *offset = ast->data->offset;    // Reset offset
+        *offset = ast->data->offset;
         createThreeAddressCodeList(ast->rs, list, offset, labelCounter, parameterStack);
-        ast->data->offset = *offset;    // TODO: Check if the offset is updated at this point.
+        ast->data->offset = *offset;
         ThreeAddressCodeNode *endFunction = threeAddressCodeNodeFactory(END_LABEL, ast->data, newEmptyNodeInfo(), newEmptyNodeInfo());
         addToTAC(list, endFunction);
 

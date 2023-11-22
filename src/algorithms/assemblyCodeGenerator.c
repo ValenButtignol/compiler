@@ -3,9 +3,8 @@
 void generateAssembly(ThreeAddressCodeList* list) {
     FILE* file = fopen("assembly.s", "w");
     if (file == NULL) {
-        // Error handling code
         perror("Error opening the file");
-        exit(1); // Return a non-zero value to indicate failure
+        exit(1);
     }
 
     generateHeader(file, list);
@@ -167,11 +166,8 @@ void generateMov(FILE* file, char* firstValue, char* secondValue) {
 }
 
 void generateRet(FILE* file, char* firstValue) {
-    //generatePrint(file, firstValue);
-
     fprintf(file, "    movl    %s, %%eax\n", firstValue);
     fprintf(file, "\n");
-
 }
 
 char* generateValue(NodeInfo* node) {
@@ -318,7 +314,6 @@ void unloadRegisters(FILE* file, NodeInfo* method) {
 
 void generateEndLabel(FILE* file) {
 
-//    fprintf(file, "    movl -8(%%rbp), %%edi\n    call print\n");
     fprintf(file, "    leave\n");
     fprintf(file, "    ret\n");
 }

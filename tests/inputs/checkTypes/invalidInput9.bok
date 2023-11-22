@@ -1,14 +1,14 @@
 Program {
     def integer foo(bool a, bool b) {
         if (a == b) then {
-            if ((1 + 2) == 3) then {                //No debería ser error
+            if ((1 + 2) == 3) then {                
                 while (!a || b) {
                     a = false;
                 }
                 return 1;
             }
         } else {
-            while (3 + 4 > true) {             //Si debería ser error.
+            while (3 + 4 > true) {             //Error here
                 a = true;
             }
             return false;               //Error in return.

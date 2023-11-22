@@ -43,7 +43,7 @@ int main(int argc,char *argv[]) {
 
     ThreeAddressCodeList *list = createEmptyTAC();
 
-    int offset = 0;//getOffset();
+    int offset = 0;
     int labelCounter = 0;
 
     //printAst(globalAst);

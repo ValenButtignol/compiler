@@ -88,8 +88,8 @@ int hasBokExtension(const char* fileName) {
 
     // Check if there is a dot and if the extension is ".bok"
     if (dotPosition != NULL && strcmp(dotPosition, ".bok") == 0) {
-        return 1; // File has ".bok" extension
+        return 1;
     } else {
-        return 0; // File does not have ".bok" extension
+        return 0;
     }
 }

@@ -95,7 +95,7 @@ char* currentMethodName;
 %initial-action {
     errors = NULL;
     offset = 0;
-    initializeSymbolTable(&symbolTable); // TODO: Initialize symbol table with block 0.
+    initializeSymbolTable(&symbolTable);
 } 
 
 %%
@@ -106,7 +106,7 @@ PROGRAM: TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurly
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);       
             $$ = newAst(programNode, $3, $4);
             globalAst = $$;
-            popLevelSymbolTable(&symbolTable);          // This pop is not really necesary.
+            popLevelSymbolTable(&symbolTable);          
         }
     | TProgram TOpenCurlyBracket METHOD_DECL_BLOCK TCloseCurlyBracket {
             NodeInfo* programNode = newNodeInfoSimple(PROGRAM, yylineno);
@@ -119,7 +119,7 @@ PROGRAM: TProgram TOpenCurlyBracket VAR_DECL_BLOCK METHOD_DECL_BLOCK TCloseCurly
 VAR_DECL_BLOCK: VAR_DECL VAR_DECL_BLOCK {
 
             NodeInfo* varDeclBlockNode = newNodeInfoSimple(VAR_DECL_BLOCK, yylineno);
-            $$ = newAst(varDeclBlockNode, $1, $2);      // LS is VAR_DECL and RS others VAR_DECL_BLOCK.
+            $$ = newAst(varDeclBlockNode, $1, $2);      
         }
     | VAR_DECL {
             $$ = $1;
@@ -127,17 +127,17 @@ VAR_DECL_BLOCK: VAR_DECL VAR_DECL_BLOCK {
     ;
 
 VAR_DECL: TType TId TAssign EXPR TSemiColon {
-            NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);       // Check if the identificator is already declared in the current level.
+            NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $2);       // Check if the id is already declared in the current level.
             if (alreadyDeclared != NULL) {   
                 addVariableIDDeclaredError(&errors, yylineno, $2);
             }
 
             offset++;
-            NodeInfo* varNode = newNodeInfoDeclaration($2, *$1, VAR, yylineno, offset);      // Create VAR node.
+            NodeInfo* varNode = newNodeInfoDeclaration($2, *$1, VAR, yylineno, offset);      
             addNodeToSymbolTable(&symbolTable, varNode);
             TAst* declaredVariable = newLeaf(&varNode);
             
-            NodeInfo* varDecl = newNodeInfoType(varNode->type, VAR_DECL, yylineno);                  // Create a VAR_DECL node to evaluate VAR after with the EXPR.
+            NodeInfo* varDecl = newNodeInfoType(varNode->type, VAR_DECL, yylineno);
 
             $$ = newAst(varDecl, declaredVariable, $4);
 
@@ -155,18 +155,18 @@ METHOD_DECL_BLOCK: METHOD_DECL METHOD_DECL_BLOCK {
 
 METHOD_DECL: TDef TType TId TOpenParenthesis {
 
-                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $3);       // Check if the identificator is already declared in the current level.
+                NodeInfo* alreadyDeclared = searchLocalLevelSymbolTable(symbolTable, $3);
                 if (alreadyDeclared != NULL) {   
                     addProcedureIDDeclaredError(&errors, yylineno, $3);
                 }
                 offset = 0;
                 NodeInfo* methodNode = newNodeInfoDeclaration($3, *$2, METHOD_DECL, yylineno, offset);    
-                addNodeToSymbolTable(&symbolTable, methodNode);                                     // Add the method to the symbol table.
+                addNodeToSymbolTable(&symbolTable, methodNode);                                     
                 
                 currentMethodName = malloc(strlen($3) + 1);                                             
-                currentMethodName = $3;                                                                 // Save the current method name.
+                currentMethodName = $3;                                                                
                 
-                addLevelToSymbolTable(&symbolTable);                                                // We include a new level for the params of the method.
+                addLevelToSymbolTable(&symbolTable);
 
             } METHOD_ENDING {
                 $$ = $6;
@@ -183,8 +183,8 @@ METHOD_DECL: TDef TType TId TOpenParenthesis {
                 NodeInfo* methodNode = newNodeInfoDeclaration($3, *$2, METHOD_DECL, yylineno, offset);
                 addNodeToSymbolTable(&symbolTable, methodNode);                
                 currentMethodName = malloc(strlen($3) + 1);                                             
-                currentMethodName = $3;               
-                                                                  // Save the current method name.
+                currentMethodName = $3;             
+
                 addLevelToSymbolTable(&symbolTable);
 
             } METHOD_ENDING {
@@ -196,7 +196,7 @@ METHOD_ENDING: PARAMS_DECL TCloseParenthesis BLOCK {                            
                 NodeInfo* methodNode = searchGlobalLevelSymbolTable(symbolTable, currentMethodName);     
                 setParamsToNodeInfo(&methodNode, $1);
                 setNewOffset(&methodNode, offset);        
-                $$ = newAst(methodNode, $1, $3);                                                          // After the data is linked, and the block is created, we return the method node.
+                $$ = newAst(methodNode, $1, $3);                                                          // After the data is linked, and the block is created, adn return the method node.
                 popLevelSymbolTable(&symbolTable);                                                        // Pop the level created for params.
                 free(currentMethodName);
             }
@@ -338,7 +338,7 @@ PARAMS_LIST_CALL: EXPR TComma PARAMS_LIST_CALL {
             $$ = newAst(paramNode, $3, $1);
         }
     | EXPR {
-            NodeInfo* paramNode = newNodeInfoType($1->data->type, PARAM, yylineno);// TODO: REMEMBER TO ASK IF YOU HAVE RS. 
+            NodeInfo* paramNode = newNodeInfoType($1->data->type, PARAM, yylineno);
             $$ = newAst(paramNode, NULL, $1);
         }
     ;
@@ -376,51 +376,51 @@ RETURN_STATEMENT: TReturn EXPR TSemiColon {
     ;
 
 EXPR: EXPR TAdd EXPR {
-            NodeInfo* addNode = newNodeInfoType(INTEGER, ADD, yylineno);     // BINARY OP
+            NodeInfo* addNode = newNodeInfoType(INTEGER, ADD, yylineno);
             $$ = newAst(addNode, $1, $3);
         }
     | EXPR TSub EXPR {
-            NodeInfo* subNode = newNodeInfoType(INTEGER, SUB, yylineno);     // BINARY OP
+            NodeInfo* subNode = newNodeInfoType(INTEGER, SUB, yylineno);
             $$ = newAst(subNode, $1, $3);
         }
     | EXPR TMul EXPR {
-            NodeInfo* mulNode = newNodeInfoType(INTEGER, MUL, yylineno);     // BINARY OP
+            NodeInfo* mulNode = newNodeInfoType(INTEGER, MUL, yylineno);
             $$ = newAst(mulNode, $1, $3);
         }
     | EXPR TDiv EXPR {
-            NodeInfo* divNode = newNodeInfoType(INTEGER, DIV, yylineno);     // BINARY OP
+            NodeInfo* divNode = newNodeInfoType(INTEGER, DIV, yylineno);
             $$ = newAst(divNode, $1, $3);
         }
     | EXPR TMod EXPR {
-            NodeInfo* modNode = newNodeInfoType(INTEGER, MOD, yylineno);     // BINARY OP
+            NodeInfo* modNode = newNodeInfoType(INTEGER, MOD, yylineno);
             $$ = newAst(modNode, $1, $3);
         }
     | EXPR TGreaterThan EXPR {
-            NodeInfo* greaterThanNode = newNodeInfoType(BOOLEAN, GREATER_THAN, yylineno);     // BINARY OP
+            NodeInfo* greaterThanNode = newNodeInfoType(BOOLEAN, GREATER_THAN, yylineno);
             $$ = newAst(greaterThanNode, $1, $3);
         }
     | EXPR TLessThan EXPR {
-            NodeInfo* lessThanNode = newNodeInfoType(BOOLEAN, LESS_THAN, yylineno);     // BINARY OP
+            NodeInfo* lessThanNode = newNodeInfoType(BOOLEAN, LESS_THAN, yylineno);
             $$ = newAst(lessThanNode, $1, $3);
         }
     | EXPR TEquals EXPR {
-            NodeInfo* equalsNode = newNodeInfoType(BOOLEAN, EQUALS, yylineno);     // BINARY OP
+            NodeInfo* equalsNode = newNodeInfoType(BOOLEAN, EQUALS, yylineno);
             $$ = newAst(equalsNode, $1, $3);
         }
     | EXPR TAnd EXPR {
-            NodeInfo* andNode = newNodeInfoType(BOOLEAN, AND, yylineno);             // BINARY OP
+            NodeInfo* andNode = newNodeInfoType(BOOLEAN, AND, yylineno);
             $$ = newAst(andNode, $1, $3);
         }
     | EXPR TOr EXPR {
-            NodeInfo* orNode = newNodeInfoType(BOOLEAN, OR, yylineno);             // BINARY OP
+            NodeInfo* orNode = newNodeInfoType(BOOLEAN, OR, yylineno);
             $$ = newAst(orNode, $1, $3);
         }
     | TSub EXPR %prec TNegative {
-            NodeInfo* negativeNode = newNodeInfoType(INTEGER, NEGATIVE, yylineno); // UNARY OP
+            NodeInfo* negativeNode = newNodeInfoType(INTEGER, NEGATIVE, yylineno);
             $$ = newAst(negativeNode, $2, NULL);
         }
     | TNot EXPR {
-            NodeInfo* notNode = newNodeInfoType(BOOLEAN, NOT, yylineno);           // UNARY OP
+            NodeInfo* notNode = newNodeInfoType(BOOLEAN, NOT, yylineno);          
             $$ = newAst(notNode, $2, NULL);
         }
     | METHOD_CALL {
@@ -444,11 +444,11 @@ EXPR: EXPR TAdd EXPR {
 
 LITERAL: TIntegerLiteral {
             NodeInfo* literalNode = newNodeInfoLiteral($1, INTEGER, CONST_VALUE, yylineno);
-            $$ = newLeaf(&literalNode);         // Node without value and ID.
+            $$ = newLeaf(&literalNode);       
         }
     | TBooleanLiteral {
             NodeInfo* literalNode = newNodeInfoLiteral($1, BOOLEAN, CONST_VALUE, yylineno);
-            $$ = newLeaf(&literalNode);  // Node without value and ID.
+            $$ = newLeaf(&literalNode);
         }
     ;
 

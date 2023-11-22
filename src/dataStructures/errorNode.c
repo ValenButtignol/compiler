@@ -6,7 +6,7 @@ ErrorNode* createErrorNode(const char* data) {
         printf("Memory allocation failed\n");
         exit(1);
     }
-    newNode->data = strdup(data);  // Dynamically allocate memory for the string
+    newNode->data = strdup(data);
     newNode->next = NULL;
     return newNode;
 }

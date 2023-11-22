@@ -117,7 +117,6 @@ char *valueToString(NodeInfo *node){
     if(node->type == INTEGER){
         sprintf(str, "%d", *(int*)node->value);
     }else if(node->type == BOOLEAN){
-        // int value = (int*)node->value;
         strcat(str, boolToString(*value));
     }
     return str;

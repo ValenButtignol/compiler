@@ -47,7 +47,7 @@ int main(int argc,char *argv[]) {
         generateAstTestSuite(fileName, globalAst, errors);
 
     } else if (strcmp(testType, "type") == 0) {
-        // if errors != NULL, then there are syntax errors
+        
         checkTypes(globalAst, &errors);
         checkTypeTestSuite(fileName, globalAst, errors);
 

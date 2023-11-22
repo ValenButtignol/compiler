@@ -24,12 +24,7 @@ int testerOutputs(char *filename, int expectedOutput[]){
     return expectedOutput[i] == -999999;
 }
 int testerDfs(TAst* globalAst, TestingNodeInfoList* expectedNodes) {
-    // printf("\n%s\n", astToString(globalAst));
-    // int a = (*(int*)(globalAst->data)->value);
-    // printf("\n\n\nvalueAST: %d == %d\n", a, expectedNodes->head->data.value);
-    // printf("idAST: %s == %s\n", (globalAst->data)->id, expectedNodes->head->data.id);
-    // printf("tagAST: %s == %s\n", tagToString(globalAst->data->tag), tagToString(expectedNodes->head->data.tag));
-    // printf("NODE:  %s\n\n", nodeInfoToString(*globalAst->data));
+    
     if (globalAst->ls == NULL && globalAst->rs == NULL) {
         return equalsNodeInfo(globalAst->data, expectedNodes->head->data);
     }

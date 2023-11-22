@@ -8,7 +8,7 @@ Program {
     }
 
     def void main() {
-        bool a = foo(g(foo(g(foo(true)))));          // Error aca.
+        bool a = foo(g(foo(g(foo(true)))));          // Error here.
         return ;  
     }
 }
