@@ -40,7 +40,7 @@ Es importante tener en cuenta que el archivo deba tener la extensión ".bok" deb
 Este comando permite el linkeo del código assembler generado con todos los archivos `.c` ubicados dentro del folder `extern`. De esta forma, se puede utilizar cualquier función externa que se quiera declarar dentro del programa, y dicha función externa puede estar escrita en cualquier lenguaje que `gcc` admita (C, C++, Fortran, etc.). El comando para realizar dicho linkeo es el siguiente:
 
 ```
-make link ASM_FILE=<nombre_archivo>.s ASM_EXEC=<nombre_ejecutable>
+make link ASM_FILE=<nombre_archivo>.s ASM_EXEC=<nombre_archivo>
 ```
 
 La variable `ASM_FILE` indica el nombre del archivo de código assembler a linkear, mientras que la variable `ASM_EXEC` indica el nombre del ejecutable que se generará. En caso de no pasar un argumento a la variable `ASM_FILE`, se linkeará el archivo `input.s` por defecto. En caso de no pasar un argumento a la variable `ASM_EXEC`, se generará un ejecutable llamado `executable` por defecto.
@@ -62,6 +62,8 @@ make compile IN_FILE=<nombre_archivo>.bok ASM_FILE=<nombre_archivo>.s ASM_EXEC=<
 ```
 
 ### 1.7: Ejecución de Tests
+
+Para ejecutar los tests, están las siguientes opciones:
 
 ```
 make test_checktypes
