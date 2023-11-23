@@ -1,6 +1,12 @@
 
 #include "../include/assemblyTestInputs.h"
 
+void assemblyExpectedOutputCreator1(int expectedNodes[MAXOUTPUTS]);
+void assemblyExpectedOutputCreator2(int expectedNodes[MAXOUTPUTS]);
+void assemblyExpectedOutputCreator3(int expectedNodes[MAXOUTPUTS]);
+void assemblyExpectedOutputCreator4(int expectedNodes[MAXOUTPUTS]);
+void assemblyExpectedOutputCreator5(int expectedNodes[MAXOUTPUTS]);
+
 void assembleExpectedOutputsFactory(char* inputTestFileName,  int expectedNodes[MAXOUTPUTS]){
     if(strstr(inputTestFileName, "invalid")!=NULL){
         return;
@@ -24,7 +30,6 @@ void assembleExpectedOutputsFactory(char* inputTestFileName,  int expectedNodes[
     }else if (strcmp(inputTestFileName, "validInput9.txt") == 0) {
         assemblyExpectedOutputCreator9(expectedNodes);
     }*/
-    return NULL ;
 }
 
 void assemblyExpectedOutputCreator1(int expectedNodes[MAXOUTPUTS]){
