@@ -63,9 +63,10 @@ make compile IN_FILE=<nombre_archivo>.bok ASM_FILE=<nombre_archivo>.s ASM_EXEC=<
 
 ### 1.7: Ejecución de Tests
 
-
 ```
-Poner comandos de ejecución.
+make test_checktypes
+make test_assembly
+make test_all
 ```
 
 ## 2: Proceso de construcción.
