@@ -13,12 +13,12 @@ typedef struct ThreeAddressCodeList{
 
 ThreeAddressCodeList *createEmptyTAC();
 
+ThreeAddressCodeNode *getFromTAC(ThreeAddressCodeList *list, int index);
+
 void createThreeAddressCodeList(TAst *ast, ThreeAddressCodeList *list, int* offset, int* labelCounter, NodeInfoStack *parameterStack);
 
 char* threeAddressListToString(ThreeAddressCodeList *list);
 
 void addToTAC(ThreeAddressCodeList* list,ThreeAddressCodeNode* node);
-
-ThreeAddressCodeNode *getFromTAC(ThreeAddressCodeList *list, int index);
 
 #endif

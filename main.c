@@ -43,7 +43,7 @@ int main(int argc,char *argv[]) {
 
     ThreeAddressCodeList *list = createEmptyTAC();
 
-    int offset = 0;//getOffset();
+    int offset = 0;
     int labelCounter = 0;
 
     //printAst(globalAst);
@@ -52,5 +52,17 @@ int main(int argc,char *argv[]) {
     // printf("PARSE COMPLETE %d\n", 1);
     // printf("TERMINE\n");
     // printf("\n--------------------------TAC--------------------------\n%s--------------------------------------------------------\n",threeAddressListToString(list));
-    generateAssembly(list);
+    
+    char* execMode = argv[1];
+    if (strcmp(execMode, "run") == 0) {
+        char* assemblyFilename = generateAssemblyFilename(filename);
+        generateAssembly(list, assemblyFilename);
+    } else if (strcmp(execMode, "test") == 0) {
+        const char* assemblyFilename = "tests/output/test.s";
+        generateAssembly(list, assemblyFilename);
+
+    } else {
+        printf("\033[1;31mError:\033[0m execution mode not recognized\n");
+        exit(1);
+    }
 }

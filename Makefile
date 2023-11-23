@@ -10,7 +10,7 @@ BIN_DIR = output
 SRCS := $(wildcard $(SRC_DIR)/**/*.c) ./main.c
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))  
 
-TARGET = $(BIN_DIR)/my_program
+TARGET = $(BIN_DIR)/compiler
 
 .PHONY: all clean
 
@@ -63,29 +63,30 @@ test_assembly:
 test_all: test_syntax test_checktypes test_assembly
 
 
-#IN_TEST ?= validInput1.txt
-#TYPE ?=	eval
-#
-#test_file:
-#	$(SCRIPT_DIR)/test_file.sh $(TEST_DIR)/inputs/$(IN_TEST) $(TYPE)
+IN_FILE ?= input.bok
+ASM_FILE = input.s
+ASM_EXEC = executable
 
-IN_FILE ?= input/input.bok
 
 run:
-	./$(TARGET) $(IN_FILE) 
+	./$(TARGET) input/$(IN_FILE) "run"; \
 
-ASSEMBLY_FILE = assembly.s
-ASSMBLE_EXE = executable
+link:
+	$(CC) $(BIN_DIR)/$(ASM_FILE) extern/*.c -o $(BIN_DIR)/$(ASM_EXEC)
+
+
+asm:
+	@if [ $(OUTFILE) = "nofile" ]; then \
+		$(BIN_DIR)/$(ASM_EXEC) 2>/dev/null || true; \
+	else \
+		$(BIN_DIR)/$(ASM_EXEC) > $(OUTFILE) 2>/dev/null || true; \
+	fi
+
+compile: run link asm
 
 OUTFILE ?= nofile
 
-assemble:
-	$(CC) $(ASSEMBLY_FILE)  extern/*.c -o $(BIN_DIR)/$(ASSMBLE_EXE)
-
-	@if [ $(OUTFILE) = "nofile" ]; then \
-		$(BIN_DIR)/$(ASSMBLE_EXE) 2>/dev/null || true; \
-	else \
-		$(BIN_DIR)/$(ASSMBLE_EXE) > $(OUTFILE) 2>/dev/null || true; \
-	fi
-
-compile: run assemble
+compile_test:
+	./$(TARGET) $(IN_FILE) "test"
+	$(CC) $(TEST_DIR)/output/test.s extern/*.c -o $(TEST_DIR)/output/test
+	$(TEST_DIR)/output/test > $(OUTFILE) 2>/dev/null || true; \

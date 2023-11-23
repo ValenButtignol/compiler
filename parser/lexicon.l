@@ -151,7 +151,7 @@ digit [0-9]
         strcpy(yylval.string,yytext);
         return TId;
     }
-"/\*"(.*|.*\n|\n)*"\*/"     ; /* ignore comments */
+"\*"(.*|.*\n|\n)*"*/"     ; /* ignore comments */
 "//"(.)*\n ;
 
 .|\n ;
@@ -161,6 +161,6 @@ digit [0-9]
 %%
 
 void yyerror(){
-    printf("ERROR SINTACTICO %d\n", yylineno);
+    printf("Syntax Error at line: %d\n", yylineno);
     exit(1);
 }

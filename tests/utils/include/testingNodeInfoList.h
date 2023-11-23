@@ -4,13 +4,11 @@
 #include "../../../include/dataStructures/ast.h"
 #include "../../../include/dataStructures/nodeInfo.h"
 
-// Define the Node structure for the linked list
 typedef struct TestingNode {
     NodeInfo* data;
     struct TestingNode* next;
 } TestingNode;
 
-// Define the LinkedList structure
 typedef struct {
     TestingNode* head;
 } TestingNodeInfoList;
