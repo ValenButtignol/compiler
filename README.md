@@ -58,7 +58,7 @@ make asm ASM_EXEC=<nombre_ejecutable>
 A modo de ahorro de tiempo, se puede ejecutar el siguiente comando para realizar todos los últimos tres pasos anteriores en un solo comando:
 
 ```
-make compile IN_FILE=<nombre_archivo>.bok ASM_FILE=<nombre_archivo>.s ASM_EXEC=<nombre_ejecutable>
+make compile IN_FILE=<nombre_archivo>.bok ASM_FILE=<nombre_archivo>.s ASM_EXEC=<nombre_archivo>
 ```
 
 ### 1.7: Ejecución de Tests

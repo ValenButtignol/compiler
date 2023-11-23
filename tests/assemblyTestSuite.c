@@ -9,14 +9,13 @@
 static void assemblyTestSuite(char* inputTestFileName) {
 
     int expectedOutput[MAXOUTPUTS] = {-999999};
-    
     assembleExpectedOutputsFactory(inputTestFileName, expectedOutput);
     if (expectedOutput == NULL) {
         printNoTestSuiteMessage(inputTestFileName);
         return ;
     }
     
-    if ((testerOutputs("out.txt", expectedOutput))) {
+    if ((testerOutputs("tests/output/out.txt", expectedOutput))) {
         printTestSuccessMessage("Assembly", inputTestFileName);
     } else {
         printTestFailedMessage("Assembly", inputTestFileName);

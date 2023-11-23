@@ -69,12 +69,11 @@ ASM_EXEC = executable
 
 
 run:
-	./$(TARGET) input/$(IN_FILE) ; \
+	./$(TARGET) input/$(IN_FILE) "run"; \
 
 link:
 	$(CC) $(BIN_DIR)/$(ASM_FILE) extern/*.c -o $(BIN_DIR)/$(ASM_EXEC)
 
-OUTFILE ?= nofile
 
 asm:
 	@if [ $(OUTFILE) = "nofile" ]; then \
@@ -85,6 +84,9 @@ asm:
 
 compile: run link asm
 
+OUTFILE ?= nofile
+
 compile_test:
-	./$(TARGET) $(IN_FILE)
-	$(CC) $(BIN_DIR)/$(ASM_FILE) extern/*.c -o $(BIN_DIR)/$(ASM_EXEC)
+	./$(TARGET) $(IN_FILE) "test"
+	$(CC) $(TEST_DIR)/output/test.s extern/*.c -o $(TEST_DIR)/output/test
+	$(TEST_DIR)/output/test > $(OUTFILE) 2>/dev/null || true; \
